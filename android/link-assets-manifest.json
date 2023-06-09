@@ -1,0 +1,37 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/Audrey-Bold.otf",
+      "sha1": "2f117fdb987090ac415563c8d5370247a23d21d0"
+    },
+    {
+      "path": "assets/fonts/Audrey-BoldOblique.otf",
+      "sha1": "157503cc1feb8fe4a8c18f4fba0229e3799f817c"
+    },
+    {
+      "path": "assets/fonts/Audrey-Medium.otf",
+      "sha1": "c3fe21d0eb1d15498c44a88db1dca5b213bb2bb7"
+    },
+    {
+      "path": "assets/fonts/Audrey-MediumOblique.otf",
+      "sha1": "f975d9f865db8b7c56e0d6720d8669767bd81a51"
+    },
+    {
+      "path": "assets/fonts/Audrey-Normal.otf",
+      "sha1": "678c9e3685518e7fcef341166d5c63b297d5d0c1"
+    },
+    {
+      "path": "assets/fonts/Audrey-NormalOblique.otf",
+      "sha1": "f7dc97c05f2e6f03cb23171b91dff9a21ddc86ff"
+    },
+    {
+      "path": "assets/fonts/RedHatDisplay-Regular.ttf",
+      "sha1": "a88bb6ead24bce67c673802676d453ad4d1a5ffd"
+    },
+    {
+      "path": "assets/fonts/RubikPuddles-Regular.ttf",
+      "sha1": "75d8cd92e80c3b344908b7d376e19d5fe9aa9023"
+    }
+  ]
+}
