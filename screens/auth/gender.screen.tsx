@@ -43,7 +43,7 @@ export const GenderScreen = () => {
     return (
         <Layout>
             <KeyboardAwareScrollView contentContainerStyle={styles.mainScrollView}>
-                <Stepper stepCount={10} activeSteps={5} />
+                <Stepper stepCount={11} activeSteps={5} />
                 <View style={styles.mainWrapper}>
                     <View style={styles.headerWrapper}>
                         <GenderIcon />

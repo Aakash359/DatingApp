@@ -28,7 +28,7 @@ export const NameScreen = () => {
     return (
         <Layout>
             <KeyboardAwareScrollView contentContainerStyle={styles.mainScrollView}>
-                <Stepper stepCount={10} activeSteps={3} />
+                <Stepper stepCount={11} activeSteps={3} />
                 <View style={styles.mainWrapper}>
                     <View style={styles.headerWrapper}>
                         <ProfileIcon />

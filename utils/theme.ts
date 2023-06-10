@@ -23,6 +23,15 @@ export enum COLORS {
     ERROR = '#EF5258'
 }
 
+export const getModalBackgroundColor = (theme: THEME) => {
+    switch (theme) {
+        case THEME.LIGHT:
+            return COLORS.LIGHT_10;
+        case THEME.DARK:
+            return COLORS.LIGHT_20;
+    }
+};
+
 export const getIconBackgroundColor = (theme: THEME) => {
     switch (theme) {
         case THEME.LIGHT:

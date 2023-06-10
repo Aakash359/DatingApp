@@ -6,3 +6,7 @@ export * from './dateOfBirth.screen';
 export * from './gender.screen';
 export * from './profilePhoto.screen';
 export * from './genderPreference.screen';
+export * from './addYourPhotos.screen';
+export * from './visibilityDistanceScreen';
+export * from './agePreference.screen';
+export * from './interest.screen';

@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { DateOfBirthScreen, GenderPreferenceScreen, GenderScreen, NameScreen, OnboardingScreen, OtpScreen, PhoneNumberScreen, ProfilePhotoScreen } from './screens';
+import { AddYourPhotosScreen, AgePreferenceScreen, DateOfBirthScreen, GenderPreferenceScreen, GenderScreen, InterestScreen, NameScreen, OnboardingScreen, OtpScreen, PhoneNumberScreen, ProfilePhotoScreen, VisibilityDistanceScreen } from './screens';
 
 export type RootStackParamList = {
   OnboardingScreen: undefined;
@@ -14,6 +14,10 @@ export type RootStackParamList = {
   GenderScreen: undefined;
   GenderPreferenceScreen: undefined;
   ProfilePhotoScreen: undefined;
+  AddYourPhotosScreen: undefined;
+  VisibilityDistanceScreen: undefined;
+  AgePreferenceScreen: undefined;
+  InterestScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -31,6 +35,10 @@ function App(): JSX.Element {
           <Stack.Screen name="GenderScreen" component={GenderScreen} options={{ headerShown: false }} />
           <Stack.Screen name="GenderPreferenceScreen" component={GenderPreferenceScreen} options={{ headerShown: false }} />
           <Stack.Screen name="ProfilePhotoScreen" component={ProfilePhotoScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="AddYourPhotosScreen" component={AddYourPhotosScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="VisibilityDistanceScreen" component={VisibilityDistanceScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="AgePreferenceScreen" component={AgePreferenceScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="InterestScreen" component={InterestScreen} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

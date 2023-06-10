@@ -28,7 +28,7 @@ export const OtpScreen = () => {
     return (
         <Layout>
             <KeyboardAwareScrollView contentContainerStyle={styles.mainScrollView}>
-                <Stepper stepCount={10} activeSteps={2} />
+                <Stepper stepCount={11} activeSteps={2} />
                 <View style={styles.mainWrapper}>
                     <View style={styles.headerWrapper}>
                         <LockIcon />

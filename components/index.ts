@@ -6,3 +6,6 @@ export * from './textButton.component';
 export * from './customDatepicker.component';
 export * from './pill.component';
 export * from './singleSelectPill.component';
+export * from './slider.component';
+export * from './rangeSlider.component';
+export * from './verificationModal.component';

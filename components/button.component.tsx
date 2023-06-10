@@ -3,7 +3,7 @@ import { TouchableOpacity, ImageBackground, StyleSheet, View } from 'react-nativ
 
 interface ImageButtonProps {
     onPress: () => void;
-    imageSource: any; // The type of this prop might depend on how you're getting your images
+    imageSource?: any; // The type of this prop might depend on how you're getting your images
     children: ReactNode;
     variant: 'primary' | 'ghost' | 'secondary' | 'outline';
     height: number;
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     },
     outline: {
         borderWidth: 1,
-        borderColor: 'blue',
+        borderColor: '#96969E',
         backgroundColor: 'transparent',
         justifyContent: 'center',
         alignItems: 'center',

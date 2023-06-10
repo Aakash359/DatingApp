@@ -26,7 +26,7 @@ export const PhoneNumberScreen = () => {
     return (
         <Layout>
             <KeyboardAwareScrollView contentContainerStyle={styles.mainScrollView}>
-                <Stepper stepCount={10} activeSteps={1} />
+                <Stepper stepCount={11} activeSteps={1} />
                 <View style={styles.mainWrapper}>
                     <View style={styles.headerWrapper}>
                         <PhoneIcon />

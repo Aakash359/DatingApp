@@ -10,3 +10,7 @@ export * from './calendar.icon';
 export * from './gender.icon';
 export * from './image.icon';
 export * from './bigProfilePhoto.icon';
+export * from './circlePlus.icon';
+export * from './addImageVerticalBox.icon';
+export * from './distanceRadar.icon';
+export * from './interest.icon';

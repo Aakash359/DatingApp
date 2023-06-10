@@ -27,7 +27,7 @@ export const DateOfBirthScreen = () => {
     return (
         <Layout>
             <KeyboardAwareScrollView contentContainerStyle={styles.mainScrollView}>
-                <Stepper stepCount={10} activeSteps={4} />
+                <Stepper stepCount={11} activeSteps={4} />
                 <View style={styles.mainWrapper}>
                     <View style={styles.headerWrapper}>
                         <CalendarIcon />

@@ -1,13 +1,14 @@
 import React, { forwardRef } from 'react';
 import { TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { getBrandColor, getPillColor, getTextPrimaryColor, THEME } from '../utils/theme';
-import { responsiveFontSize, responsiveHeight } from 'react-native-responsive-dimensions';
+import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 
 interface ImageButtonProps {
     onPress?: () => void;
     selectedGender: string[];
     setSelectedGender: React.Dispatch<React.SetStateAction<string[]>>;
     text: string;
+    icon?: React.JSX.Element;
 }
 
 const handlePress = (text: string, setSelectedGender: React.Dispatch<React.SetStateAction<string[]>>, selectedGender: string[]) => {
@@ -19,10 +20,10 @@ const handlePress = (text: string, setSelectedGender: React.Dispatch<React.SetSt
     }
 }
 
-export const Pill = forwardRef<TouchableOpacity, ImageButtonProps>(({ setSelectedGender, text, selectedGender }, ref) => {
+export const Pill = forwardRef<TouchableOpacity, ImageButtonProps>(({ setSelectedGender, text, selectedGender, icon }, ref) => {
     return (
         <TouchableOpacity style={selectedGender.includes(text) ? styles.selectedPill : styles.pill} onPress={() => handlePress(text, setSelectedGender, selectedGender)} ref={ref}>
-            <Text style={styles.text}>{text}</Text>
+            {icon ? icon : null}<Text style={styles.text}>{text}</Text>
         </TouchableOpacity>
     )
 });
@@ -32,6 +33,9 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: getPillColor(THEME.DARK),
         backgroundColor: 'transparent',
+        display: 'flex',
+        flexDirection: 'row',
+        gap: responsiveWidth(2),
         justifyContent: 'center',
         alignItems: 'center',
         height: responsiveHeight(5),
@@ -44,6 +48,9 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: getBrandColor(THEME.DARK),
         backgroundColor: 'transparent',
+        display: 'flex',
+        flexDirection: 'row',
+        gap: responsiveWidth(2),
         justifyContent: 'center',
         alignItems: 'center',
         height: responsiveHeight(5),

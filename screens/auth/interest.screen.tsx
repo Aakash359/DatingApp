@@ -3,22 +3,22 @@ import { StyleSheet, View, Text } from 'react-native';
 import { responsiveScreenWidth, responsiveScreenHeight, responsiveFontSize } from 'react-native-responsive-dimensions';
 import { Layout } from '../../layout/layout';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { GenderIcon, RightArrow } from '../../assets';
+import { GenderIcon, InterestIcon, RightArrow } from '../../assets';
 import { THEME, getTextPrimaryColor, getTextSecondaryColor } from '../../utils/theme';
-import { Button, CheckBox, Input, Pill } from '../../components';
+import { Button, CheckBox, Input, Pill, VerificationModal } from '../../components';
 import { Stepper } from '../../components/stepper.component';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { genderPillDataAlt } from '../../constants';
+import { genderPillDataAlt, interestPillData } from '../../constants';
 
 type otpScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
-    'GenderPreferenceScreen'
+    'InterestScreen'
 >;
 
-export const GenderPreferenceScreen = () => {
-    const [gender, setGender] = React.useState('');
+export const InterestScreen = () => {
+    const [isVerificationModalVisible, setIsVerificationModalVisible] = React.useState(false);
     const [selectedGender, setSelectedGender] = React.useState(['']);
     const [isChecked, setIsChecked] = React.useState(false);
     const navigation = useNavigation<otpScreenNavigationProp>();
@@ -26,34 +26,39 @@ export const GenderPreferenceScreen = () => {
         setIsChecked(prev => !prev);
     }
     const handleNavigateToProfilePhotoScreen = () => {
-        navigation.navigate('ProfilePhotoScreen');
+        setIsVerificationModalVisible(true)
     };
 
     return (
         <Layout>
             <KeyboardAwareScrollView contentContainerStyle={styles.mainScrollView}>
-                <Stepper stepCount={11} activeSteps={6} />
+                <Stepper stepCount={11} activeSteps={11} />
                 <View style={styles.mainWrapper}>
                     <View style={styles.headerWrapper}>
-                        <GenderIcon />
-                        <Text style={styles.headerText}>WHICH GENDERS ARE YOU INTERESTED IN</Text>
+                        <InterestIcon />
+                        <Text style={styles.headerText}>YOUR INTERSTS ARE</Text>
                     </View>
                     <View style={styles.inputWrapper}>
-                        <Input value={gender} setValue={setGender} placeholder='SEARCH' />
+                        {/* <Input value={gender} setValue={setGender} placeholder='SEARCH' /> */}
+                        <Text style={styles.inputDescription}>Creativity:</Text>
                         <View style={styles.pillContainer}>
-                            {genderPillDataAlt.map((item, index) => (
+                            {interestPillData.map((item, index) => (
                                 <View style={styles.inputDescriptionWrapper} key={index}>
-                                    <Pill selectedGender={selectedGender} setSelectedGender={setSelectedGender} text={item.text} />
+                                    <Pill icon={item.icon} selectedGender={selectedGender} setSelectedGender={setSelectedGender} text={item.text} />
+                                </View>
+                            ))}
+                        </View>
+                        <Text style={styles.inputDescription}>Sports:</Text>
+                        <View style={styles.pillContainer}>
+                            {interestPillData.map((item, index) => (
+                                <View style={styles.inputDescriptionWrapper} key={index}>
+                                    <Pill icon={item.icon} selectedGender={selectedGender} setSelectedGender={setSelectedGender} text={item.text} />
                                 </View>
                             ))}
                         </View>
                     </View>
                 </View>
                 <View style={styles.footerWrapper}>
-                    <View style={styles.footerTextWrapper}>
-                        <CheckBox isChecked={isChecked} onPress={checkboxPress} />
-                        <Text style={styles.inputDescription}>Show Interested Genders on profile?</Text>
-                    </View>
                     <View style={styles.buttonWrapper}>
                         <Button
                             onPress={handleNavigateToProfilePhotoScreen}
@@ -65,6 +70,7 @@ export const GenderPreferenceScreen = () => {
                         </Button>
                     </View>
                 </View>
+                <VerificationModal isVisible={isVerificationModalVisible} setIsVisible={setIsVerificationModalVisible}/>
             </KeyboardAwareScrollView>
         </Layout>
     )
@@ -86,6 +92,15 @@ const styles = StyleSheet.create({
         gap: responsiveScreenWidth(1.5),
         maxWidth: responsiveScreenWidth(100),
         paddingHorizontal: responsiveScreenWidth(3),
+        marginTop: responsiveScreenHeight(5),
+    },
+    buttonWrapper: {
+        marginTop: responsiveScreenHeight(3),
+        width: responsiveScreenHeight(8),
+        marginBottom: responsiveScreenHeight(3),
+        position: 'absolute',
+        bottom: 0,
+        right: responsiveScreenWidth(3),
     },
     footerWrapper: {
         display: 'flex',
@@ -96,11 +111,6 @@ const styles = StyleSheet.create({
         width: responsiveScreenWidth(100),
         marginBottom: responsiveScreenHeight(2),
         paddingRight: responsiveScreenWidth(3),
-    },
-    buttonWrapper: {
-        marginTop: responsiveScreenHeight(3),
-        width: responsiveScreenHeight(8),
-        marginBottom: responsiveScreenHeight(3),
     },
     headerWrapper: {
         display: 'flex',
@@ -145,5 +155,6 @@ const styles = StyleSheet.create({
         gap: responsiveScreenWidth(3),
         marginTop: responsiveScreenHeight(2),
         width: responsiveScreenWidth(95),
+        marginBottom: responsiveScreenHeight(2),
     },
 })
