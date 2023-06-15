@@ -11,26 +11,108 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { genderPillDataAlt, interestPillData } from '../../constants';
+import Modal from 'react-native-modal/dist/modal';
 
 type otpScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
     'InterestScreen'
 >;
 
+enum ModalPage {
+    VERIFICATION_SCREEN = 'VERIFICATION_SCREEN',
+    STRIKE_POSE_SCREEN = 'STRIKE_POSE',
+    CONFIRMATION_SCREEN = 'CONFIRMATION',
+    REVIEW_SCREEN = 'REVIEW',
+}
+
 export const InterestScreen = () => {
     const [isVerificationModalVisible, setIsVerificationModalVisible] = React.useState(false);
     const [selectedGender, setSelectedGender] = React.useState(['']);
-    const [isChecked, setIsChecked] = React.useState(false);
+    const [modalPage, setModalPage] = React.useState<ModalPage>();
     const navigation = useNavigation<otpScreenNavigationProp>();
-    const checkboxPress = () => {
-        setIsChecked(prev => !prev);
-    }
+
     const handleNavigateToProfilePhotoScreen = () => {
         setIsVerificationModalVisible(true)
     };
 
+    const displayModalContent = () => {
+        switch (modalPage) {
+            case ModalPage.VERIFICATION_SCREEN:
+                return (
+                    <VerificationModal
+                        modalHeader='VERIFY YOURSELF'
+                        modalPrimaryImage={require('../../assets/images/auth/smilingReference.png')}
+                        modalDescription='Provide you’re the person in your profile by taking a photo. if you match, boom, you’re verified!'
+                        modalButtonText='GET VERIFIED'
+                        modalCancleButtonText='NOT NOW'
+                        onNextPress={() => setModalPage(ModalPage.STRIKE_POSE_SCREEN)}
+                        onBackPress={() => setIsVerificationModalVisible(false)}
+                    />
+                )
+        
+            case ModalPage.STRIKE_POSE_SCREEN:
+                return (
+                    <VerificationModal
+                        modalHeader='STRIKE THIS POSE'
+                        modalPrimaryImage={require('../../assets/images/auth/smilingReference.png')}
+                        modalDescription='Copy the gesture in the photo below: we’ll compare them and if they both match your profile will be verified'
+                        modalButtonText='I’M READY'
+                        modalCancleButtonText='BACK'
+                        onNextPress={() => setModalPage(ModalPage.CONFIRMATION_SCREEN)}
+                        onBackPress={() => setModalPage(ModalPage.VERIFICATION_SCREEN)}
+                    />
+                )
+            case ModalPage.CONFIRMATION_SCREEN:
+                return (
+                    <VerificationModal
+                        modalHeader='HAPPY WITH PHOTO?'
+                        modalPrimaryImage={require('../../assets/images/auth/ModalSecondaryImage.png')}
+                        modalDescription='Remember, to verify yourself successfully; Your face must be clearly visible and you must be copying th exact pose'
+                        modalButtonText='SUBMIT'
+                        modalCancleButtonText='RETAKE PHOTO'
+                        onNextPress={() => setModalPage(ModalPage.REVIEW_SCREEN)}
+                        onBackPress={() => setModalPage(ModalPage.STRIKE_POSE_SCREEN)}
+                        isModalMultiImage={true}
+                    />
+                )
+            case ModalPage.REVIEW_SCREEN:
+                return (
+                    <VerificationModal
+                        modalHeader='UNDER REVIEW'
+                        modalPrimaryImage={require('../../assets/images/auth/smilingReference.png')}
+                        modalDescription='Your profile verification is under review, we will get back to you shortly'
+                        modalButtonText='GET VERIFIED'
+                        modalCancleButtonText='NOT NOW'
+                        onNextPress={() => navigation.navigate('PhoneNumberScreen', {isSignup: false})}
+                        onBackPress={() => setModalPage(ModalPage.CONFIRMATION_SCREEN)}
+                        isLastModal={true}
+                    />
+                )
+
+            default:
+                return (
+                    <VerificationModal
+                        modalHeader='VERIFY YOURSELF'
+                        modalPrimaryImage={require('../../assets/images/auth/smilingReference.png')}
+                        modalDescription='Provide you’re the person in your profile by taking a photo. if you match, boom, you’re verified!'
+                        modalButtonText='GET VERIFIED'
+                        modalCancleButtonText='NOT NOW'
+                        onNextPress={() => setModalPage(ModalPage.STRIKE_POSE_SCREEN)}
+                        onBackPress={() => setIsVerificationModalVisible(false)}
+                    />
+                )
+        }
+    }
+
     return (
         <Layout>
+            <Modal
+                useNativeDriverForBackdrop={true}
+                style={styles.modal}
+                onBackdropPress={() => setIsVerificationModalVisible(false)}
+                isVisible={isVerificationModalVisible}>
+                {displayModalContent()}
+            </Modal>
             <KeyboardAwareScrollView contentContainerStyle={styles.mainScrollView}>
                 <Stepper stepCount={11} activeSteps={11} />
                 <View style={styles.mainWrapper}>
@@ -41,6 +123,14 @@ export const InterestScreen = () => {
                     <View style={styles.inputWrapper}>
                         {/* <Input value={gender} setValue={setGender} placeholder='SEARCH' /> */}
                         <Text style={styles.inputDescription}>Creativity:</Text>
+                        <View style={styles.pillContainer}>
+                            {interestPillData.map((item, index) => (
+                                <View style={styles.inputDescriptionWrapper} key={index}>
+                                    <Pill icon={item.icon} selectedGender={selectedGender} setSelectedGender={setSelectedGender} text={item.text} />
+                                </View>
+                            ))}
+                        </View>
+                        <Text style={styles.inputDescription}>Sports:</Text>
                         <View style={styles.pillContainer}>
                             {interestPillData.map((item, index) => (
                                 <View style={styles.inputDescriptionWrapper} key={index}>
@@ -70,13 +160,22 @@ export const InterestScreen = () => {
                         </Button>
                     </View>
                 </View>
-                <VerificationModal isVisible={isVerificationModalVisible} setIsVisible={setIsVerificationModalVisible}/>
             </KeyboardAwareScrollView>
         </Layout>
     )
 }
 
 const styles = StyleSheet.create({
+    modal: {
+        width: '100%',
+        height: '100%',
+        maxHeight: '100%',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        margin: 0,
+    },
     mainScrollView: {
         display: 'flex',
         justifyContent: 'space-between',
@@ -127,6 +226,7 @@ const styles = StyleSheet.create({
     inputWrapper: {
         marginTop: responsiveScreenHeight(4),
         paddingHorizontal: responsiveScreenWidth(3),
+        maxHeight: responsiveScreenHeight(50),
     },
     inputDescription: {
         fontSize: responsiveFontSize(2),

@@ -20,8 +20,14 @@ export const DateOfBirthScreen = () => {
     const navigation = useNavigation<PhoneNumbeerScreenNavigationProp>();
     const [date, setDate] = React.useState<Date>();
     const [isChecked, setIsChecked] = React.useState(false);
+
     const checkboxPress = () => {
         setIsChecked(prev => !prev);
+    }
+
+    const handleNavigateToNextScreen = () => {
+        if(!date) return;
+        navigation.navigate('GenderScreen');
     }
 
     return (
@@ -51,9 +57,9 @@ export const DateOfBirthScreen = () => {
 
                 <View style={styles.buttonWrapper}>
                     <Button
-                        onPress={() => navigation.navigate('GenderScreen')}
+                        onPress={handleNavigateToNextScreen}
                         imageSource={require('../../assets/gradients/splash.png')}
-                        variant="primary"
+                        variant={!date ? 'disabled' : "primary"}
                         height={responsiveScreenHeight(8)}
                     >
                         <RightArrow />

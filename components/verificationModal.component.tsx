@@ -7,71 +7,105 @@ import { Button } from './button.component';
 import { THEME, getModalBackgroundColor, getTextPrimaryColor, getTextSecondaryColor } from '../utils';
 
 export interface Props {
-    isVisible: boolean;
-    setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
+    isModalMultiImage?: boolean;
+    modalHeader: string;
+    modalPrimaryImage: any;
+    modalDescription: string;
+    modalButtonText: string;
+    modalCancleButtonText: string;
+    onNextPress: () => void;
+    onBackPress: () => void;
+    isLastModal?: boolean;
 }
 
-export const VerificationModal: React.FC<Props> = ({ isVisible, setIsVisible }) => {
-    const navigation = useNavigation();
+export const VerificationModal: React.FC<Props> = ({ isModalMultiImage, isLastModal, onNextPress, onBackPress, modalPrimaryImage, modalHeader, modalDescription, modalCancleButtonText, modalButtonText }) => {
     return (
-        <Modal
-            useNativeDriverForBackdrop={true}
-            style={styles.modal}
-            onBackdropPress={() => setIsVisible(false)}
-            isVisible={isVisible}>
-            <View style={styles.modalContainer}>
-                <View style={styles.dragger} />
-                <View style={styles.imageWrapper}>
-                    <Image source={require('../assets/images/auth/profilePhoto.png')} />
-                </View>
-                <View style={styles.textContainer}>
-                    <Text style={styles.headerText}>
-                        VERIFY YOURSELF
-                    </Text>
-                    <Text style={styles.inputDescription}>Provide you’re the person in your profile by taking a photo. if you match, boom, you’re verified!</Text>
-                </View>
-                <View style={styles.buttonMainWrapper}>
-                    <View style={styles.buttonWrapper}>
-                        <Button onPress={() => console.log('clickse')} imageSource={require('../assets/gradients/splash.png')} variant={'primary'} height={responsiveScreenHeight(8)} >
-                            <Text style={styles.headerText}>GET VERIFIED</Text>
-                        </Button>
+        <View style={isModalMultiImage ? styles.multiImageModalContainer : isLastModal ? styles.smallModalContainer : styles.modalContainer}>
+            <View style={styles.dragger} />
+            {isModalMultiImage ?
+                (
+                    <View style={styles.MultiImageWrapper}>
+                        <Image source={modalPrimaryImage} />
+                        <Image source={modalPrimaryImage} />
                     </View>
-                    <View style={styles.buttonWrapper}>
-                        <Button onPress={() => console.log('clickse')} variant={'outline'} height={responsiveScreenHeight(8)} >
-                            <Text style={styles.headerText}>NOT NOW</Text>
-                        </Button>
+                )
+                :
+                (
+                    <View style={styles.imageWrapper}>
+                        <Image source={modalPrimaryImage} />
                     </View>
-                </View>
+                )
+            }
+            <View style={styles.textContainer}>
+                <Text style={styles.headerText}>
+                    {modalHeader}
+                </Text>
+                <Text style={styles.inputDescription}>{modalDescription}</Text>
             </View>
-        </Modal>
+            <View style={isLastModal ? styles.singleButtonWrapper :styles.buttonMainWrapper}>
+                <View style={styles.buttonWrapper}>
+                    <Button onPress={onNextPress} imageSource={require('../assets/gradients/splash.png')} variant={'primary'} height={responsiveScreenHeight(8)} >
+                        <Text style={styles.headerText}>{modalButtonText}</Text>
+                    </Button>
+                </View>
+                {isLastModal ?
+                    null
+                    :
+                    <View style={styles.buttonWrapper}>
+                        <Button onPress={onBackPress} variant={'outline'} height={responsiveScreenHeight(8)} >
+                            <Text style={styles.headerText}>{modalCancleButtonText}</Text>
+                        </Button>
+                    </View>}
+            </View>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
-    modal: {
-        width: '100%',
-        height: '100%',
-        maxHeight: '100%',
-        display: 'flex',
-        justifyContent: 'flex-end',
-        alignItems: 'flex-end',
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        margin: 0,
-    },
+
     modalContainer: {
-        // backgroundColor: 'rgba(0,0,0,1)',
         backgroundColor: getModalBackgroundColor(THEME.DARK),
         display: 'flex',
         justifyContent: 'space-between',
         paddingVertical: responsiveScreenHeight(2),
         paddingHorizontal: responsiveScreenWidth(3),
         alignItems: 'center',
-        height: responsiveScreenHeight(70),
+        height: responsiveScreenHeight(75),
+        width: responsiveScreenWidth(100),
+        borderTopLeftRadius: 40,
+        borderTopRightRadius: 40,
+    },
+    multiImageModalContainer: {
+        backgroundColor: getModalBackgroundColor(THEME.DARK),
+        display: 'flex',
+        justifyContent: 'space-between',
+        paddingVertical: responsiveScreenHeight(2),
+        paddingHorizontal: responsiveScreenWidth(3),
+        alignItems: 'center',
+        height: responsiveScreenHeight(71),
+        width: responsiveScreenWidth(100),
+        borderTopLeftRadius: 40,
+        borderTopRightRadius: 40,
+    },
+    smallModalContainer: {
+        backgroundColor: getModalBackgroundColor(THEME.DARK),
+        display: 'flex',
+        justifyContent: 'space-between',
+        paddingVertical: responsiveScreenHeight(2),
+        paddingHorizontal: responsiveScreenWidth(3),
+        alignItems: 'center',
+        height: responsiveScreenHeight(63),
         width: responsiveScreenWidth(100),
         borderTopLeftRadius: 40,
         borderTopRightRadius: 40,
     },
     imageWrapper: {
+        marginBottom: responsiveScreenHeight(2),
+    },
+    MultiImageWrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        gap: responsiveScreenWidth(5),
         marginBottom: responsiveScreenHeight(2),
     },
     textContainer: {
@@ -95,7 +129,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     dragger: {
-        width: responsiveScreenWidth(10),
+        width: responsiveScreenWidth(20),
         height: responsiveScreenHeight(0.5),
         backgroundColor: 'rgba(255,255,255,0.5)',
         borderRadius: 10,
@@ -112,6 +146,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: responsiveScreenHeight(11),
         marginTop: responsiveScreenHeight(3),
+        marginBottom: responsiveScreenHeight(15),
+    },
+    singleButtonWrapper: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: responsiveScreenHeight(1),
+        marginTop: responsiveScreenHeight(0),
         marginBottom: responsiveScreenHeight(15),
     }
 });

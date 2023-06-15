@@ -19,7 +19,7 @@ type otpScreenNavigationProp = NativeStackNavigationProp<
 
 export const AgePreferenceScreen = () => {
     const navigation = useNavigation<otpScreenNavigationProp>();
-    const [sliderValues, setSliderValues] = React.useState([20, 80]);
+    const [sliderValues, setSliderValues] = React.useState([18, 32]);
     const handleNavigateToProfilePhotoScreen = () => {
         navigation.navigate('InterestScreen')
     };

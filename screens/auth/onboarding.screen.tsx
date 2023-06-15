@@ -19,7 +19,7 @@ export const OnboardingScreen = () => {
   const navigation = useNavigation<OnboardingScreenNavigationProp>();
 
   const handleSignInPress = () => {
-    navigation.navigate('PhoneNumberScreen');
+    navigation.navigate('PhoneNumberScreen', {isSignup: true});
   }
 
   return (
@@ -52,7 +52,7 @@ export const OnboardingScreen = () => {
           <TouchableOpacity style={styles.icon}>
             <FacebookIcon />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.icon}>
+          <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('HomeScreen')}>
             <GoogleIcon />
           </TouchableOpacity>
           <TouchableOpacity style={styles.icon}>

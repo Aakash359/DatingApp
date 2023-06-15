@@ -12,6 +12,7 @@ interface Props extends TextInputProps {
   value: string;
   setValue: (text: string) => void;
   icon?: React.ReactNode;
+  type?: 'text' | 'number' | 'password';
 }
 
 export const Input: React.FC<Props> = props => {
@@ -27,8 +28,8 @@ export const Input: React.FC<Props> = props => {
         style={[
           styles.input,
           {
-            borderColor: isError ? 'red' : isFocused ? COLORS.BRAND_LIGHT : COLORS.LIGHT_60,
-            color: isError ? 'red' : getTextPrimaryColor(THEME.DARK),
+            borderColor: isError ? COLORS.ERROR : isFocused ? COLORS.BRAND_LIGHT : COLORS.LIGHT_60,
+            color: isError ? COLORS.ERROR : getTextPrimaryColor(THEME.DARK),
             fontFamily: 'Audrey-Medium',
             fontSize: responsiveFontSize(3),
           },
@@ -37,6 +38,7 @@ export const Input: React.FC<Props> = props => {
         onChangeText={text => setValue(text)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        keyboardType={props.type === 'number' ? 'number-pad' : 'default'}
         {...otherProps}
       />
       {props.icon && <View style={styles.iconContainer}>{props.icon}</View>}

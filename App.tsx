@@ -3,12 +3,12 @@ import { StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { AddYourPhotosScreen, AgePreferenceScreen, DateOfBirthScreen, GenderPreferenceScreen, GenderScreen, InterestScreen, NameScreen, OnboardingScreen, OtpScreen, PhoneNumberScreen, ProfilePhotoScreen, VisibilityDistanceScreen } from './screens';
+import { AddYourPhotosScreen, AgePreferenceScreen, DateOfBirthScreen, GenderPreferenceScreen, GenderScreen, HomeScreen, InterestScreen, NameScreen, OnboardingScreen, OtpScreen, PhoneNumberScreen, ProfilePhotoScreen, VisibilityDistanceScreen } from './screens';
 
 export type RootStackParamList = {
   OnboardingScreen: undefined;
-  PhoneNumberScreen: undefined;
-  OtpScreen: undefined;
+  PhoneNumberScreen: { isSignup: boolean };
+  OtpScreen: { isSignup: boolean };
   NameScreen: undefined;
   DateOfBirthScreen: undefined;
   GenderScreen: undefined;
@@ -18,6 +18,7 @@ export type RootStackParamList = {
   VisibilityDistanceScreen: undefined;
   AgePreferenceScreen: undefined;
   InterestScreen: undefined;
+  HomeScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -26,7 +27,9 @@ function App(): JSX.Element {
   return (
     <SafeAreaProvider style={styles.mainView}>
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator screenOptions={{
+          animation: 'none'
+        }}>
           <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} options={{ headerShown: false }} />
           <Stack.Screen name="PhoneNumberScreen" component={PhoneNumberScreen} options={{ headerShown: false }} />
           <Stack.Screen name="OtpScreen" component={OtpScreen} options={{ headerShown: false }} />
@@ -39,6 +42,8 @@ function App(): JSX.Element {
           <Stack.Screen name="VisibilityDistanceScreen" component={VisibilityDistanceScreen} options={{ headerShown: false }} />
           <Stack.Screen name="AgePreferenceScreen" component={AgePreferenceScreen} options={{ headerShown: false }} />
           <Stack.Screen name="InterestScreen" component={InterestScreen} options={{ headerShown: false }} />
+          {/* Home screens */}
+          <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

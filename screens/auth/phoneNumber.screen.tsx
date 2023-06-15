@@ -4,10 +4,10 @@ import { responsiveScreenWidth, responsiveScreenHeight, responsiveFontSize } fro
 import { Layout } from '../../layout/layout';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { PhoneIcon, RightArrow } from '../../assets';
-import { THEME, getBrandColor, getTextPrimaryColor, getTextSecondaryColor } from '../../utils/theme';
+import { COLORS, THEME, getBrandColor, getTextPrimaryColor, getTextSecondaryColor } from '../../utils/theme';
 import { Button, CheckBox, Input } from '../../components';
 import { Stepper } from '../../components/stepper.component';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 
@@ -17,27 +17,64 @@ type PhoneNumbeerScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 export const PhoneNumberScreen = () => {
+    const route = useRoute();
+    const { isSignup } = route.params as any;
     const navigation = useNavigation<PhoneNumbeerScreenNavigationProp>();
     const [phoneNumber, setPhoneNumber] = React.useState('');
     const [isChecked, setIsChecked] = React.useState(false);
+    const [isPhoneNumberValid, setIsPhoneNumberValid] = React.useState(true);
+
     const checkboxPress = () => {
         setIsChecked(prev => !prev);
     }
+
+    const handleNavigateToNextScreen = () => {
+        if (phoneNumber.length === 10) {
+            if (isSignup === false) {
+                navigation.navigate('OtpScreen', { isSignup: false });
+            } else {
+                navigation.navigate('OtpScreen', { isSignup: true });
+            }
+        } else {
+            setIsPhoneNumberValid(false);
+            return;
+        }
+    }
+
+    React.useEffect(() => {
+        if (!isPhoneNumberValid) {
+            if (phoneNumber.length === 10) {
+                setIsPhoneNumberValid(true);
+            }
+        }
+    }, [isPhoneNumberValid, phoneNumber])
+
     return (
         <Layout>
             <KeyboardAwareScrollView contentContainerStyle={styles.mainScrollView}>
-                <Stepper stepCount={11} activeSteps={1} />
+                { isSignup ?? <Stepper stepCount={11} activeSteps={1} />}
                 <View style={styles.mainWrapper}>
                     <View style={styles.headerWrapper}>
                         <PhoneIcon />
-                        <Text style={styles.headerText}>WHAT'S YOUR PHONE NUMBER?</Text>
+                        {isSignup ?
+                            <Text style={styles.headerText}>WHAT'S YOUR PHONE NUMBER?</Text>
+                            :
+                            <Text style={styles.headerText}>WHAT'S YOUR PHONE NUMBER? LOGIN</Text>
+                        }
                     </View>
                     <View style={styles.inputWrapper}>
                         <Input
                             value={phoneNumber}
                             setValue={setPhoneNumber}
                             placeholder='PHONE NUMBER'
+                            isError={!isPhoneNumberValid}
+                            type="number"
                         />
+                        {
+                            !isPhoneNumberValid && (
+                                <Text style={styles.errorText}>Please enter a valid phone number</Text>
+                            )
+                        }
                         <Text style={styles.inputDescription}>We will send you a 4-digit code to verify your phone.</Text>
                     </View>
                     <View style={styles.footerTextWrapper}>
@@ -56,15 +93,15 @@ export const PhoneNumberScreen = () => {
                         </TouchableOpacity>
                     </View>
                 </View>
-                    <View style={styles.buttonWrapper}>
-                        <Button
-                            onPress={() => navigation.navigate('OtpScreen')}
-                            imageSource={require('../../assets/gradients/splash.png')}
-                            variant="primary"
-                            height={responsiveScreenHeight(8)}
-                        >
-                            <RightArrow />
-                        </Button>
+                <View style={styles.buttonWrapper}>
+                    <Button
+                        onPress={handleNavigateToNextScreen}
+                        imageSource={require('../../assets/gradients/splash.png')}
+                        variant={phoneNumber.length !== 10 ? 'disabled' : "primary"}
+                        height={responsiveScreenHeight(8)}
+                    >
+                        <RightArrow />
+                    </Button>
                 </View>
             </KeyboardAwareScrollView>
         </Layout>
@@ -134,4 +171,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    errorText: {
+        color: COLORS.ERROR,
+        fontSize: responsiveFontSize(1.5),
+        fontFamily: 'RedHatDisplay-Regular',
+        marginTop: responsiveScreenHeight(1),
+    }
 })

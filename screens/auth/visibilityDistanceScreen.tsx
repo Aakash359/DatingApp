@@ -18,7 +18,7 @@ type otpScreenNavigationProp = NativeStackNavigationProp<
 
 export const VisibilityDistanceScreen = () => {
     const navigation = useNavigation<otpScreenNavigationProp>();
-    const [sliderValue, setSliderValue] = React.useState(0);
+    const [sliderValue, setSliderValue] = React.useState(100);
     const handleNavigateToProfilePhotoScreen = () => {
         navigation.navigate('AgePreferenceScreen')
     };

@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, ImageBackground, View } from 'react-native';
 
 interface Props {
-    children: React.ReactNode;
+    children?: React.ReactNode;
 }
 
 export const Layout: React.FC<Props> = (props) => {

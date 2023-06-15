@@ -2,9 +2,9 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { responsiveScreenWidth, responsiveScreenHeight, responsiveFontSize } from 'react-native-responsive-dimensions';
 import { Layout } from '../../layout/layout';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { ProfileIcon, RightArrow } from '../../assets';
-import { THEME, getBrandColor, getTextPrimaryColor, getTextSecondaryColor } from '../../utils/theme';
+import { COLORS, THEME, getBrandColor, getTextPrimaryColor, getTextSecondaryColor } from '../../utils/theme';
 import { Button, Input } from '../../components';
 import { Stepper } from '../../components/stepper.component';
 import { useNavigation } from '@react-navigation/native';
@@ -20,10 +20,38 @@ export const NameScreen = () => {
     const navigation = useNavigation<NameScreenNavigationProp>();
     const [firstName, setFirstName] = React.useState('');
     const [lastName, setLastName] = React.useState('');
+    const [firstNameError, setFirstNameError] = React.useState('');
+    const [lastNameError, setLastNameError] = React.useState('');
+
+    const validateName = (name: string) => {
+        if(name.length === 0) return 'This field is required';
+        const regex = /^[A-Za-z]+$/;
+        return name.match(regex) ? '' : 'Name should only contain alphabets';
+    };
 
     const handleNavigateToDOBScreen = () => {
-        navigation.navigate('DateOfBirthScreen');
+        const firstNameError = validateName(firstName);
+        const lastNameError = validateName(lastName);
+
+        if (!firstNameError && !lastNameError) {
+            navigation.navigate('DateOfBirthScreen');
+        } else {
+            setFirstNameError(firstNameError);
+            setLastNameError(lastNameError);
+        }
     };
+
+    React.useEffect(() => {
+        if (firstName) {
+            setFirstNameError(validateName(firstName));
+        }
+    }, [firstName]);
+
+    React.useEffect(() => {
+        if (lastName) {
+            setLastNameError(validateName(lastName));
+        }
+    }, [lastName]);
 
     return (
         <Layout>
@@ -40,26 +68,37 @@ export const NameScreen = () => {
                                 value={firstName}
                                 setValue={setFirstName}
                                 placeholder='FIRST NAME'
+                                isError={!!firstNameError}
                             />
+                            {
+                                !!firstNameError && (
+                                    <Text style={styles.errorText}>{firstNameError}</Text>
+                                )
+                            }
                         </View>
                         <View style={styles.input}>
                             <Input
                                 value={lastName}
                                 setValue={setLastName}
                                 placeholder='LAST NAME'
+                                isError={!!lastNameError}
                             />
+                            {
+                                !!lastNameError && (
+                                    <Text style={styles.errorText}>{lastNameError}</Text>
+                                )
+                            }
                         </View>
                         <Text style={styles.inputDescription}>
                             This will be shown in your profile. and you wont be able to change it later
                         </Text>
                     </View>
                 </View>
-
                 <View style={styles.buttonWrapper}>
                     <Button
                         onPress={handleNavigateToDOBScreen}
                         imageSource={require('../../assets/gradients/splash.png')}
-                        variant="primary"
+                        variant={firstNameError || lastNameError ? 'disabled' : "primary"}
                         height={responsiveScreenHeight(8)}
                     >
                         <RightArrow />
@@ -67,8 +106,8 @@ export const NameScreen = () => {
                 </View>
             </KeyboardAwareScrollView>
         </Layout>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     mainScrollView: {
@@ -134,5 +173,11 @@ const styles = StyleSheet.create({
     },
     input: {
         marginTop: responsiveScreenHeight(4),
+    },
+    errorText: {
+        color: COLORS.ERROR,
+        fontSize: responsiveFontSize(1.5),
+        fontFamily: 'RedHatDisplay-Regular',
+        marginTop: responsiveScreenHeight(1),
     }
 })

@@ -5,7 +5,7 @@ interface ImageButtonProps {
     onPress: () => void;
     imageSource?: any; // The type of this prop might depend on how you're getting your images
     children: ReactNode;
-    variant: 'primary' | 'ghost' | 'secondary' | 'outline';
+    variant: 'primary' | 'ghost' | 'secondary' | 'outline' | 'disabled';
     height: number;
 }
 
@@ -22,11 +22,16 @@ export const Button = forwardRef<TouchableOpacity, ImageButtonProps>(({ onPress,
                 </ImageBackground>
             </TouchableOpacity>
         )
-        : (
-            <TouchableOpacity ref={ref} onPress={onPress} activeOpacity={0.7} style={variantStyle}>
-                {children}
-            </TouchableOpacity>
-        );
+        : variant === 'disabled' ? (
+                <ImageBackground source={imageSource} style={{ width: '100%', height: '100%', borderRadius: 5, overflow: 'hidden', minHeight: height }}>
+                    <View style={variantStyle}>
+                        {children}
+                    </View>
+                </ImageBackground>
+        ) : 
+        <TouchableOpacity ref={ref} onPress={onPress} activeOpacity={0.7} style={variantStyle}>
+            {children}
+        </TouchableOpacity>;
 });
 
 const styles = StyleSheet.create({
@@ -56,5 +61,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         height: '100%',
+    },
+    disabled: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        opacity: 0.5,
     },
 });

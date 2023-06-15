@@ -4,7 +4,7 @@ import { responsiveScreenWidth, responsiveScreenHeight, responsiveFontSize } fro
 import { Layout } from '../../layout/layout';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { GenderIcon, RightArrow } from '../../assets';
-import { THEME, getTextPrimaryColor, getTextSecondaryColor } from '../../utils/theme';
+import { COLORS, THEME, getTextPrimaryColor, getTextSecondaryColor } from '../../utils/theme';
 import { Button, CheckBox, Input, Pill, SingleSelectPill, TextButton } from '../../components';
 import { Stepper } from '../../components/stepper.component';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -20,25 +20,37 @@ type otpScreenNavigationProp = NativeStackNavigationProp<
 export const GenderScreen = () => {
     const [gender, setGender] = React.useState('');
     const [selectedGender, setSelectedGender] = React.useState('');
+    const [genderError, setGenderError] = React.useState(false);
     const [isChecked, setIsChecked] = React.useState(false);
+    const [genderData, setGenderData] = React.useState(genderPillData);
     const navigation = useNavigation<otpScreenNavigationProp>();
     const checkboxPress = () => {
         setIsChecked(prev => !prev);
     }
     const handleNavigateToProfilePhotoScreen = () => {
-        navigation.navigate('GenderPreferenceScreen');
+        if (selectedGender !== '' ) {
+            navigation.navigate('GenderPreferenceScreen');
+        } else {
+            setGenderError(true);
+        }
     };
 
     useFocusEffect(
         React.useCallback(() => {
-            if (selectedGender !== '') {
-                setGender(selectedGender);
+            if (gender) {
+                const filteredData = genderPillData.filter(item => item.text.toLowerCase().includes(gender.toLowerCase()));
+                setGenderData(filteredData);
+            } else {
+                setGenderData(genderPillData);
             }
-            if (selectedGender === '') {
-                setGender('');
-            }
-        }, [selectedGender])
+        }, [gender])
     );
+
+    React.useEffect(() => {
+        if (selectedGender) {
+            setGenderError(false);
+        }
+    }, [selectedGender]);
 
     return (
         <Layout>
@@ -50,7 +62,8 @@ export const GenderScreen = () => {
                         <Text style={styles.headerText}>WHAT’S YOUR GENDER</Text>
                     </View>
                     <View style={styles.inputWrapper}>
-                        <Input value={gender} setValue={setGender} placeholder='SEARCH' />
+                        <Input value={gender} setValue={setGender} placeholder='SEARCH' isError={genderError}/>
+                        {genderError ? <Text style={styles.errorText}>Select a Gender</Text> : null}
                         <ScrollView
                             horizontal
                             showsHorizontalScrollIndicator={false}
@@ -58,10 +71,10 @@ export const GenderScreen = () => {
                             alwaysBounceVertical={false}>
                             <FlatList
                                 contentContainerStyle={{ alignSelf: 'flex-start', marginTop:20 }}
-                                numColumns={Math.ceil(genderPillData.length / 2)}
+                                numColumns={4}
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
-                                data={genderPillData}
+                                data={genderData}
                                 keyExtractor={(item, index) => index.toString()}
                                 renderItem={({ item, index }) => (
                                     <View style={styles.inputDescriptionWrapper} key={index}>
@@ -81,7 +94,7 @@ export const GenderScreen = () => {
                         <Button
                             onPress={handleNavigateToProfilePhotoScreen}
                             imageSource={require('../../assets/gradients/splash.png')}
-                            variant="primary"
+                            variant={genderError ? 'disabled' : "primary"}
                             height={responsiveScreenHeight(8)}
                         >
                             <RightArrow />
@@ -171,4 +184,10 @@ const styles = StyleSheet.create({
         marginTop: responsiveScreenHeight(2),
         width: responsiveScreenWidth(95),
     },
+    errorText: {
+        color: COLORS.ERROR,
+        fontSize: responsiveFontSize(1.5),
+        fontFamily: 'RedHatDisplay-Regular',
+        marginTop: responsiveScreenHeight(1),
+    }
 })

@@ -10,7 +10,7 @@ import { Stepper } from '../../components/stepper.component';
 import { OtpInput } from '../../components/otpInput.component';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 type otpScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -18,21 +18,28 @@ type otpScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 export const OtpScreen = () => {
+    const route = useRoute();
+    const { isSignup } = route.params as any;
     const [otp, setOtp] = React.useState('');
     const navigation = useNavigation<otpScreenNavigationProp>();
 
     const handleNavigateToNameScreen = () => {
+        if (otp.length !== 6) return;
         navigation.navigate('NameScreen');
     };
 
     return (
         <Layout>
             <KeyboardAwareScrollView contentContainerStyle={styles.mainScrollView}>
-                <Stepper stepCount={11} activeSteps={2} />
+                {isSignup ?? <Stepper stepCount={11} activeSteps={2} />}
                 <View style={styles.mainWrapper}>
                     <View style={styles.headerWrapper}>
                         <LockIcon />
-                        <Text style={styles.headerText}>ENTER THE 4-DIGIT VERIFICATION CODE</Text>
+                        {isSignup ?
+                            <Text style={styles.headerText}>ENTER THE 4-DIGIT VERIFICATION CODE</Text>
+                            :
+                            <Text style={styles.headerText}>ENTER THE 4-DIGIT VERIFICATION CODE LOGIN</Text>
+                        }
                     </View>
                     <View style={styles.inputWrapper}>
                         <OtpInput setValue={setOtp} />
@@ -54,7 +61,7 @@ export const OtpScreen = () => {
                         <Button
                             onPress={handleNavigateToNameScreen}
                             imageSource={require('../../assets/gradients/splash.png')}
-                            variant="primary"
+                            variant={otp.length !== 6 ? 'disabled' : "primary"}
                             height={responsiveScreenHeight(8)}
                         >
                             <RightArrow />

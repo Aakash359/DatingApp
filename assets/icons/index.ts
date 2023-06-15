@@ -14,3 +14,4 @@ export * from './circlePlus.icon';
 export * from './addImageVerticalBox.icon';
 export * from './distanceRadar.icon';
 export * from './interest.icon';
+export * from './doubleCard.icon';

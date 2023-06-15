@@ -4,7 +4,7 @@ import { responsiveScreenWidth, responsiveScreenHeight, responsiveFontSize } fro
 import { Layout } from '../../layout/layout';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { GenderIcon, RightArrow } from '../../assets';
-import { THEME, getTextPrimaryColor, getTextSecondaryColor } from '../../utils/theme';
+import { COLORS, THEME, getTextPrimaryColor, getTextSecondaryColor } from '../../utils/theme';
 import { Button, CheckBox, Input, Pill } from '../../components';
 import { Stepper } from '../../components/stepper.component';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -20,14 +20,37 @@ type otpScreenNavigationProp = NativeStackNavigationProp<
 export const GenderPreferenceScreen = () => {
     const [gender, setGender] = React.useState('');
     const [selectedGender, setSelectedGender] = React.useState(['']);
+    const [genderError, setGenderError] = React.useState(false);
     const [isChecked, setIsChecked] = React.useState(false);
+    const [genderData, setGenderData] = React.useState(genderPillDataAlt);
     const navigation = useNavigation<otpScreenNavigationProp>();
     const checkboxPress = () => {
         setIsChecked(prev => !prev);
     }
     const handleNavigateToProfilePhotoScreen = () => {
-        navigation.navigate('ProfilePhotoScreen');
+        if (selectedGender[1]) {
+            navigation.navigate('ProfilePhotoScreen');
+        } else {
+            setGenderError(true);
+        }
     };
+
+    useFocusEffect(
+        React.useCallback(() => {
+            if (gender) {
+                const filteredData = genderPillDataAlt.filter(item => item.text.toLowerCase().includes(gender.toLowerCase()));
+                setGenderData(filteredData);
+            } else {
+                setGenderData(genderPillDataAlt);
+            }
+        }, [gender])
+    );
+
+    React.useEffect(() => {
+        if (selectedGender) {
+            setGenderError(false);
+        }
+    }, [selectedGender]);
 
     return (
         <Layout>
@@ -39,9 +62,10 @@ export const GenderPreferenceScreen = () => {
                         <Text style={styles.headerText}>WHICH GENDERS ARE YOU INTERESTED IN</Text>
                     </View>
                     <View style={styles.inputWrapper}>
-                        <Input value={gender} setValue={setGender} placeholder='SEARCH' />
+                        <Input value={gender} setValue={setGender} placeholder='SEARCH' isError={genderError}/>
+                        {genderError ? <Text style={styles.errorText}>Select a Gender</Text> : null}
                         <View style={styles.pillContainer}>
-                            {genderPillDataAlt.map((item, index) => (
+                            {genderData.map((item, index) => (
                                 <View style={styles.inputDescriptionWrapper} key={index}>
                                     <Pill selectedGender={selectedGender} setSelectedGender={setSelectedGender} text={item.text} />
                                 </View>
@@ -58,7 +82,7 @@ export const GenderPreferenceScreen = () => {
                         <Button
                             onPress={handleNavigateToProfilePhotoScreen}
                             imageSource={require('../../assets/gradients/splash.png')}
-                            variant="primary"
+                            variant={genderError ? 'disabled' : "primary"}
                             height={responsiveScreenHeight(8)}
                         >
                             <RightArrow />
@@ -146,4 +170,10 @@ const styles = StyleSheet.create({
         marginTop: responsiveScreenHeight(2),
         width: responsiveScreenWidth(95),
     },
+    errorText: {
+        color: COLORS.ERROR,
+        fontSize: responsiveFontSize(1.5),
+        fontFamily: 'RedHatDisplay-Regular',
+        marginTop: responsiveScreenHeight(1),
+    }
 })
