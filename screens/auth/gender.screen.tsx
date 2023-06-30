@@ -5,12 +5,14 @@ import { Layout } from '../../layout/layout';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { GenderIcon, RightArrow } from '../../assets';
 import { COLORS, THEME, getTextPrimaryColor, getTextSecondaryColor } from '../../utils/theme';
-import { Button, CheckBox, Input, Pill, SingleSelectPill, TextButton } from '../../components';
+import { Button, CheckBox, Input, SingleSelectPill } from '../../components';
 import { Stepper } from '../../components/stepper.component';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { genderPillData } from '../../constants';
+import { RootState, setGender } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../utils';
 
 type otpScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -18,7 +20,9 @@ type otpScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 export const GenderScreen = () => {
-    const [gender, setGender] = React.useState('');
+    const dispatch = useAppDispatch();
+    const authDetails = useAppSelector((state: RootState) => state.authDetails);
+    const [gender, setLocalGender] = React.useState('');
     const [selectedGender, setSelectedGender] = React.useState('');
     const [genderError, setGenderError] = React.useState(false);
     const [isChecked, setIsChecked] = React.useState(false);
@@ -28,7 +32,9 @@ export const GenderScreen = () => {
         setIsChecked(prev => !prev);
     }
     const handleNavigateToProfilePhotoScreen = () => {
-        if (selectedGender !== '' ) {
+        if (selectedGender !== '') {
+            dispatch(setGender(selectedGender));
+            console.log('date', authDetails.signUpDetails.dateOfBirth);
             navigation.navigate('GenderPreferenceScreen');
         } else {
             setGenderError(true);
@@ -62,7 +68,7 @@ export const GenderScreen = () => {
                         <Text style={styles.headerText}>WHAT’S YOUR GENDER</Text>
                     </View>
                     <View style={styles.inputWrapper}>
-                        <Input value={gender} setValue={setGender} placeholder='SEARCH' isError={genderError}/>
+                        <Input value={gender} setValue={setLocalGender} placeholder='SEARCH' isError={genderError} />
                         {genderError ? <Text style={styles.errorText}>Select a Gender</Text> : null}
                         <ScrollView
                             horizontal
@@ -70,7 +76,7 @@ export const GenderScreen = () => {
                             directionalLockEnabled={true}
                             alwaysBounceVertical={false}>
                             <FlatList
-                                contentContainerStyle={{ alignSelf: 'flex-start', marginTop:20 }}
+                                contentContainerStyle={{ alignSelf: 'flex-start', marginTop: 20 }}
                                 numColumns={4}
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
@@ -170,7 +176,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         gap: responsiveScreenWidth(1.5),
-        marginBottom: responsiveScreenHeight(1.5), 
+        marginBottom: responsiveScreenHeight(1.5),
         marginRight: responsiveScreenHeight(1.5)
         // marginTop: responsiveScreenHeight(1.5),
     },

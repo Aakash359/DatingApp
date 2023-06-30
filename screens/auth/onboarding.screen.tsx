@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, ImageBackground, View, Image, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableOpacity } from 'react-native';
 import { responsiveScreenWidth, responsiveScreenHeight, responsiveFontSize } from 'react-native-responsive-dimensions';
-import { COLORS, THEME, getIconBackgroundColor, getSeperatorColor, getTextButtonColor, getTextPrimaryColor, getTextSecondaryColor } from '../../utils/theme';
+import { THEME, getIconBackgroundColor, getSeperatorColor, getTextButtonColor, getTextPrimaryColor, getTextSecondaryColor } from '../../utils/theme';
 import { Button } from '../../components';
 import { AppleIcon, FacebookIcon, GoogleIcon } from '../../assets';
 import { useNavigation } from '@react-navigation/native';
@@ -49,7 +49,7 @@ export const OnboardingScreen = () => {
           <View style={styles.seperator} />
         </View>
         <View style={styles.iconContainer}>
-          <TouchableOpacity style={styles.icon}>
+          <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('PhoneNumberScreen', {isSignup: false})}>
             <FacebookIcon />
           </TouchableOpacity>
           <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('HomeScreen')}>

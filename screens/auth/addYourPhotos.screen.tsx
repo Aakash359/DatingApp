@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Platform } from 'react-native';
 import { responsiveScreenWidth, responsiveScreenHeight, responsiveFontSize } from 'react-native-responsive-dimensions';
 import { Layout } from '../../layout/layout';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { AddImageVerticalBox, CirclePlusIcon, ImageIcon, RightArrow } from '../../assets';
+import { AddImageVerticalBox, ImageIcon, RightArrow } from '../../assets';
 import { THEME, getTextPrimaryColor } from '../../utils/theme';
 import { Button } from '../../components';
 import { Stepper } from '../../components/stepper.component';

@@ -11,6 +11,8 @@ import { OtpInput } from '../../components/otpInput.component';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { RootState, setLoginOtp, setOtp } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../utils';
 
 type otpScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -18,13 +20,18 @@ type otpScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 export const OtpScreen = () => {
+    const dispatch = useAppDispatch();
     const route = useRoute();
     const { isSignup } = route.params as any;
-    const [otp, setOtp] = React.useState('');
+    const authDetails = useAppSelector((state: RootState) => state.authDetails);
+    const [otp, setLocalOtp] = React.useState('');
     const navigation = useNavigation<otpScreenNavigationProp>();
 
     const handleNavigateToNameScreen = () => {
         if (otp.length !== 6) return;
+        if (!isSignup) dispatch(setLoginOtp(otp));
+        dispatch(setOtp(otp))
+        console.log('phone Number', authDetails.signUpDetails.phoneNumber);
         navigation.navigate('NameScreen');
     };
 
@@ -42,7 +49,7 @@ export const OtpScreen = () => {
                         }
                     </View>
                     <View style={styles.inputWrapper}>
-                        <OtpInput setValue={setOtp} />
+                        <OtpInput setValue={setLocalOtp} />
                         <View style={styles.inputDescriptionWrapper}>
                             <Text style={styles.inputDescription}>Code sent to +91 7229098241</Text>
                             <TextButton text='Edit' />

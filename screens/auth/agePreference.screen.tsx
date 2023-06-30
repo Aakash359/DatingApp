@@ -1,15 +1,17 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { responsiveScreenWidth, responsiveScreenHeight, responsiveFontSize } from 'react-native-responsive-dimensions';
 import { Layout } from '../../layout/layout';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { DistanceRadarIcon, RightArrow } from '../../assets';
 import { THEME, getTextPrimaryColor, getTextSecondaryColor } from '../../utils/theme';
-import { Button, CustomRangeSlider, CustomSlider } from '../../components';
+import { Button, CustomRangeSlider } from '../../components';
 import { Stepper } from '../../components/stepper.component';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import { useNavigation } from '@react-navigation/native';
+import { RootState, setPreferredAge } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../utils';
 
 
 type otpScreenNavigationProp = NativeStackNavigationProp<
@@ -18,9 +20,15 @@ type otpScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 export const AgePreferenceScreen = () => {
+    const dispatch = useAppDispatch();
+    const authDetails = useAppSelector((state: RootState) => state.authDetails);
     const navigation = useNavigation<otpScreenNavigationProp>();
     const [sliderValues, setSliderValues] = React.useState([18, 32]);
+
     const handleNavigateToProfilePhotoScreen = () => {
+        dispatch(setPreferredAge({min: sliderValues[0], max: sliderValues[1]}));
+        console.log('distance', authDetails.signUpDetails.visibleDistance);
+
         navigation.navigate('InterestScreen')
     };
 
@@ -36,10 +44,10 @@ export const AgePreferenceScreen = () => {
                     <View style={styles.bodyContainer}>
                         <CustomRangeSlider sliderValues={sliderValues} setSliderValues={setSliderValues} />
                     </View>
-                        <View style={styles.sliderTextContainer}>
-                            <Text style={styles.sliderText}>MIN: {Math.round(sliderValues[0])}</Text>
-                            <Text style={styles.sliderText}>MAX: {Math.round(sliderValues[1])}</Text>
-                        </View>
+                    <View style={styles.sliderTextContainer}>
+                        <Text style={styles.sliderText}>MIN: {Math.round(sliderValues[0])}</Text>
+                        <Text style={styles.sliderText}>MAX: {Math.round(sliderValues[1])}</Text>
+                    </View>
                 </View>
                 <View style={styles.footerWrapper}>
                     <View style={styles.footerTextWrapper}>
@@ -138,7 +146,7 @@ const styles = StyleSheet.create({
         marginLeft: responsiveScreenWidth(3),
         width: '95%',
         height: responsiveScreenHeight(10),
-        
+
     },
     sliderTextContainer: {
         display: 'flex',

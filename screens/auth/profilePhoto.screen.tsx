@@ -12,7 +12,8 @@ import { RootStackParamList } from '../../App';
 import mime from 'mime';
 import { useNavigation } from '@react-navigation/native';
 import { launchImageLibrary } from 'react-native-image-picker';
-import { uploadImageAndroid } from '../../utils';
+import { uploadImageAndroid, useAppSelector } from '../../utils';
+import { RootState } from '../../redux';
 
 type otpScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -20,6 +21,8 @@ type otpScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 export const ProfilePhotoScreen = () => {
+    const authDetails = useAppSelector((state: RootState) => state.authDetails);
+    console.log('preferred Gender', authDetails.signUpDetails.preferredGender);
     const navigation = useNavigation<otpScreenNavigationProp>();
     const [isPhotoUploading, setIsPhotoUploading] = React.useState(false);
     const [photo, setPhoto] = React.useState('');
@@ -29,33 +32,33 @@ export const ProfilePhotoScreen = () => {
 
     const handleOpenAddPhoto = async () => {
         const result = await launchImageLibrary({
-          mediaType: 'photo',
-          selectionLimit: 1,
+            mediaType: 'photo',
+            selectionLimit: 1,
         });
         if (result?.assets?.[0]?.uri) {
-          try {
-            setIsPhotoUploading(true);
-            const asset = result.assets[0];
-            if (asset && asset.uri) {
-                const newImageUri =
-                Platform.OS === 'android'
-                ? asset.uri
-                : asset.uri.replace('file://', '');
-    
-                const file = {
-                    name: asset.uri.split('/').pop(),
-                    type: mime.getType(newImageUri),
-                    uri: newImageUri,
-                };
-                const resp = await uploadImageAndroid(file);
-                setPhoto(resp[0].location);
+            try {
+                setIsPhotoUploading(true);
+                const asset = result.assets[0];
+                if (asset && asset.uri) {
+                    const newImageUri =
+                        Platform.OS === 'android'
+                            ? asset.uri
+                            : asset.uri.replace('file://', '');
+
+                    const file = {
+                        name: asset.uri.split('/').pop(),
+                        type: mime.getType(newImageUri),
+                        uri: newImageUri,
+                    };
+                    const resp = await uploadImageAndroid(file);
+                    setPhoto(resp[0].location);
+                }
+                setIsPhotoUploading(false);
+            } catch (e) {
+                setIsPhotoUploading(false);
             }
-            setIsPhotoUploading(false);
-          } catch (e) {
-            setIsPhotoUploading(false);
-          }
         }
-      };
+    };
 
     return (
         <Layout>

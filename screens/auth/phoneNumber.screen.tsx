@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, ImageBackground, View, Image, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { responsiveScreenWidth, responsiveScreenHeight, responsiveFontSize } from 'react-native-responsive-dimensions';
 import { Layout } from '../../layout/layout';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -10,6 +10,8 @@ import { Stepper } from '../../components/stepper.component';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
+import { useAppDispatch } from '../../utils';
+import { setLoginPhoneNumber, setPhoneNumber } from '../../redux';
 
 type PhoneNumbeerScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -17,10 +19,11 @@ type PhoneNumbeerScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 export const PhoneNumberScreen = () => {
+    const dispatch = useAppDispatch();
     const route = useRoute();
     const { isSignup } = route.params as any;
     const navigation = useNavigation<PhoneNumbeerScreenNavigationProp>();
-    const [phoneNumber, setPhoneNumber] = React.useState('');
+    const [phoneNumber, setPhoneNumbers] = React.useState('');
     const [isChecked, setIsChecked] = React.useState(false);
     const [isPhoneNumberValid, setIsPhoneNumberValid] = React.useState(true);
 
@@ -31,8 +34,10 @@ export const PhoneNumberScreen = () => {
     const handleNavigateToNextScreen = () => {
         if (phoneNumber.length === 10) {
             if (isSignup === false) {
+                dispatch(setLoginPhoneNumber(phoneNumber))
                 navigation.navigate('OtpScreen', { isSignup: false });
             } else {
+                dispatch(setPhoneNumber(phoneNumber))
                 navigation.navigate('OtpScreen', { isSignup: true });
             }
         } else {
@@ -52,7 +57,7 @@ export const PhoneNumberScreen = () => {
     return (
         <Layout>
             <KeyboardAwareScrollView contentContainerStyle={styles.mainScrollView}>
-                { isSignup ?? <Stepper stepCount={11} activeSteps={1} />}
+                { isSignup ? <Stepper stepCount={11} activeSteps={1} /> : null}
                 <View style={styles.mainWrapper}>
                     <View style={styles.headerWrapper}>
                         <PhoneIcon />
@@ -65,7 +70,7 @@ export const PhoneNumberScreen = () => {
                     <View style={styles.inputWrapper}>
                         <Input
                             value={phoneNumber}
-                            setValue={setPhoneNumber}
+                            setValue={setPhoneNumbers}
                             placeholder='PHONE NUMBER'
                             isError={!isPhoneNumberValid}
                             type="number"
@@ -97,7 +102,7 @@ export const PhoneNumberScreen = () => {
                     <Button
                         onPress={handleNavigateToNextScreen}
                         imageSource={require('../../assets/gradients/splash.png')}
-                        variant={phoneNumber.length !== 10 ? 'disabled' : "primary"}
+                        variant={!isPhoneNumberValid ? 'disabled' : "primary"}
                         height={responsiveScreenHeight(8)}
                     >
                         <RightArrow />

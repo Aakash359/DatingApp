@@ -10,6 +10,8 @@ import { Stepper } from '../../components/stepper.component';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
+import { RootState, setFirstName, setLastName } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../utils';
 
 type NameScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -17,9 +19,11 @@ type NameScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 export const NameScreen = () => {
+    const dispatch = useAppDispatch();
     const navigation = useNavigation<NameScreenNavigationProp>();
-    const [firstName, setFirstName] = React.useState('');
-    const [lastName, setLastName] = React.useState('');
+    const authDetails = useAppSelector((state: RootState) => state.authDetails);
+    const [firstName, setLocalFirstName] = React.useState('');
+    const [lastName, setLocalLastName] = React.useState('');
     const [firstNameError, setFirstNameError] = React.useState('');
     const [lastNameError, setLastNameError] = React.useState('');
 
@@ -34,6 +38,9 @@ export const NameScreen = () => {
         const lastNameError = validateName(lastName);
 
         if (!firstNameError && !lastNameError) {
+            dispatch(setFirstName(firstName))
+            dispatch(setLastName(lastName))
+            console.log('OTP', authDetails.signUpDetails.otp);
             navigation.navigate('DateOfBirthScreen');
         } else {
             setFirstNameError(firstNameError);
@@ -66,7 +73,7 @@ export const NameScreen = () => {
                         <View style={styles.input}>
                             <Input
                                 value={firstName}
-                                setValue={setFirstName}
+                                setValue={setLocalFirstName}
                                 placeholder='FIRST NAME'
                                 isError={!!firstNameError}
                             />
@@ -79,7 +86,7 @@ export const NameScreen = () => {
                         <View style={styles.input}>
                             <Input
                                 value={lastName}
-                                setValue={setLastName}
+                                setValue={setLocalLastName}
                                 placeholder='LAST NAME'
                                 isError={!!lastNameError}
                             />

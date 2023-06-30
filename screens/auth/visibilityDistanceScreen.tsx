@@ -10,6 +10,8 @@ import { Stepper } from '../../components/stepper.component';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import { useNavigation } from '@react-navigation/native';
+import { setVisibleDistance } from '../../redux';
+import { useAppDispatch } from '../../utils';
 
 type otpScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -17,11 +19,14 @@ type otpScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 export const VisibilityDistanceScreen = () => {
+    const dispatch = useAppDispatch();
     const navigation = useNavigation<otpScreenNavigationProp>();
     const [sliderValue, setSliderValue] = React.useState(100);
     const handleNavigateToProfilePhotoScreen = () => {
+        dispatch(setVisibleDistance(sliderValue));
         navigation.navigate('AgePreferenceScreen')
     };
+
 
     return (
         <Layout>

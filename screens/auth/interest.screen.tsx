@@ -3,15 +3,17 @@ import { StyleSheet, View, Text } from 'react-native';
 import { responsiveScreenWidth, responsiveScreenHeight, responsiveFontSize } from 'react-native-responsive-dimensions';
 import { Layout } from '../../layout/layout';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { GenderIcon, InterestIcon, RightArrow } from '../../assets';
+import { InterestIcon, RightArrow } from '../../assets';
 import { THEME, getTextPrimaryColor, getTextSecondaryColor } from '../../utils/theme';
-import { Button, CheckBox, Input, Pill, VerificationModal } from '../../components';
+import { Button, Pill, VerificationModal } from '../../components';
 import { Stepper } from '../../components/stepper.component';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { genderPillDataAlt, interestPillData } from '../../constants';
+import { useNavigation } from '@react-navigation/native';
+import { interestPillData } from '../../constants';
 import Modal from 'react-native-modal/dist/modal';
+import { RootState, setInterests } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../utils';
 
 type otpScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -26,13 +28,17 @@ enum ModalPage {
 }
 
 export const InterestScreen = () => {
+    const dispatch = useAppDispatch();
+    const authDetails = useAppSelector((state: RootState) => state.authDetails);
     const [isVerificationModalVisible, setIsVerificationModalVisible] = React.useState(false);
-    const [selectedGender, setSelectedGender] = React.useState(['']);
+    const [selectedInterest, setSelectedInterest] = React.useState(['']);
     const [modalPage, setModalPage] = React.useState<ModalPage>();
     const navigation = useNavigation<otpScreenNavigationProp>();
 
     const handleNavigateToProfilePhotoScreen = () => {
+        dispatch(setInterests(selectedInterest));
         setIsVerificationModalVisible(true)
+        console.log('everything', authDetails.signUpDetails);
     };
 
     const displayModalContent = () => {
@@ -126,7 +132,7 @@ export const InterestScreen = () => {
                         <View style={styles.pillContainer}>
                             {interestPillData.map((item, index) => (
                                 <View style={styles.inputDescriptionWrapper} key={index}>
-                                    <Pill icon={item.icon} selectedGender={selectedGender} setSelectedGender={setSelectedGender} text={item.text} />
+                                    <Pill icon={item.icon} selectedGender={selectedInterest} setSelectedGender={setSelectedInterest} text={item.text} />
                                 </View>
                             ))}
                         </View>
@@ -134,7 +140,7 @@ export const InterestScreen = () => {
                         <View style={styles.pillContainer}>
                             {interestPillData.map((item, index) => (
                                 <View style={styles.inputDescriptionWrapper} key={index}>
-                                    <Pill icon={item.icon} selectedGender={selectedGender} setSelectedGender={setSelectedGender} text={item.text} />
+                                    <Pill icon={item.icon} selectedGender={selectedInterest} setSelectedGender={setSelectedInterest} text={item.text} />
                                 </View>
                             ))}
                         </View>
@@ -142,7 +148,7 @@ export const InterestScreen = () => {
                         <View style={styles.pillContainer}>
                             {interestPillData.map((item, index) => (
                                 <View style={styles.inputDescriptionWrapper} key={index}>
-                                    <Pill icon={item.icon} selectedGender={selectedGender} setSelectedGender={setSelectedGender} text={item.text} />
+                                    <Pill icon={item.icon} selectedGender={selectedInterest} setSelectedGender={setSelectedInterest} text={item.text} />
                                 </View>
                             ))}
                         </View>

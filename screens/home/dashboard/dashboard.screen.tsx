@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { StyleSheet, Image, Dimensions, PanResponder, Animated, View, Text } from 'react-native';
-import { Layout } from '../../layout/layout';
+import { Layout } from '../../../layout/layout';
+import { MainHeader } from '../../../layout';
+import { CardDislikeIcon, CardLikeIcon } from '../../../assets';
+import { responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions';
 
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
@@ -56,14 +59,14 @@ const nextCardScale = position.x.interpolate({
   extrapolate: 'clamp'
 })
 export const DashboardScreen = () => {
-   
-  const [currentIndex, setCurrentIndex] = useState(0);
 
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollY = useRef(new Animated.Value(0)).current;
 
   const createdPanResponder = PanResponder.create({
     onStartShouldSetPanResponder: (evt, gestureState) => true,
     onPanResponderMove: (evt, gestureState) => {
-    //   position.setValue({ x: gestureState.dx, y: gestureState.dy })
+      //   position.setValue({ x: gestureState.dx, y: gestureState.dy })
       position.setValue({ x: gestureState.dx, y: 0 })
     },
     onPanResponderRelease: (evt, gestureState) => {
@@ -96,127 +99,144 @@ export const DashboardScreen = () => {
 
   return (
     <Layout>
-        <View style={styles.container}>
-      {users.map((user, index) => {
-        if (index < currentIndex) {
-          return null;
-        } else if (index === currentIndex) {
-          return (
-            <Animated.View
-              style={[
-                {
-                  ...styles.imgContainer,
-                  transform: [{
-                    rotate
-                  },
-                  ...position.getTranslateTransform()
-                  ]
-                }
-              ]}
-              key={user.id}
-              {...createdPanResponder.panHandlers}
-            >
+      <MainHeader />
+      <View style={styles.container}>
+        {users.map((user, index) => {
+          if (index < currentIndex) {
+            return null;
+          } else if (index === currentIndex) {
+            return (
               <Animated.View
-                style={{
-                  opacity: likeOpacity,
-                  transform: [{ rotate: "-30deg" }],
-                  position: "absolute",
-                  top: 50,
-                  left: 40,
-                  zIndex: 1000
-                }}
+                style={[
+                  {
+                    ...styles.imgContainer,
+                    transform: [{
+                      rotate
+                    },
+                    ...position.getTranslateTransform()
+                    ]
+                  }
+                ]}
+                key={user.id}
+                {...createdPanResponder.panHandlers}
               >
-                <Text
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "green",
-                    color: "green",
-                    fontSize: 32,
-                    fontWeight: "800",
-                    padding: 10
-                  }}
+                <Animated.ScrollView
+                  scrollEventThrottle={16}
+                  style={{ flex: 1 }}
+                  contentContainerStyle={{ padding: 10 }}
+                  scrollEnabled={true}
                 >
-                  LIKE
-                </Text>
+                  <Animated.View
+                    style={{
+                      opacity: likeOpacity,
+                      transform: [{ scale: 1.2 }],
+                      position: "absolute",
+                      top: responsiveScreenHeight(30),
+                      left: responsiveScreenWidth(5),
+                      zIndex: 1000
+                    }}
+                  >
+                    {/* <Text
+                      style={{
+                        borderWidth: 1,
+                        borderColor: "green",
+                        color: "green",
+                        fontSize: 32,
+                        fontWeight: "800",
+                        padding: 10
+                      }}
+                    >
+                      LIKE
+                    </Text> */}
+                    <CardLikeIcon />
+                  </Animated.View>
+                  <Animated.View
+                    style={{
+                      opacity: nopeOpacity,
+                      transform: [{ scale: 1.2 }],
+                      position: "absolute",
+                      top: responsiveScreenHeight(30),
+                      right: responsiveScreenWidth(3),
+                      zIndex: 1000
+                    }}
+                  >
+                    {/* <Text
+                      style={{
+                        borderWidth: 1,
+                        borderColor: "red",
+                        color: "red",
+                        fontSize: 32,
+                        fontWeight: "800",
+                        padding: 10
+                      }}
+                    >
+                      NOPE
+                    </Text> */}
+                    <CardDislikeIcon />
+                  </Animated.View>
+                  <Image source={{ uri: user.photo }} style={styles.img} resizeMode='contain' />
+                  <Text style={styles.userName}>{user.firstName}</Text>
+                  <Text>asddasdasasd</Text>
+                  <Text>asddasdasasd</Text>
+                  <Text>asddasdasasd</Text>
+                  <Text>asddasdasasd</Text>
+                  <Text>asddasdasasd</Text>
+                  <Text>asddasdasasd</Text>
+                  <Text>asddasdasasd</Text>
+                  <Text>asddasdasasd</Text>
+                  <Text>asddasdasasd</Text>
+                  <Text>asddasdasasd</Text>
+                  <Text>asddasdasasd</Text>
+                  <Text>asddasdasasd</Text>
+                </Animated.ScrollView>
               </Animated.View>
+            )
+          } else {
+            return (
               <Animated.View
-                style={{
-                  opacity: nopeOpacity,
-                  transform: [{ rotate: "30deg" }],
-                  position: "absolute",
-                  top: 50,
-                  right: 40,
-                  zIndex: 1000
-                }}
+                style={[
+                  {
+                    ...styles.imgContainer,
+                    opacity: nextCardOpacity,
+                    transform: [{ scale: nextCardScale }]
+                  }
+                ]}
+                key={user.id}
               >
-                <Text
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "red",
-                    color: "red",
-                    fontSize: 32,
-                    fontWeight: "800",
-                    padding: 10
-                  }}
-                >
-                  NOPE
-                </Text>
+                <Image source={{ uri: user.photo }} style={styles.img} />
+                <Text style={styles.userName}>{user.firstName}</Text>
               </Animated.View>
-              <Image source={{ uri: user.photo }} style={styles.img} />
-              <Text style={styles.userName}>{user.firstName}</Text>
-              {/* <View style={{backgroundColor:'red',width:200, height:200}}></View> */}
-              
-            </Animated.View>
-          )
-        } else {
-          return (
-            <Animated.View
-              style={[
-                {
-                  ...styles.imgContainer,
-                  opacity: nextCardOpacity,
-                  transform: [{ scale: nextCardScale }]
-                }
-              ]}
-              key={user.id}
-            >
-              <Image source={{ uri: user.photo }} style={styles.img} />
-              <Text style={styles.userName}>{user.firstName}</Text>
-              {/* <View style={{backgroundColor:'red',width:200, height:200}}></View> */}
-            </Animated.View>
-          )
-        }
-      }).reverse()}
-    </View>
+            )
+          }
+        }).reverse()}
+      </View>
     </Layout>
   );
 };
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    imgContainer: {
-      position: 'absolute',
-      marginTop: 20,
-      height: SCREEN_HEIGHT - 120,
-      width: SCREEN_WIDTH,
-      padding: 10
-    },
-    img: {
-      flex: 1,
-      height: undefined,
-      width: undefined,
-      resizeMode: "cover",
-      borderRadius: 20
-    },
-    userName: {
-      position: 'absolute',
-      top: '85%',
-      left: '10%',
-      fontSize: 32,
-      fontWeight: 'bold',
-    }
-  });
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  imgContainer: {
+    position: 'absolute',
+    height: SCREEN_HEIGHT - 120,
+    width: SCREEN_WIDTH,
+    padding: 10,
+  },
+  img: {
+    height: SCREEN_HEIGHT - 120,
+    width: undefined,
+    resizeMode: "cover",
+    borderRadius: 20
+  },
+  userName: {
+    position: 'absolute',
+    top: '85%',
+    left: '10%',
+    fontSize: 32,
+    fontWeight: 'bold',
+  }
+});

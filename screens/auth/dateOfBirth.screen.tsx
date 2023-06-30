@@ -5,11 +5,13 @@ import { Layout } from '../../layout/layout';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { CalendarIcon, RightArrow } from '../../assets';
 import { THEME, getTextPrimaryColor, getTextSecondaryColor } from '../../utils/theme';
-import { Button, CheckBox, CustomDatePicker, Input } from '../../components';
+import { Button, CheckBox, CustomDatePicker } from '../../components';
 import { Stepper } from '../../components/stepper.component';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
+import { RootState, setDateOfBirth } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../utils';
 
 type PhoneNumbeerScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -17,8 +19,10 @@ type PhoneNumbeerScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 export const DateOfBirthScreen = () => {
+    const dispatch = useAppDispatch();
+    const authDetails = useAppSelector((state: RootState) => state.authDetails);
     const navigation = useNavigation<PhoneNumbeerScreenNavigationProp>();
-    const [date, setDate] = React.useState<Date>();
+    const [date, setLocalDate] = React.useState<Date>();
     const [isChecked, setIsChecked] = React.useState(false);
 
     const checkboxPress = () => {
@@ -27,6 +31,9 @@ export const DateOfBirthScreen = () => {
 
     const handleNavigateToNextScreen = () => {
         if(!date) return;
+        dispatch(setDateOfBirth(date.toISOString().split('T')[0]));
+        console.log('first', authDetails.signUpDetails.firstName);
+        console.log('last', authDetails.signUpDetails.lastName);
         navigation.navigate('GenderScreen');
     }
 
@@ -41,7 +48,7 @@ export const DateOfBirthScreen = () => {
                     </View>
                     <View style={styles.inputWrapper}>
                         <CustomDatePicker
-                            setDate={setDate}
+                            setDate={setLocalDate}
                             date={date}
                             validDates={true}
                             placeholder="DATE OF BIRTH"

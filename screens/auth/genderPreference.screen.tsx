@@ -11,6 +11,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { genderPillDataAlt } from '../../constants';
+import { RootState, setPreferredGender } from '../../redux';
+import { useAppDispatch, useAppSelector } from '../../utils';
 
 type otpScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -18,8 +20,10 @@ type otpScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 export const GenderPreferenceScreen = () => {
+    const dispatch = useAppDispatch();
+    const authDetails = useAppSelector((state: RootState) => state.authDetails);
     const [gender, setGender] = React.useState('');
-    const [selectedGender, setSelectedGender] = React.useState(['']);
+    const [selectedGender, setSelectedGender] = React.useState<string[]>([]);
     const [genderError, setGenderError] = React.useState(false);
     const [isChecked, setIsChecked] = React.useState(false);
     const [genderData, setGenderData] = React.useState(genderPillDataAlt);
@@ -28,7 +32,9 @@ export const GenderPreferenceScreen = () => {
         setIsChecked(prev => !prev);
     }
     const handleNavigateToProfilePhotoScreen = () => {
-        if (selectedGender[1]) {
+        if (selectedGender[0]) {
+            dispatch(setPreferredGender(selectedGender));
+            console.log('gender', authDetails.signUpDetails.gender);
             navigation.navigate('ProfilePhotoScreen');
         } else {
             setGenderError(true);
