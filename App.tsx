@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AddYourPhotosScreen, AgePreferenceScreen, DateOfBirthScreen, GenderPreferenceScreen, GenderScreen, HomeScreen, InterestScreen, NameScreen, OnboardingScreen, OtpScreen, PhoneNumberScreen, ProfilePhotoScreen, VisibilityDistanceScreen } from './screens';
 import { Provider } from 'react-redux';
 import { store } from './redux';
+import { PurchaseGemsScreen } from './screens/common/purchaseGems.screen';
 
 export type RootStackParamList = {
   OnboardingScreen: undefined;
@@ -21,6 +22,7 @@ export type RootStackParamList = {
   AgePreferenceScreen: undefined;
   InterestScreen: undefined;
   HomeScreen: undefined;
+  PurchaseGemsScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -47,6 +49,7 @@ function App(): JSX.Element {
             <Stack.Screen name="InterestScreen" component={InterestScreen} options={{ headerShown: false }} />
             {/* Home screens */}
             <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="PurchaseGemsScreen" component={PurchaseGemsScreen} options={{ headerShown: false }} />
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaProvider>

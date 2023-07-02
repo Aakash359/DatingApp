@@ -25,3 +25,7 @@ export * from './navProfileFilled.icon';
 export * from './cardDislike.icon';
 export * from './cardLike.icon';
 export * from './noLikes.icon';
+export * from './leftArrow.icon';
+export * from './manifestCurrency.icon';
+export * from './radioCircle.icon';
+export * from './radioCircleFilled.icon';

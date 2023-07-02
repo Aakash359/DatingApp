@@ -23,15 +23,17 @@ export const Button = forwardRef<TouchableOpacity, ImageButtonProps>(({ onPress,
             </TouchableOpacity>
         )
         : variant === 'disabled' ? (
-                <ImageBackground source={imageSource} style={{ width: '100%', height: '100%', borderRadius: 5, overflow: 'hidden', minHeight: height }}>
+            <TouchableOpacity ref={ref} disabled={true} onPress={onPress} activeOpacity={0.7} style={{ borderRadius: 5, overflow: 'hidden', height }}>
+                <ImageBackground source={imageSource} style={{ width: '100%', height: '100%' }}>
                     <View style={variantStyle}>
                         {children}
                     </View>
                 </ImageBackground>
-        ) : 
-        <TouchableOpacity ref={ref} onPress={onPress} activeOpacity={0.7} style={variantStyle}>
-            {children}
-        </TouchableOpacity>;
+            </TouchableOpacity>
+        ) :
+            <TouchableOpacity ref={ref} onPress={onPress} activeOpacity={0.7} style={variantStyle}>
+                {children}
+            </TouchableOpacity>;
 });
 
 const styles = StyleSheet.create({

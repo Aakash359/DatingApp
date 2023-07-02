@@ -9,3 +9,4 @@ export * from './singleSelectPill.component';
 export * from './slider.component';
 export * from './rangeSlider.component';
 export * from './verificationModal.component';
+export * from './radioButtonArea.component';

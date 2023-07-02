@@ -20,7 +20,8 @@ export enum COLORS {
     PRIMARY_DARK = '#5134A9',
     INFO = '#42A5F5',
     SUCCESS = '#00B751',
-    ERROR = '#EF5258'
+    ERROR = '#EF5258',
+    BRAND_RADIO_BG_DARK = '#272B31'
 }
 
 export const getModalBackgroundColor = (theme: THEME) => {
@@ -101,5 +102,14 @@ export const getBrandSecondaryColor = (theme: THEME) => {
             return COLORS.BRAND_DARK; //tbd
         case THEME.DARK:
             return COLORS.BRAND_LIGHT;
+    }
+}
+
+export const getRadioGroupBackgroundColor = (theme: THEME) => {
+    switch (theme) {
+        case THEME.LIGHT:
+            return COLORS.LIGHT_20;
+        case THEME.DARK:
+            return COLORS.BRAND_RADIO_BG_DARK;
     }
 }

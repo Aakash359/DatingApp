@@ -7,15 +7,24 @@ import { THEME, getTextButtonColor, getTextPrimaryColor, getTextSecondaryColor }
 import { Button } from '../../../../components'
 import Modal from 'react-native-modal/dist/modal';
 import { LikesModal } from '../likesModal'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../../../App'
 
 enum ModalPage {
     COST_SCREEN = 'COST_SCREEN',
     SUCCESS_SCREEN = 'SUCCESS_SCREEN',
 }
 
+type noLikesScreenNavigationProp = NativeStackNavigationProp<
+    RootStackParamList,
+    'InterestScreen'
+>;
+
 export const NoLikesScreen = () => {
     const [isModalVisible, setIsModalVisible] = React.useState(false);
     const [modalPage, setModalPage] = React.useState(ModalPage.COST_SCREEN);
+    const navigation = useNavigation<noLikesScreenNavigationProp>();
 
     const renderModalPage = () => {
         switch (modalPage) {
@@ -37,7 +46,11 @@ export const NoLikesScreen = () => {
                     modalDescription='Your profile is visible to more people'
                     nextButtonText='CONTINUE'
                     modalCancleButtonText='RETAKE PHOTO'
-                    onNextPress={() => {setIsModalVisible(false); setModalPage(ModalPage.COST_SCREEN)}}
+                    onNextPress={() => {
+                        setIsModalVisible(false);
+                        setModalPage(ModalPage.COST_SCREEN)
+                        navigation.navigate('PurchaseGemsScreen')
+                    }}
                     onBackPress={() => console.log('e')}
                 />
         }
