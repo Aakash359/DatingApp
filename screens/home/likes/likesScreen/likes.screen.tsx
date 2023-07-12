@@ -1,26 +1,37 @@
 import React from 'react'
 import { Layout, MainHeader } from '../../../../layout'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, FlatList } from 'react-native'
 import { NoLikesIcon } from '../../../../assets'
 import { responsiveFontSize, responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions'
 import { THEME, getTextButtonColor, getTextPrimaryColor, getTextSecondaryColor } from '../../../../utils'
-import { Button } from '../../../../components'
+import { Button, LikedProfileCard, ProfileBoosterCard, SingleSelectPill } from '../../../../components'
 import Modal from 'react-native-modal/dist/modal';
 import { LikesModal } from '../likesModal'
+import { likesFilterData } from '../../../../constants'
 
 enum ModalPage {
     COST_SCREEN = 'COST_SCREEN',
     SUCCESS_SCREEN = 'SUCCESS_SCREEN',
 }
 
+export enum Filter {
+    ALL = 'ALL',
+    GIFTS = 'GIFTS',
+    LIKES = 'LIKES',
+    COMMENTS = 'COMMENTS',
+}
+
 interface Props {
     numberOfLikes: string
 }
 
-export const LikesScreen = (props : Props) => {
+export const LikesScreen = (props: Props) => {
     const { numberOfLikes } = props
     const [isModalVisible, setIsModalVisible] = React.useState(false);
     const [modalPage, setModalPage] = React.useState(ModalPage.COST_SCREEN);
+    const [selectedFilter, setSelectedFilter] = React.useState(Filter.ALL);
+    const filterData = React.useState(likesFilterData)[0];
+    const [isProfileBoosted, setIsProfileBoosted] = React.useState(false);
 
     const renderModalPage = () => {
         switch (modalPage) {
@@ -42,7 +53,7 @@ export const LikesScreen = (props : Props) => {
                     modalDescription='Your profile is visible to more people'
                     nextButtonText='CONTINUE'
                     modalCancleButtonText='RETAKE PHOTO'
-                    onNextPress={() => {setIsModalVisible(false); setModalPage(ModalPage.COST_SCREEN)}}
+                    onNextPress={() => { setIsModalVisible(false); setModalPage(ModalPage.COST_SCREEN) }}
                     onBackPress={() => console.log('e')}
                 />
         }
@@ -56,8 +67,38 @@ export const LikesScreen = (props : Props) => {
                     <NoLikesIcon />
                     <View style={styles.textWrapper}>
                         <Text style={styles.headerText}>{numberOfLikes} PEOPLE LIKED YOU</Text>
-                        <Text style={styles.descriptionText}>See who liked you and match with them for 300 Gems</Text>
                     </View>
+                </View>
+                <View style={styles.contentWrapper}>
+                    <View style={styles.filterPillContainer}>
+                        <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            directionalLockEnabled={true}
+                            alwaysBounceVertical={false}>
+                            <FlatList
+                                numColumns={4}
+                                showsVerticalScrollIndicator={false}
+                                showsHorizontalScrollIndicator={false}
+                                data={filterData}
+                                keyExtractor={(item, index) => index.toString()}
+                                renderItem={({ item, index }) => (
+                                    <View style={styles.filterPillWrapper}>
+                                        <SingleSelectPill icon={item.icon} key={index} selectedPill={selectedFilter} setSelectedPill={setSelectedFilter} text={item.text} />
+                                    </View>
+                                )}
+                            />
+                        </ScrollView>
+                    </View>
+                    <ScrollView style={{height: 'auto'}} contentContainerStyle={{ paddingBottom: 200}} showsVerticalScrollIndicator={false}>
+                        <View style={styles.cardMainWrapper}>
+                            <ProfileBoosterCard isProfileBoosted={isProfileBoosted} setIsProfileBoosted={setIsProfileBoosted} />
+                            <LikedProfileCard name={'Hello'} age={'23'} image={require('../../../../assets/images/home/likes/avatar1.png')} isBlur/>
+                            <LikedProfileCard name={'Hello'} age={'23'} image={require('../../../../assets/images/home/likes/avatar1.png')} />
+                            <LikedProfileCard name={'Hello'} age={'23'} image={require('../../../../assets/images/home/likes/avatar1.png')} />
+                            <LikedProfileCard name={'Hello'} age={'23'} image={require('../../../../assets/images/home/likes/avatar1.png')} />
+                        </View>
+                    </ScrollView>
                 </View>
                 <View style={styles.buttonWrapper}>
                     <Button
@@ -68,13 +109,13 @@ export const LikesScreen = (props : Props) => {
                     >
                         <Text style={styles.buttonText}>UNLOCK FEATURE</Text>
                     </Button>
-            <Modal
-                useNativeDriverForBackdrop={true}
-                style={styles.modal}
-                onBackdropPress={() => setIsModalVisible(false)}
-                isVisible={isModalVisible}>
-                {renderModalPage()}
-            </Modal>
+                    <Modal
+                        useNativeDriverForBackdrop={true}
+                        style={styles.modal}
+                        onBackdropPress={() => setIsModalVisible(false)}
+                        isVisible={isModalVisible}>
+                        {renderModalPage()}
+                    </Modal>
                 </View>
             </View>
         </Layout>
@@ -92,19 +133,49 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.5)',
         margin: 0,
     },
-
     mainWrapper: {
+        position: 'relative',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
+        height: responsiveScreenHeight(100) - responsiveScreenHeight(22),
     },
     likesWrapper: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'flex-start',
-        height: '84%',
+        justifyContent: 'space-between',
         gap: responsiveScreenHeight(2),
+        marginBottom: responsiveScreenHeight(3),
+    },
+    contentWrapper: {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        flexDirection: 'column',
+        height: 'auto',
+        alignItems: 'flex-start',
+    },
+    cardMainWrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        width: '100%',
+        height: 'auto',
+        flexWrap: 'wrap',
+        gap: responsiveScreenHeight(2),
+        marginTop: responsiveScreenHeight(2),
+    },
+    filterPillContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        gap: responsiveScreenWidth(2),
+        width: '94%',
+    },
+    filterPillWrapper: {
+        marginRight: responsiveScreenWidth(2),
     },
     textWrapper: {
         display: 'flex',
@@ -121,6 +192,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Audrey-Bold',
         color: getTextPrimaryColor(THEME.DARK),
         textAlign: 'center',
+        marginBottom: responsiveScreenHeight(2),
     },
     descriptionText: {
         fontSize: responsiveFontSize(2),
@@ -129,6 +201,8 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     buttonWrapper: {
+        position: 'absolute',
+        bottom: 0,
         width: '90%',
         paddingHorizontal: responsiveScreenWidth(2),
     },

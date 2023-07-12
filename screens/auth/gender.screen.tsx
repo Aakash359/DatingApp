@@ -84,7 +84,7 @@ export const GenderScreen = () => {
                                 keyExtractor={(item, index) => index.toString()}
                                 renderItem={({ item, index }) => (
                                     <View style={styles.inputDescriptionWrapper} key={index}>
-                                        <SingleSelectPill selectedGender={selectedGender} setSelectedGender={setSelectedGender} text={item.text} />
+                                        <SingleSelectPill selectedPill={selectedGender} setSelectedPill={setSelectedGender} text={item.text} />
                                     </View>
                                 )}
                             />

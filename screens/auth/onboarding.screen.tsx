@@ -55,7 +55,7 @@ export const OnboardingScreen = () => {
           <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('HomeScreen')}>
             <GoogleIcon />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.icon}>
+          <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate('PurchaseGiftsScreen')}>
             <AppleIcon />
           </TouchableOpacity>
         </View>

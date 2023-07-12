@@ -10,3 +10,7 @@ export * from './slider.component';
 export * from './rangeSlider.component';
 export * from './verificationModal.component';
 export * from './radioButtonArea.component';
+export * from './selectableGift.component';
+export * from './profileBoosterCard.component';
+export * from './countdown.component';
+export * from './likedProfileCard.component';

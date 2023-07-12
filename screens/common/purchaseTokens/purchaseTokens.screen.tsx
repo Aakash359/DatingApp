@@ -1,74 +1,79 @@
 import React from 'react';
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Layout } from '../../layout';
-import { RootStackParamList } from '../../App';
+import { Layout } from '../../../layout';
+import { RootStackParamList } from '../../../App';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
-import { LeftArrow, ManifestCurrency, RightArrow } from '../../assets';
-import { COLORS, THEME, getTextPrimaryColor } from '../../utils';
-import { Button, RadioButtonArea } from '../../components';
+import { LeftArrow, ManifestCurrency } from '../../../assets';
+import { COLORS, THEME, getTextButtonColor, getTextPrimaryColor } from '../../../utils';
+import Modal from 'react-native-modal/dist/modal';
+import { Button, RadioButtonArea } from '../../../components';
+import { LikesModal } from '../..';
 
 type purchaseGemScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
-    'PurchaseGemsScreen'
+    'PurchaseTokensScreen'
 >;
 
-const gemPurchaseOffers = [
+const tokenPurchaseOffers = [
     {
-        gemAmount: 200,
+        tokenAmount: 200,
         price: 30,
         // oldPrice: 40,
         isBestValue: false
 
     },
     {
-        gemAmount: 300,
+        tokenAmount: 300,
         price: 40,
         oldPrice: 50,
         isBestValue: false
     },
     {
-        gemAmount: 400,
+        tokenAmount: 400,
         price: 50,
         oldPrice: 60,
         isBestValue: true
     },
     {
-        gemAmount: 500,
+        tokenAmount: 500,
         price: 60,
         oldPrice: 70,
         isBestValue: false
     },
 ]
 
-export const PurchaseGemsScreen = () => {
+export const PurchaseTokensScreen = () => {
 
     const navigation = useNavigation<purchaseGemScreenNavigationProp>();
 
     const [selectedId, setSelectedId] = React.useState('');
+    const [isInfoModalVisible, setIsInfoModalVisible] = React.useState(false);
+    const [isPurchaseModalVisible, setIsPurchaseModalVisible] = React.useState(false);
 
     return (
         <Layout>
             <View style={styles.mainWrapper}>
-                <View style={styles.headerWrapper}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <LeftArrow width={20} height={20} />
-                    </TouchableOpacity>
-                    <Text style={styles.headerText}>BUY GEMS</Text>
+                <View style={styles.mainHeaderWrapper}>
+                    <View style={styles.headerWrapper}>
+                        <TouchableOpacity onPress={() => navigation.goBack()}>
+                            <LeftArrow width={20} height={20} />
+                        </TouchableOpacity>
+                        <Text style={styles.headerText}>BUY TOKENS</Text>
+                    </View>
                 </View>
                 <View style={styles.imageBackgroundWrapper}>
                     <ImageBackground
-                        source={require('../../assets/images/common/diamondBackground.png')}
+                        source={require('../../../assets/images/common/tokenBackground.png')}
                         style={styles.imageBackground}
                     >
                         <View style={styles.offerTextWrapper}>
                             <Text style={styles.offerText}>Great Offer</Text>
-                            <Text style={[styles.offerText, { fontSize: responsiveFontSize(4) }]}>20 Gems</Text>
+                            <Text style={[styles.offerText, { fontSize: responsiveFontSize(4) }]}>250 Tokens</Text>
                             <View style={styles.offerPriceWrapper}>
-                                <ManifestCurrency />
                                 <Text style={styles.offerPrice}>
-                                    30 <Text style={styles.offerPriceCut}>40</Text>
+                                ₹ 30 <Text style={styles.offerPriceCut}>₹ 40</Text>
                                 </Text>
                             </View>
                         </View>
@@ -76,7 +81,7 @@ export const PurchaseGemsScreen = () => {
                 </View>
                 <View style={styles.radioButtonAreaWrapper}>
                     {
-                        gemPurchaseOffers.map((item, index) => {
+                        tokenPurchaseOffers.map((item, index) => {
                             return (
                                 <RadioButtonArea
                                     key={index}
@@ -87,12 +92,17 @@ export const PurchaseGemsScreen = () => {
                                     height={responsiveHeight(10.5)}
                                 >
                                     <View style={styles.offerWrapper}>
-                                        <Text style={styles.gemsAmountText}>{item.gemAmount} GEMS</Text>
+                                        <View style={styles.priceWrapper}>
+                                            <Text style={styles.tokenAmountText}>{item.tokenAmount}</Text>
+                                            <View style={styles.manifestWrapper}>
+                                                <ManifestCurrency />
+                                            </View>
+                                        </View>
                                         <View style={styles.offerPriceWrapper}>
-                                            <ManifestCurrency />
+                                            <Text style={styles.rupeeText}>₹</Text>
                                             <Text
                                                 style={
-                                                    [styles.offerPrice,
+                                                    [styles.offerPriceAlt,
                                                     {
                                                         fontSize: responsiveFontSize(2),
                                                         position: 'relative',
@@ -103,14 +113,17 @@ export const PurchaseGemsScreen = () => {
                                             </Text>
                                             <Text
                                                 style={
-                                                    [styles.offerPriceCut,
+                                                    [styles.offerPriceCutAlt,
                                                     {
                                                         fontSize: responsiveFontSize(2),
                                                         color: COLORS.LIGHT_40,
                                                         position: 'relative',
                                                         top: -responsiveHeight(0.1)
                                                     }]}>
-                                                {item.oldPrice}
+                                                    {item.oldPrice &&
+                                                        <Text style={styles.rupeeTextAlt}>₹</Text>
+                                                    }
+                                                    {item.oldPrice}
                                             </Text>
                                         </View>
                                     </View>
@@ -123,22 +136,62 @@ export const PurchaseGemsScreen = () => {
                     <Button
                         variant={selectedId === '' ? 'disabled' : 'primary'}
                         height={responsiveHeight(8)}
-                        imageSource={require('../../assets/gradients/splash.png')}
-                        onPress={() => { }}
+                        imageSource={require('../../../assets/gradients/splash.png')}
+                        onPress={() => setIsPurchaseModalVisible(true)}
                     >
                         <Text style={styles.buttonText}>PURCHASE</Text>
                     </Button>
                 </View>
             </View>
+            <Modal
+                useNativeDriverForBackdrop={true}
+                style={styles.modal}
+                onBackdropPress={() => setIsInfoModalVisible(false)}
+                isVisible={isPurchaseModalVisible}>
+                <LikesModal
+                    modalPrimaryImage={require('../../../assets/images/home/likes/successCheckmark.png')}
+                    modalHeader='TOKENS PURCHASED'
+                    modalDescription='You Purchased 200 Manifest Tokens'
+                    nextButtonText='GREAT'
+                    isOnlyOneButton={true}
+                    onNextPress={() => navigation.navigate('HomeScreen')}
+                    onBackPress={() => console.log('e')}
+                />
+            </Modal>
         </Layout>
     )
 };
 
 const styles = StyleSheet.create({
+    modal: {
+        width: '100%',
+        height: '100%',
+        maxHeight: '100%',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        margin: 0,
+    },
     mainWrapper: {
         flex: 1,
         marginVertical: responsiveHeight(3),
         paddingHorizontal: responsiveWidth(3),
+    },
+    priceWrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: responsiveWidth(2),
+    },
+    mainHeaderWrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    manifestWrapper: {
+        transform: [{ scale: 1.5 }],
     },
     headerWrapper: {
         display: 'flex',
@@ -153,7 +206,17 @@ const styles = StyleSheet.create({
     headerText: {
         fontFamily: 'Audrey-Medium',
         fontSize: responsiveFontSize(3),
+        color: getTextButtonColor(THEME.DARK)
+    },
+    rupeeText: {
+        fontFamily: 'Audrey-Medium',
+        fontSize: responsiveFontSize(3),
         color: getTextPrimaryColor(THEME.DARK)
+    },
+    rupeeTextAlt: {
+        fontFamily: 'Audrey-Medium',
+        fontSize: responsiveFontSize(2.5),
+        color: COLORS.LIGHT_40
     },
     imageBackground: {
         height: responsiveHeight(20),
@@ -172,25 +235,36 @@ const styles = StyleSheet.create({
     },
     offerText: {
         fontFamily: 'RedHatDisplay-Bold',
-        color: 'white',
+        color: 'black',
         fontSize: responsiveFontSize(2.5),
     },
     offerPrice: {
+        fontFamily: 'RedHatDisplay-Bold',
+        color: 'black',
+        fontSize: responsiveFontSize(2.5),
+    },
+    offerPriceAlt: {
         fontFamily: 'RedHatDisplay-Bold',
         color: 'white',
         fontSize: responsiveFontSize(2.5),
     },
     offerPriceCut: {
         fontFamily: 'RedHatDisplay-Bold',
+        color: COLORS.LIGHT_30,
+        textDecorationLine: 'line-through',
+        fontSize: responsiveFontSize(2),
+    },
+    offerPriceCutAlt: {
+        fontFamily: 'RedHatDisplay-Bold',
         color: COLORS.LIGHT_70,
         textDecorationLine: 'line-through',
-        fontSize: responsiveFontSize(2.5),
+        fontSize: responsiveFontSize(2),
     },
     offerPriceWrapper: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        gap: responsiveWidth(1),
+        gap: responsiveWidth(1.5),
     },
     radioButtonAreaWrapper: {
         marginTop: responsiveHeight(2),
@@ -200,21 +274,21 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontFamily: 'Audrey-Medium',
-        color: getTextPrimaryColor(THEME.DARK),
+        color: getTextButtonColor(THEME.DARK),
         fontSize: responsiveFontSize(3),
     },
     buttonWrapper: {
         marginTop: responsiveHeight(3),
     },
     offerWrapper: {
-        paddingHorizontal: responsiveWidth(3),
-        paddingVertical: responsiveHeight(2),
         display: 'flex',
+        paddingHorizontal: responsiveWidth(3),
+        paddingVertical: responsiveHeight(3.5),
         gap: responsiveHeight(0.5),
     },
-    gemsAmountText: {
+    tokenAmountText: {
         fontFamily: 'Audrey-Bold',
-        color: getTextPrimaryColor(THEME.DARK),
-        fontSize: responsiveFontSize(2.5),
+        color: getTextButtonColor(THEME.DARK),
+        fontSize: responsiveFontSize(3),
     }
 })

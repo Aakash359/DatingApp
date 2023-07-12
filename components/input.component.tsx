@@ -3,7 +3,6 @@ import React, {useState} from 'react';
 import {StyleSheet, TextInput, TextInputProps, View, Text} from 'react-native';
 import { COLORS, THEME, getTextPrimaryColor } from '../utils/theme';
 import { responsiveFontSize } from 'react-native-responsive-dimensions';
-// import {Visiblity} from '../../assets/icons';
 
 interface Props extends TextInputProps {
   isValid?: boolean;
@@ -28,7 +27,7 @@ export const Input: React.FC<Props> = props => {
         style={[
           styles.input,
           {
-            borderColor: isError ? COLORS.ERROR : isFocused ? COLORS.BRAND_LIGHT : COLORS.LIGHT_60,
+            borderColor: isError ? COLORS.ERROR : isFocused ? COLORS.LIGHT_40 : COLORS.LIGHT_60,
             color: isError ? COLORS.ERROR : getTextPrimaryColor(THEME.DARK),
             fontFamily: 'Audrey-Medium',
             fontSize: responsiveFontSize(3),

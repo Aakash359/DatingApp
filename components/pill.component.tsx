@@ -1,7 +1,8 @@
 import React, { forwardRef } from 'react';
 import { TouchableOpacity, StyleSheet, Text } from 'react-native';
-import { getBrandColor, getPillColor, getTextPrimaryColor, THEME } from '../utils/theme';
-import { responsiveFontSize, responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
+import { getBrandColor, getModalBackgroundColor, getPillColor, getTextPrimaryColor, THEME } from '../utils/theme';
+import { responsiveFontSize, responsiveScreenHeight } from 'react-native-responsive-dimensions';
+import LinearGradient from 'react-native-linear-gradient';
 
 interface ImageButtonProps {
     onPress?: () => void;
@@ -15,16 +16,31 @@ const handlePress = (text: string, setSelectedGender: React.Dispatch<React.SetSt
     const newSelectedGender = [...selectedGender, text]
     setSelectedGender(newSelectedGender);
     if (selectedGender.includes(text)) {
-        const newSelectedGender  = selectedGender.filter((item) => item !== text);
+        const newSelectedGender = selectedGender.filter((item) => item !== text);
         setSelectedGender(newSelectedGender);
     }
 }
 
 export const Pill = forwardRef<TouchableOpacity, ImageButtonProps>(({ setSelectedGender, text, selectedGender, icon }, ref) => {
     return (
-        <TouchableOpacity style={selectedGender.includes(text) ? styles.selectedPill : styles.pill} onPress={() => handlePress(text, setSelectedGender, selectedGender)} ref={ref}>
-            {icon ? icon : null}<Text style={styles.text}>{text}</Text>
-        </TouchableOpacity>
+        <LinearGradient
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0.5, y: 1 }}
+            colors={[getBrandColor(THEME.LIGHT), getBrandColor(THEME.DARK)]}
+            style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 5,
+                height: responsiveScreenHeight(5.3),
+                width: 'auto',
+                paddingVertical: responsiveScreenHeight(2),
+                zIndex: -1,
+            }}
+        >
+            <TouchableOpacity activeOpacity={1} style={selectedGender.includes(text) ? styles.selectedPill : styles.pill} onPress={() => handlePress(text, setSelectedGender, selectedGender)} ref={ref}>
+                {icon ? icon : null}<Text style={styles.text}>{text}</Text>
+            </TouchableOpacity>
+        </LinearGradient>
     )
 });
 
@@ -32,32 +48,27 @@ const styles = StyleSheet.create({
     pill: {
         borderWidth: 2,
         borderColor: getPillColor(THEME.DARK),
-        backgroundColor: 'transparent',
-        display: 'flex',
-        flexDirection: 'row',
-        gap: responsiveWidth(2),
+        backgroundColor: getModalBackgroundColor(THEME.LIGHT),
         justifyContent: 'center',
         alignItems: 'center',
-        height: responsiveHeight(5),
-        paddingHorizontal: responsiveHeight(2),
-        paddingVertical: responsiveHeight(1),
+        height: responsiveScreenHeight(5.3),
+        paddingHorizontal: responsiveScreenHeight(2),
+        paddingVertical: responsiveScreenHeight(1.2),
         width: 'auto',
         borderRadius: 5,
     },
     selectedPill: {
-        borderWidth: 2,
-        borderColor: getBrandColor(THEME.DARK),
-        backgroundColor: 'transparent',
-        display: 'flex',
-        flexDirection: 'row',
-        gap: responsiveWidth(2),
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: responsiveHeight(5),
-        paddingHorizontal: responsiveHeight(2),
-        paddingVertical: responsiveHeight(1),
+        margin: 1,
+        marginHorizontal: 2,
         width: 'auto',
         borderRadius: 5,
+        height: responsiveScreenHeight(5),
+        paddingHorizontal: responsiveScreenHeight(2),
+        paddingVertical: responsiveScreenHeight(0.8),
+        alignItems: 'center',
+        backgroundColor: getModalBackgroundColor(THEME.LIGHT),
+        justifyContent: 'center',
+        zIndex: 3,
     },
     text: {
         color: getTextPrimaryColor(THEME.DARK),

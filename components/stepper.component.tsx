@@ -17,13 +17,13 @@ export const Stepper: React.FC<IStepperProps> = ({ stepCount, activeSteps }) => 
             {steps.map((_, index) => (
                 <View key={index}
                 style={{
-                        marginRight: responsiveScreenWidth(2),
-                        marginTop: responsiveScreenWidth(3),
-                        borderRadius: 3,
-                        width: responsiveScreenWidth(6.4),
-                        height: responsiveScreenHeight(0.5),
-                        backgroundColor: index <= activeStep ? getBrandSecondaryColor(THEME.DARK) : getSeperatorColor(THEME.DARK),
-                    }}
+                    marginRight: responsiveScreenWidth(2),
+                    marginTop: responsiveScreenWidth(3),
+                    borderRadius: 3,
+                    width: responsiveScreenWidth(6.4),
+                    height: responsiveScreenHeight(0.5),
+                    backgroundColor: index <= activeStep ? getBrandSecondaryColor(THEME.DARK) : getSeperatorColor(THEME.DARK),
+                }}
                 />
             ))}
         </View>

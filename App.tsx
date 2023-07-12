@@ -3,10 +3,10 @@ import { StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { AddYourPhotosScreen, AgePreferenceScreen, DateOfBirthScreen, GenderPreferenceScreen, GenderScreen, HomeScreen, InterestScreen, NameScreen, OnboardingScreen, OtpScreen, PhoneNumberScreen, ProfilePhotoScreen, VisibilityDistanceScreen } from './screens';
+import { AddYourPhotosScreen, AgePreferenceScreen, DateOfBirthScreen, GenderPreferenceScreen, GenderScreen, HomeScreen, InterestScreen, NameScreen, OnboardingScreen, OtpScreen, PhoneNumberScreen, ProfilePhotoScreen, PurchaseGemsScreen, PurchaseTokensScreen, VisibilityDistanceScreen } from './screens';
 import { Provider } from 'react-redux';
 import { store } from './redux';
-import { PurchaseGemsScreen } from './screens/common/purchaseGems.screen';
+import { PurchaseGiftsScreen } from './screens/common/purchaseGifts';
 
 export type RootStackParamList = {
   OnboardingScreen: undefined;
@@ -23,6 +23,8 @@ export type RootStackParamList = {
   InterestScreen: undefined;
   HomeScreen: undefined;
   PurchaseGemsScreen: undefined;
+  PurchaseTokensScreen: undefined;
+  PurchaseGiftsScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -49,7 +51,10 @@ function App(): JSX.Element {
             <Stack.Screen name="InterestScreen" component={InterestScreen} options={{ headerShown: false }} />
             {/* Home screens */}
             <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
+            {/* Common Screens */}
             <Stack.Screen name="PurchaseGemsScreen" component={PurchaseGemsScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="PurchaseTokensScreen" component={PurchaseTokensScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="PurchaseGiftsScreen" component={PurchaseGiftsScreen} options={{ headerShown: false }} />
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaProvider>

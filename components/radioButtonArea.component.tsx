@@ -1,8 +1,9 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { responsiveHeight, responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions';
-import { COLORS, getRadioGroupBackgroundColor, THEME } from '../utils';
+import { COLORS, getBrandColor, getRadioGroupBackgroundColor, THEME } from '../utils';
 import { RadioCircle, RadioCircleFilled } from '../assets';
+import LinearGradient from 'react-native-linear-gradient';
 
 interface Props {
     selectedId: string;
@@ -39,7 +40,22 @@ export const RadioButtonArea = (props: Props) => {
                 </View>
             </View>
             {props.isBestValue ? <View style={styles.bestOfferWrapper}>
-                <Text style={styles.bestOfferText}>BEST VALUE</Text>
+                <LinearGradient
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 0.5, y: 1 }}
+                    colors={[getBrandColor(THEME.LIGHT), getBrandColor(THEME.DARK)]}
+                    style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: 5,
+                        height: responsiveScreenHeight(3.6),
+                        width: 'auto',
+                        paddingHorizontal: responsiveScreenWidth(3),
+                        zIndex: -1,
+                    }}
+                >
+                    <Text style={styles.bestOfferText}>BEST VALUE</Text>
+                </LinearGradient>
             </View> : null}
         </TouchableOpacity>
     )
@@ -59,7 +75,6 @@ const styles = StyleSheet.create({
     },
     bestOfferWrapper: {
         position: 'absolute',
-        backgroundColor: COLORS.BRAND_LIGHT,
         paddingHorizontal: responsiveScreenWidth(3),
         paddingVertical: responsiveScreenHeight(0.5),
         borderRadius: 5,

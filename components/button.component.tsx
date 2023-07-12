@@ -1,5 +1,8 @@
 import React, { forwardRef, ReactNode } from 'react';
 import { TouchableOpacity, ImageBackground, StyleSheet, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
+import { getBrandColor, getModalBackgroundColor, THEME } from '../utils';
 
 interface ImageButtonProps {
     onPress: () => void;
@@ -30,7 +33,27 @@ export const Button = forwardRef<TouchableOpacity, ImageButtonProps>(({ onPress,
                     </View>
                 </ImageBackground>
             </TouchableOpacity>
-        ) :
+        ) : variant === 'outline' ?
+            <LinearGradient
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0.5, y: 1 }}
+                colors={[getBrandColor(THEME.LIGHT), getBrandColor(THEME.DARK)]}
+                style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 5,
+                    height: 'auto',
+                    width: 'auto',
+                    zIndex: -1,
+                }}
+            >
+                <TouchableOpacity ref={ref} onPress={onPress} activeOpacity={0.8} style={{ borderRadius: 5, overflow: 'hidden', height }}>
+                    <View style={variantStyle}>
+                        {children}
+                    </View>
+                </TouchableOpacity>
+            </LinearGradient>
+            :
             <TouchableOpacity ref={ref} onPress={onPress} activeOpacity={0.7} style={variantStyle}>
                 {children}
             </TouchableOpacity>;
@@ -52,12 +75,14 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     outline: {
-        borderWidth: 1,
-        borderColor: '#96969E',
-        backgroundColor: 'transparent',
+        backgroundColor: getModalBackgroundColor(THEME.LIGHT),
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100%',
+        height: '92%',
+        width: responsiveScreenWidth(36),
+        marginTop: 1,
+        zIndex: 2,
+        borderRadius: 5,
     },
     primary: {
         justifyContent: 'center',
