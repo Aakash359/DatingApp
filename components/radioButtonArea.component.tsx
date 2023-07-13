@@ -23,22 +23,40 @@ export const RadioButtonArea = (props: Props) => {
     const isCurrentRadioBtnSelected = props.id === props.selectedId;
 
     return (
-        <TouchableOpacity onPress={handleRadioButtonAreaPress}>
-            <View style={[styles.mainWrapper, {
-                height: props.height ? props.height : responsiveHeight(10),
-                borderColor: isCurrentRadioBtnSelected ? COLORS.BRAND_LIGHT : 'transparent',
-            }]}>
-                <View>
-                    {props.children}
+        <TouchableOpacity activeOpacity={1} onPress={handleRadioButtonAreaPress}>
+            <LinearGradient
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0.5, y: 1 }}
+                colors={[getBrandColor(THEME.LIGHT), getBrandColor(THEME.DARK)]}
+                style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 5,
+                    width: 'auto',
+                    paddingHorizontal: isCurrentRadioBtnSelected ? responsiveScreenWidth(0.3) : 0,
+                    paddingVertical: isCurrentRadioBtnSelected ? responsiveScreenHeight(0.2) : 0,
+                    zIndex: -1,
+                }}
+            >
+
+                <View style={[styles.mainWrapper, {
+                    height: props.height ? props.height : responsiveHeight(10),
+                    width: '100%',
+                    paddingHorizontal: isCurrentRadioBtnSelected ?  0 : responsiveScreenWidth(0.3),
+                    paddingVertical:  isCurrentRadioBtnSelected ? 0 : responsiveScreenHeight(0.2),
+                }]}>
+                    <View>
+                        {props.children}
+                    </View>
+                    <View style={{marginRight: responsiveScreenWidth(1)}}>
+                        {isCurrentRadioBtnSelected ? (
+                            <RadioCircleFilled />
+                        ) : (
+                            <RadioCircle />
+                        )}
+                    </View>
                 </View>
-                <View>
-                    {isCurrentRadioBtnSelected ? (
-                        <RadioCircleFilled />
-                    ) : (
-                        <RadioCircle />
-                    )}
-                </View>
-            </View>
+            </LinearGradient>
             {props.isBestValue ? <View style={styles.bestOfferWrapper}>
                 <LinearGradient
                     start={{ x: 0, y: 0 }}
@@ -71,7 +89,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: responsiveScreenWidth(3),
         borderRadius: 5,
-        borderWidth: 1
+        borderWidth: 1,
     },
     bestOfferWrapper: {
         position: 'absolute',

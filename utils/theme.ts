@@ -21,7 +21,8 @@ export enum COLORS {
     INFO = '#42A5F5',
     SUCCESS = '#00B751',
     ERROR = '#EF5258',
-    BRAND_RADIO_BG_DARK = '#272B31'
+    BRAND_RADIO_BG_DARK = '#272B31',
+    ONLINE_STATUS = '#0FE16D'
 }
 
 export const getModalBackgroundColor = (theme: THEME) => {
@@ -120,5 +121,32 @@ export const getRadioGroupBackgroundColor = (theme: THEME) => {
             return COLORS.LIGHT_20;
         case THEME.DARK:
             return COLORS.BRAND_RADIO_BG_DARK;
+    }
+}
+
+export const getSearchInputBorderColor = (theme: THEME) => {
+    switch (theme) {
+        case THEME.LIGHT:
+            return COLORS.LIGHT_90;
+        case THEME.DARK:
+            return COLORS.LIGHT_40;
+    }
+}
+
+export const getPlaceholderTextColor = (theme: THEME) => {
+    switch (theme) {
+        case THEME.LIGHT:
+            return COLORS.LIGHT_40;
+        case THEME.DARK:
+            return COLORS.LIGHT_40;
+    }
+}
+
+export const getUnreadMessageTextColor = (theme: THEME) => {
+    switch (theme) {
+        case THEME.LIGHT:
+            return COLORS.LIGHT_100;
+        case THEME.DARK:
+            return COLORS.LIGHT_100;
     }
 }

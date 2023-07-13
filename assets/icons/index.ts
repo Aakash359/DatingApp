@@ -35,3 +35,4 @@ export * from './filterAllItems.icon';
 export * from './filterGiftItems.icon';
 export * from './filterHeartItems.icon';
 export * from './filterCommentItems.icon';
+export * from './search.icon';

@@ -14,3 +14,5 @@ export * from './selectableGift.component';
 export * from './profileBoosterCard.component';
 export * from './countdown.component';
 export * from './likedProfileCard.component';
+export * from './searchInput.component';
+export * from './conversation.component';

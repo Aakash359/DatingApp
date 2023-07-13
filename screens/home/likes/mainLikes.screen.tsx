@@ -3,7 +3,7 @@ import { NoLikesScreen } from './noLikesScreen'
 import { LikesScreen } from './likesScreen'
 
 export const LikesMainScreen = () => {
-    const [numberOfLikes, setNumberOfLikes] = React.useState('8')
+    const [numberOfLikes, setNumberOfLikes] = React.useState('0')
     return (
         numberOfLikes === '0' ?
         <NoLikesScreen />
