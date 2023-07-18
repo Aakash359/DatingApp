@@ -1,77 +1,36 @@
 import React from "react";
-import { StyleSheet, Animated, View, TouchableOpacity, TextInput, NativeSyntheticEvent, TextInputContentSizeChangeEventData } from "react-native";
+import { StyleSheet, View, TouchableOpacity, TextInput, NativeSyntheticEvent, TextInputContentSizeChangeEventData } from "react-native";
 import { CameraIcon, GiftIcon, LoveStickerIcon, MicrophoneIcon, RightArrow } from "../../../../../assets";
 import { responsiveFontSize, responsiveScreenHeight, responsiveScreenWidth } from "react-native-responsive-dimensions";
 import { getPlaceholderTextColor, getTextPrimaryColor, THEME } from "../../../../../utils";
+import Animated, { useSharedValue, withTiming, Easing } from 'react-native-reanimated';
 
 const fontSize = responsiveFontSize(1.8);
-const animationDuration = 300;
 
 export const ConversationFooter = () => {
     const [height, setHeight] = React.useState(40);
     const [message, setMessage] = React.useState('');
-    const animatedIconSize = React.useRef(new Animated.Value(0)).current;
-    const animatedInputWidth = React.useRef(new Animated.Value(60)).current;
-    const animatedCameraIconWidth = React.useRef(new Animated.Value(25)).current;
-    const animatedIconMargin = React.useRef(new Animated.Value(4)).current;
+    const inputWidth = useSharedValue(responsiveScreenWidth(60));
+    const inputMarginLeft = useSharedValue(responsiveScreenWidth(4));
+    const cameraIconWidth = useSharedValue(25);
+    const iconSize = useSharedValue(1);
+    const animatedSendIconSize = useSharedValue(0);
     const [isSendIconVisible, setIsSendIconVisible] = React.useState(false);
-    const animateSendIconSize = React.useRef(new Animated.Value(0)).current;
 
     const animateIcons = () => {
         if (message) {
-            Animated.timing(animatedIconSize, {
-                toValue: 0,
-                duration: animationDuration,
-                useNativeDriver: false,
-            }).start();
-            Animated.timing(animateSendIconSize, {
-                toValue: 1.3,
-                duration: animationDuration,
-                useNativeDriver: false,
-            }).start();
-            Animated.timing(animatedInputWidth, {
-                toValue: responsiveScreenWidth(84),
-                duration: animationDuration,
-                useNativeDriver: false,
-            }).start();
-            Animated.timing(animatedCameraIconWidth, {
-                toValue: 0,
-                duration: animationDuration,
-                useNativeDriver: false,
-            }).start();
-            Animated.timing(animatedIconMargin, {
-                toValue: 0,
-                duration: animationDuration,
-                useNativeDriver: false,
-            }).start();
+            inputWidth.value = withTiming(responsiveScreenWidth(85), { duration: 300, easing: Easing.linear });
+            inputMarginLeft.value = withTiming(responsiveScreenWidth(0), { duration: 300, easing: Easing.linear });
+            cameraIconWidth.value = withTiming(0, { duration: 300, easing: Easing.linear });
+            iconSize.value = withTiming(0, { duration: 300, easing: Easing.linear });
+            animatedSendIconSize.value = withTiming(1.4, { duration: 300, easing: Easing.linear });
 
         } else if (message === '') {
-            Animated.timing(animatedIconMargin, {
-                toValue: responsiveScreenWidth(4),
-                duration: animationDuration,
-                useNativeDriver: false,
-            }).start();
-            Animated.timing(animateSendIconSize, {
-                toValue: 0,
-                duration: animationDuration,
-                useNativeDriver: false,
-            }).start();
-            Animated.timing(animatedInputWidth, {
-                toValue: responsiveScreenWidth(60),
-                duration: animationDuration,
-                useNativeDriver: false,
-            }).start();
-            Animated.timing(animatedIconSize, {
-                toValue: 1,
-                duration: animationDuration,
-                useNativeDriver: false,
-            }).start();
-            Animated.timing(animatedCameraIconWidth, {
-                toValue: 25,
-                duration: animationDuration,
-                useNativeDriver: false,
-            }).start();
-
+            inputWidth.value = withTiming(responsiveScreenWidth(60), { duration: 300, easing: Easing.linear });
+            inputMarginLeft.value = withTiming(responsiveScreenWidth(4), { duration: 300, easing: Easing.linear });
+            cameraIconWidth.value = withTiming(25, { duration: 300, easing: Easing.linear });
+            iconSize.value = withTiming(1, { duration: 300, easing: Easing.linear });
+            animatedSendIconSize.value = withTiming(0, { duration: 300, easing: Easing.linear });
         }
     };
 
@@ -97,12 +56,12 @@ export const ConversationFooter = () => {
         <View style={[styles.footerMainWrapper, {
             minHeight: height,
         }]}>
-            <Animated.View style={{ width: animatedCameraIconWidth, transform: [{ scale: animatedIconSize }] }}>
+            <Animated.View style={{ width: cameraIconWidth, transform: [{ scale: iconSize }] }}>
                 <TouchableOpacity>
                     <CameraIcon width={25} height={25} />
                 </TouchableOpacity>
             </Animated.View>
-            <Animated.View style={[styles.textInputWrapper, { width: animatedInputWidth, marginLeft: animatedIconMargin }]}>
+            <Animated.View style={[styles.textInputWrapper, { width: inputWidth, marginLeft: inputMarginLeft }]}>
                 <TextInput
                     placeholder="Write your message"
                     style={[styles.textInput, {
@@ -122,19 +81,21 @@ export const ConversationFooter = () => {
                 </View>
             </Animated.View>
             <View style={styles.endIconWrapper}>
-                <Animated.View style={{ transform: [{ scale: animateSendIconSize }] }}>
-                    {isSendIconVisible &&
+                {isSendIconVisible
+                    ?
+                    <Animated.View style={{ transform: [{ scale: animatedSendIconSize }], marginRight: responsiveScreenWidth(2) }}>
                         <TouchableOpacity>
                             <RightArrow />
                         </TouchableOpacity>
-                    }
-                </Animated.View>
-                <Animated.View style={{ transform: [{ scale: animatedIconSize }], marginRight: responsiveScreenWidth(2) }}>
-                    <TouchableOpacity>
-                        <GiftIcon width={25} height={25} />
-                    </TouchableOpacity>
-                </Animated.View>
-                <Animated.View style={{ transform: [{ scale: animatedIconSize }], marginLeft: responsiveScreenWidth(2) }}>
+                    </Animated.View>
+                    :
+                    <Animated.View style={{ transform: [{ scale: iconSize }], marginRight: responsiveScreenWidth(2) }}>
+                        <TouchableOpacity>
+                            <GiftIcon width={25} height={25} />
+                        </TouchableOpacity>
+                    </Animated.View>
+                }
+                <Animated.View style={{ transform: [{ scale: iconSize }], marginLeft: responsiveScreenWidth(2) }}>
                     <TouchableOpacity>
                         <MicrophoneIcon width={25} height={25} />
                     </TouchableOpacity>
