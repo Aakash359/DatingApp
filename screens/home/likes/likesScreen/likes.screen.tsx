@@ -7,7 +7,7 @@ import { THEME, getTextButtonColor, getTextPrimaryColor, getTextSecondaryColor }
 import { Button, LikedProfileCard, ProfileBoosterCard, SingleSelectPill } from '../../../../components'
 import Modal from 'react-native-modal/dist/modal';
 import { LikesModal } from '../likesModal'
-import { likesFilterData } from '../../../../constants'
+import { likeProfileData, likesFilterData } from '../../../../constants'
 
 enum ModalPage {
     COST_SCREEN = 'COST_SCREEN',
@@ -32,6 +32,7 @@ export const LikesScreen = (props: Props) => {
     const [selectedFilter, setSelectedFilter] = React.useState(Filter.ALL);
     const filterData = React.useState(likesFilterData)[0];
     const [isProfileBoosted, setIsProfileBoosted] = React.useState(false);
+    const [isBlur, setIsBlur] = React.useState(true);
 
     const renderModalPage = () => {
         switch (modalPage) {
@@ -44,29 +45,47 @@ export const LikesScreen = (props: Props) => {
                     onNextPress={() => setModalPage(ModalPage.SUCCESS_SCREEN)}
                     onBackPress={() => console.log('e')}
                     isNoHeader={true}
-                    modalImageText='5'
+                    modalImageText='200'
                 />
             case ModalPage.SUCCESS_SCREEN:
                 return <LikesModal
                     modalPrimaryImage={require('../../../../assets/images/home/likes/successCheckmark.png')}
-                    modalHeader='PROFILE BOOSTED'
-                    modalDescription='Your profile is visible to more people'
+                    modalHeader='FEATURE UNLOCKED'
+                    modalDescription='You will now be able to see who liked your Profile'
                     nextButtonText='CONTINUE'
                     modalCancleButtonText='RETAKE PHOTO'
-                    onNextPress={() => { setIsModalVisible(false); setModalPage(ModalPage.COST_SCREEN) }}
+                    onNextPress={() => {
+                        setIsBlur(false);
+                        setIsModalVisible(false);
+                        setModalPage(ModalPage.COST_SCREEN)
+                    }}
                     onBackPress={() => console.log('e')}
                 />
         }
     }
+
+    React.useEffect(() => {
+        if (!selectedFilter) {
+            setSelectedFilter(Filter.ALL);
+        }
+    }, [selectedFilter])
 
     return (
         <Layout>
             <MainHeader />
             <View style={styles.mainWrapper}>
                 <View style={styles.likesWrapper}>
-                    <NoLikesIcon />
                     <View style={styles.textWrapper}>
-                        <Text style={styles.headerText}>{numberOfLikes} PEOPLE LIKED YOU</Text>
+                        <Text
+                            style={styles.headerText}
+                        >
+                            {numberOfLikes} PEOPLE LIKED YOU
+                        </Text>
+                        {isBlur ?
+                            <Text style={styles.descriptionText}>See who liked you and match with them for 200 Gems</Text>
+                            :
+                            null
+                        }
                     </View>
                 </View>
                 <View style={styles.contentWrapper}>
@@ -84,39 +103,75 @@ export const LikesScreen = (props: Props) => {
                                 keyExtractor={(item, index) => index.toString()}
                                 renderItem={({ item, index }) => (
                                     <View style={styles.filterPillWrapper}>
-                                        <SingleSelectPill icon={item.icon} key={index} selectedPill={selectedFilter} setSelectedPill={setSelectedFilter} text={item.text} />
+                                        <SingleSelectPill
+                                            icon={item.icon}
+                                            key={index}
+                                            selectedPill={selectedFilter}
+                                            setSelectedPill={setSelectedFilter}
+                                            text={item.text}
+                                        />
                                     </View>
                                 )}
                             />
                         </ScrollView>
                     </View>
-                    <ScrollView style={{height: 'auto'}} contentContainerStyle={{ paddingBottom: 200}} showsVerticalScrollIndicator={false}>
+                    <ScrollView
+                        style={{ height: 'auto' }}
+                        contentContainerStyle={{ paddingBottom: isBlur ? 280 : 200 }}
+                        showsVerticalScrollIndicator={false}
+                    >
                         <View style={styles.cardMainWrapper}>
-                            <ProfileBoosterCard isProfileBoosted={isProfileBoosted} setIsProfileBoosted={setIsProfileBoosted} />
-                            <LikedProfileCard name={'Hello'} age={'23'} image={require('../../../../assets/images/home/likes/avatar1.png')} isBlur/>
-                            <LikedProfileCard name={'Hello'} age={'23'} image={require('../../../../assets/images/home/likes/avatar1.png')} />
-                            <LikedProfileCard name={'Hello'} age={'23'} image={require('../../../../assets/images/home/likes/avatar1.png')} />
-                            <LikedProfileCard name={'Hello'} age={'23'} image={require('../../../../assets/images/home/likes/avatar1.png')} />
+                            <ProfileBoosterCard
+                                isProfileBoosted={isProfileBoosted}
+                                setIsProfileBoosted={setIsProfileBoosted}
+                            />
+                            {likeProfileData.map((item, index) => {
+                                if ((selectedFilter === Filter.GIFTS && item.giftType && item.giftAmount) ||
+                                    (selectedFilter === Filter.COMMENTS && item.numberOfComments) ||
+                                    (selectedFilter === Filter.LIKES) ||
+                                    (selectedFilter === Filter.ALL)) {
+                                    return (
+                                        <LikedProfileCard
+                                            key={index}
+                                            name={item.name}
+                                            age={item.age}
+                                            image={item.image}
+                                            isBlur={isBlur}
+                                            isGiftFilter={selectedFilter === Filter.GIFTS}
+                                            isLikeFilter={selectedFilter === Filter.LIKES}
+                                            isCommentFilter={selectedFilter === Filter.COMMENTS}
+                                            giftType={item.giftType}
+                                            giftAmount={item.giftAmount}
+                                            numberOfComments={item.numberOfComments}
+                                        />
+                                    )
+                                }
+                                return null;
+                            })}
                         </View>
                     </ScrollView>
                 </View>
-                <View style={styles.buttonWrapper}>
-                    <Button
-                        onPress={() => setIsModalVisible(true)}
-                        imageSource={require('../../../../assets/gradients/splash.png')}
-                        variant="primary"
-                        height={responsiveScreenHeight(6.7)}
-                    >
-                        <Text style={styles.buttonText}>UNLOCK FEATURE</Text>
-                    </Button>
-                    <Modal
-                        useNativeDriverForBackdrop={true}
-                        style={styles.modal}
-                        onBackdropPress={() => setIsModalVisible(false)}
-                        isVisible={isModalVisible}>
-                        {renderModalPage()}
-                    </Modal>
-                </View>
+                {isBlur ?
+                    <View style={styles.buttonWrapper}>
+                        <Button
+                            onPress={() => setIsModalVisible(true)}
+                            imageSource={require('../../../../assets/gradients/splash.png')}
+                            variant="primary"
+                            height={responsiveScreenHeight(6.7)}
+                        >
+                            <Text style={styles.buttonText}>UNLOCK FEATURE</Text>
+                        </Button>
+                        <Modal
+                            useNativeDriverForBackdrop={true}
+                            style={styles.modal}
+                            onBackdropPress={() => setIsModalVisible(false)}
+                            isVisible={isModalVisible}>
+                            {renderModalPage()}
+                        </Modal>
+                    </View>
+                    :
+                    null
+                }
             </View>
         </Layout>
     )
@@ -173,6 +228,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: responsiveScreenWidth(2),
         width: '94%',
+        marginBottom: responsiveScreenHeight(0.5),
     },
     filterPillWrapper: {
         marginRight: responsiveScreenWidth(2),
@@ -185,7 +241,7 @@ const styles = StyleSheet.create({
         marginTop: responsiveScreenHeight(2),
         width: '90%',
         textAlign: 'center',
-        gap: responsiveScreenHeight(1.5),
+        gap: responsiveScreenHeight(0),
     },
     headerText: {
         fontSize: responsiveFontSize(3.5),
@@ -202,7 +258,7 @@ const styles = StyleSheet.create({
     },
     buttonWrapper: {
         position: 'absolute',
-        bottom: 0,
+        bottom: 20,
         width: '90%',
         paddingHorizontal: responsiveScreenWidth(2),
     },

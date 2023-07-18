@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { responsiveScreenHeight, responsiveScreenWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
-import { COLORS, THEME, getTextPrimaryColor, getTextSecondaryColor, getUnreadMessageTextColor } from '../utils';
+import { COLORS, THEME, getBrandColor, getTextPrimaryColor, getTextSecondaryColor, getUnreadMessageTextColor } from '../utils';
+import LinearGradient from 'react-native-linear-gradient';
 
 interface Props {
     matchProfileImgSrc: any;
@@ -10,11 +11,13 @@ interface Props {
     message: string;
     noOfUnreadTexts: number;
     isOnline?: boolean;
+    onConversationPress: () => void;
 }
+
 
 export const Conversation: React.FC<Props> = (props) => {
     return (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={props.onConversationPress}>
             <View style={styles.wrapper}>
                 <View style={styles.imageWrapper}>
                     <Image
@@ -42,9 +45,24 @@ export const Conversation: React.FC<Props> = (props) => {
                             {props.message}
                         </Text>
                         {props.noOfUnreadTexts > 0 ? <View style={styles.noOfUnreadTextsWrapper}>
-                            <Text style={styles.noOfUnreadTexts}>
-                                {props.noOfUnreadTexts}
-                            </Text>
+                            <LinearGradient
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 0 }}
+                                colors={[getBrandColor(THEME.LIGHT), getBrandColor(THEME.DARK)]}
+                                style={{
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    borderRadius: 5000,
+                                    height: responsiveScreenWidth(6),
+                                    width: responsiveScreenWidth(6),
+                                    zIndex: -1,
+                                }}
+                            >
+                                <Text style={styles.noOfUnreadTexts}>
+
+                                    {props.noOfUnreadTexts > 9 ? '9+' : props.noOfUnreadTexts}
+                                </Text>
+                            </LinearGradient>
                         </View> : null}
                     </View>
                 </View>
@@ -89,7 +107,7 @@ const styles = StyleSheet.create({
         width: responsiveScreenWidth(75),
     },
     matchNameText: {
-        fontFamily: 'RedHatDisplay-Bold',
+        fontFamily: 'RedHatDisplay-SemiBold',
         color: getUnreadMessageTextColor(THEME.DARK),
         fontSize: responsiveFontSize(2.2),
     },
@@ -104,15 +122,14 @@ const styles = StyleSheet.create({
         fontSize: responsiveFontSize(2),
     },
     noOfUnreadTextsWrapper: {
-        backgroundColor: COLORS.BRAND_LIGHT,
         borderRadius: 1000,
-        width: responsiveScreenWidth(5),
-        height: responsiveScreenWidth(5),
+        width: responsiveScreenWidth(6),
+        height: responsiveScreenWidth(6),
     },
     noOfUnreadTexts: {
         fontFamily: 'RedHatDisplay-Bold',
         color: COLORS.LIGHT_100,
-        fontSize: responsiveFontSize(1.8),
+        fontSize: responsiveFontSize(1.5),
         textAlign: 'center',
     },
 });

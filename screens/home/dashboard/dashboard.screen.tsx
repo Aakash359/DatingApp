@@ -1,32 +1,16 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Image, Dimensions, PanResponder, Animated, View, Text } from 'react-native';
 import { Layout } from '../../../layout/layout';
 import { MainHeader } from '../../../layout';
 import { CardDislikeIcon, CardLikeIcon } from '../../../assets';
 import { responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions';
-
+import { users } from '../../../constants';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
 const SCREEN_WIDTH = Dimensions.get('window').width
 
-const users = [
-  {
-    id: 1,
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john@doe.com',
-    phone: '8961242572',
-    photo: "https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=398&q=80 398w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=698&q=80 698w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=796&q=80 796w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=998&q=80 998w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1298&q=80 1298w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1396&q=80 1396w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1598&q=80 1598w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1898&q=80 1898w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1996&q=80 1996w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2198&q=80 2198w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2498&q=80 2498w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2596&q=80 2596w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2798&q=80 2798w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3098&q=80 3098w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3196&q=80 3196w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3398&q=80 3398w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3698&q=80 3698w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3796&q=80 3796w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3998&q=80 3998w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=4000&q=80 4000w",
-  },
-  {
-    id: 2,
-    firstName: 'Mary',
-    lastName: 'S',
-    email: 'john@doe.com',
-    phone: '8961242572',
-    photo: "https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=398&q=80 398w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=698&q=80 698w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=796&q=80 796w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=998&q=80 998w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1298&q=80 1298w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1396&q=80 1396w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1598&q=80 1598w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1898&q=80 1898w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1996&q=80 1996w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2198&q=80 2198w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2498&q=80 2498w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2596&q=80 2596w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2798&q=80 2798w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3098&q=80 3098w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3196&q=80 3196w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3398&q=80 3398w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3698&q=80 3698w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3796&q=80 3796w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3998&q=80 3998w, https://images.unsplash.com/photo-1673912401872-a128c7c94edd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=4000&q=80 4000w",
-  }
-]
+const SWIPE_THRESHOLD = 30;
+
 const position = new Animated.ValueXY();
 
 const rotate = position.x.interpolate({
@@ -61,13 +45,33 @@ const nextCardScale = position.x.interpolate({
 export const DashboardScreen = () => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const scrollY = useRef(new Animated.Value(0)).current;
+
+  let initialGestureX = 0;
+  let initialGestureY = 0;
 
   const createdPanResponder = PanResponder.create({
-    onStartShouldSetPanResponder: (evt, gestureState) => true,
+    onMoveShouldSetPanResponder: (evt, gestureState) => {
+      const dx = Math.abs(gestureState.dx);
+      const dy = Math.abs(gestureState.dy);
+      
+      return dx > SWIPE_THRESHOLD && dx > dy; // Takes control only for horizontal swipe
+    },
+    onPanResponderGrant: (evt, gestureState) => {
+      initialGestureX = gestureState.x0;
+      initialGestureY = gestureState.y0;
+    },
     onPanResponderMove: (evt, gestureState) => {
-      //   position.setValue({ x: gestureState.dx, y: gestureState.dy })
-      position.setValue({ x: gestureState.dx, y: 0 })
+      const currentGestureX = gestureState.moveX;
+      const currentGestureY = gestureState.moveY;
+  
+      // Calculate distances in both directions
+      const dx = Math.abs(currentGestureX - initialGestureX);
+      const dy = Math.abs(currentGestureY - initialGestureY);
+  
+      if (dx > SWIPE_THRESHOLD && dx > dy) {
+        // This is a horizontal swipe, handle it
+        position.setValue({ x: gestureState.dx, y: 0 });
+      }
     },
     onPanResponderRelease: (evt, gestureState) => {
       if (gestureState.dx > 120) {
@@ -136,18 +140,6 @@ export const DashboardScreen = () => {
                       zIndex: 1000
                     }}
                   >
-                    {/* <Text
-                      style={{
-                        borderWidth: 1,
-                        borderColor: "green",
-                        color: "green",
-                        fontSize: 32,
-                        fontWeight: "800",
-                        padding: 10
-                      }}
-                    >
-                      LIKE
-                    </Text> */}
                     <CardLikeIcon />
                   </Animated.View>
                   <Animated.View
@@ -160,21 +152,9 @@ export const DashboardScreen = () => {
                       zIndex: 1000
                     }}
                   >
-                    {/* <Text
-                      style={{
-                        borderWidth: 1,
-                        borderColor: "red",
-                        color: "red",
-                        fontSize: 32,
-                        fontWeight: "800",
-                        padding: 10
-                      }}
-                    >
-                      NOPE
-                    </Text> */}
                     <CardDislikeIcon />
                   </Animated.View>
-                  <Image source={{ uri: user.photo }} style={styles.img} resizeMode='contain' />
+                  <Image source={{ uri: user.photo }} style={styles.img} resizeMode='cover' />
                   <Text style={styles.userName}>{user.firstName}</Text>
                   <Text>asddasdasasd</Text>
                   <Text>asddasdasasd</Text>
@@ -222,12 +202,12 @@ const styles = StyleSheet.create({
   },
   imgContainer: {
     position: 'absolute',
-    height: SCREEN_HEIGHT - 120,
+    height: SCREEN_HEIGHT - responsiveScreenHeight(10),
     width: SCREEN_WIDTH,
     padding: 10,
   },
   img: {
-    height: SCREEN_HEIGHT - 120,
+    height: SCREEN_HEIGHT - responsiveScreenHeight(18),
     width: undefined,
     resizeMode: "cover",
     borderRadius: 20

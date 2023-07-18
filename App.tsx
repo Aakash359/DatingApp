@@ -7,6 +7,8 @@ import { AddYourPhotosScreen, AgePreferenceScreen, DateOfBirthScreen, GenderPref
 import { Provider } from 'react-redux';
 import { store } from './redux';
 import { PurchaseGiftsScreen } from './screens/common/purchaseGifts';
+import { ConversationScreen } from './screens/home/chat';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export type RootStackParamList = {
   OnboardingScreen: undefined;
@@ -25,40 +27,44 @@ export type RootStackParamList = {
   PurchaseGemsScreen: undefined;
   PurchaseTokensScreen: undefined;
   PurchaseGiftsScreen: undefined;
+  ConversationScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App(): JSX.Element {
   return (
-    <Provider store={store}>
-      <SafeAreaProvider style={styles.mainView}>
-        <NavigationContainer>
-          <Stack.Navigator screenOptions={{
-            animation: 'none'
-          }}>
-            <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="PhoneNumberScreen" component={PhoneNumberScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="OtpScreen" component={OtpScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="NameScreen" component={NameScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="DateOfBirthScreen" component={DateOfBirthScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="GenderScreen" component={GenderScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="GenderPreferenceScreen" component={GenderPreferenceScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="ProfilePhotoScreen" component={ProfilePhotoScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="AddYourPhotosScreen" component={AddYourPhotosScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="VisibilityDistanceScreen" component={VisibilityDistanceScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="AgePreferenceScreen" component={AgePreferenceScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="InterestScreen" component={InterestScreen} options={{ headerShown: false }} />
-            {/* Home screens */}
-            <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
-            {/* Common Screens */}
-            <Stack.Screen name="PurchaseGemsScreen" component={PurchaseGemsScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="PurchaseTokensScreen" component={PurchaseTokensScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="PurchaseGiftsScreen" component={PurchaseGiftsScreen} options={{ headerShown: false }} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </SafeAreaProvider>
-    </Provider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Provider store={store}>
+        <SafeAreaProvider style={styles.mainView}>
+          <NavigationContainer>
+            <Stack.Navigator screenOptions={{
+              animation: 'none'
+            }}>
+              <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="PhoneNumberScreen" component={PhoneNumberScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="OtpScreen" component={OtpScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="NameScreen" component={NameScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="DateOfBirthScreen" component={DateOfBirthScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="GenderScreen" component={GenderScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="GenderPreferenceScreen" component={GenderPreferenceScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="ProfilePhotoScreen" component={ProfilePhotoScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="AddYourPhotosScreen" component={AddYourPhotosScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="VisibilityDistanceScreen" component={VisibilityDistanceScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="AgePreferenceScreen" component={AgePreferenceScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="InterestScreen" component={InterestScreen} options={{ headerShown: false }} />
+              {/* Home screens */}
+              <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="ConversationScreen" component={ConversationScreen} options={{ headerShown: false }} />
+              {/* Common Screens */}
+              <Stack.Screen name="PurchaseGemsScreen" component={PurchaseGemsScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="PurchaseTokensScreen" component={PurchaseTokensScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="PurchaseGiftsScreen" component={PurchaseGiftsScreen} options={{ headerShown: false }} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </SafeAreaProvider>
+      </Provider>
+    </GestureHandlerRootView>
   );
 }
 

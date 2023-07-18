@@ -1,11 +1,14 @@
 import React from 'react'
 import { Layout } from '../../../layout'
-import { View, Text, StyleSheet, FlatList } from 'react-native'
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import { responsiveFontSize, responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions'
-import { THEME, getTextPrimaryColor } from '../../../utils'
+import { THEME, getTextButtonColor, getTextPrimaryColor } from '../../../utils'
 import { Conversation, SearchInput } from '../../../components'
 import { RecentMatchAvatar } from '../../../components/recentMatchAvatar.component'
-import { FilterMenuIcon } from '../../../assets/icons/filterMenu.icon'
+import { ChatHorizontalFilterIcon, ThreeDotsIcon } from '../../../assets'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { RootStackParamList } from '../../../App'
+import { useNavigation } from '@react-navigation/native'
 
 const recentMatches = [
     { image: require('../../../assets/images/home/likes/avatar1.png'), likes: 2 },
@@ -26,10 +29,10 @@ const conversations = [
     },
     {
         matchProfileImgSrc: require('../../../assets/images/home/likes/avatar1.png'),
-        matchName: 'Alex Linderson',
-        lastTextTime: '2 min',
+        matchName: 'Ba binderson',
+        lastTextTime: '61 min',
         message: 'How are you today ?',
-        noOfUnreadTexts: 0,
+        noOfUnreadTexts: 12,
         isOnline: true
     },
     {
@@ -82,9 +85,16 @@ const conversations = [
     },
 ];
 
+type chatScreenNavigationProps = NativeStackNavigationProp<
+    RootStackParamList,
+    'OnboardingScreen'
+>;
+
 export const ChatScreen = () => {
 
     const [searchText, setSearchText] = React.useState('');
+
+    const navigation = useNavigation<chatScreenNavigationProps>();
 
     return (
         <Layout>
@@ -118,8 +128,12 @@ export const ChatScreen = () => {
                     <View style={styles.conversationHeaderWrapper}>
                         <Text style={styles.recentMatchText}>Coversations</Text>
                         <View style={styles.conversationHeaderIconWrapper}>
-                            <FilterMenuIcon />
-                            <FilterMenuIcon />
+                            <TouchableOpacity>
+                                <ChatHorizontalFilterIcon />
+                            </TouchableOpacity>
+                            <TouchableOpacity>
+                                <ThreeDotsIcon />
+                            </TouchableOpacity>
                         </View>
                     </View>
                     <FlatList
@@ -133,6 +147,9 @@ export const ChatScreen = () => {
                                 message={item.message}
                                 noOfUnreadTexts={item.noOfUnreadTexts}
                                 isOnline={item.isOnline}
+                                onConversationPress={() => {
+                                    navigation.navigate('ConversationScreen');
+                                }}
                             />
                         )}
                         keyExtractor={(item, index) => index.toString()}
@@ -166,12 +183,13 @@ const styles = StyleSheet.create({
     recentMatchesContainer: {
         paddingHorizontal: responsiveScreenWidth(3),
         marginTop: responsiveScreenHeight(2),
+        marginBottom: responsiveScreenHeight(1),
     },
     recentMatchText: {
         marginBottom: responsiveScreenHeight(1),
-        color: getTextPrimaryColor(THEME.DARK),
+        color: getTextButtonColor(THEME.DARK),
         fontFamily: 'RedHatDisplay-SemiBold',
-        fontSize: responsiveFontSize(2.1),
+        fontSize: responsiveFontSize(2.2),
     },
     conversationWrapper: {
         backgroundColor: '#292D34',
@@ -183,6 +201,7 @@ const styles = StyleSheet.create({
     },
     conversationHeaderWrapper: {
         paddingVertical: responsiveScreenHeight(1.5),
+        paddingHorizontal: responsiveScreenWidth(1),
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -191,7 +210,7 @@ const styles = StyleSheet.create({
     conversationHeaderIconWrapper: {
         display: 'flex',
         flexDirection: 'row',
-        gap: responsiveScreenWidth(2),
+        gap: responsiveScreenWidth(5),
     },
     conversationContainer: {
         flex: 1,

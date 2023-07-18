@@ -9,6 +9,7 @@ export const FilterMenuIcon = (props: IconProps) => {
             width={width}
             height={height}
             fill="none"
+            viewBox="0 0 27 20"
             {...props}
         >
             <Path
