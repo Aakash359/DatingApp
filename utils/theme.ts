@@ -34,6 +34,15 @@ export const getModalBackgroundColor = (theme: THEME) => {
     }
 };
 
+export const getDarkBackgroundColor = (theme: THEME) => {
+    switch (theme) {
+        case THEME.LIGHT:
+            return COLORS.LIGHT_20;
+        case THEME.DARK:
+            return COLORS.LIGHT_10;
+    }
+};
+
 export const getBorderPrimaryColor = (theme: THEME) => {
     switch (theme) {
         case THEME.LIGHT:

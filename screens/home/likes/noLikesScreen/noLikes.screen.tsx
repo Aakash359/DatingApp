@@ -64,7 +64,9 @@ export const NoLikesScreen = () => {
                     <NoLikesIcon />
                     <View style={styles.textWrapper}>
                         <Text style={styles.headerText}>NO LIKES YET</Text>
-                        <Text style={styles.descriptionText}>Boost profile to get likes. Get noticed match instantly</Text>
+                        <View style={styles.descriptionTextWrapper}>
+                            <Text style={styles.descriptionText}>Boost profile to get likes. Get noticed match instantly</Text>
+                        </View>
                     </View>
                 </View>
                 <View style={styles.buttonWrapper}>
@@ -76,13 +78,13 @@ export const NoLikesScreen = () => {
                     >
                         <Text style={styles.buttonText}>BOOST PROFILE</Text>
                     </Button>
-            <Modal
-                useNativeDriverForBackdrop={true}
-                style={styles.modal}
-                onBackdropPress={() => setIsModalVisible(false)}
-                isVisible={isModalVisible}>
-                {renderModalPage()}
-            </Modal>
+                    <Modal
+                        useNativeDriverForBackdrop={true}
+                        style={styles.modal}
+                        onBackdropPress={() => setIsModalVisible(false)}
+                        isVisible={isModalVisible}>
+                        {renderModalPage()}
+                    </Modal>
                 </View>
             </View>
         </Layout>
@@ -120,7 +122,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: responsiveScreenHeight(2),
-        width: '60%',
+        width: '100%',
         gap: responsiveScreenHeight(1.5),
     },
     headerText: {
@@ -132,7 +134,10 @@ const styles = StyleSheet.create({
         fontSize: responsiveFontSize(2),
         fontFamily: 'RedHatDisplay-Regular',
         color: getTextSecondaryColor(THEME.DARK),
-        textAlign: 'center'
+        textAlign: 'center',
+    },
+    descriptionTextWrapper: {
+        width: '60%',
     },
     buttonWrapper: {
         width: '90%',

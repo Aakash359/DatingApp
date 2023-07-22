@@ -1,78 +1,95 @@
 import React, { useState } from 'react';
-import { StyleSheet, Image, Dimensions, PanResponder, View, Text } from 'react-native';
+import { StyleSheet, Image, View, Text } from 'react-native';
 import { Layout } from '../../../layout/layout';
 import { MainHeader } from '../../../layout';
 import { CardDislikeIcon, CardLikeIcon } from '../../../assets';
-import { responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions';
+import { responsiveFontSize, responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import { users } from '../../../constants';
 import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { GestureEventPayload, PanGestureHandler, PanGestureHandlerEventPayload } from 'react-native-gesture-handler';
-
-const SCREEN_HEIGHT = Dimensions.get('window').height
-const SCREEN_WIDTH = Dimensions.get('window').width
+import { THEME, getDarkBackgroundColor, getTextButtonColor } from '../../../utils';
 
 const startingPosition = 0;
 
 export const DashboardScreen = () => {
-
   const pressed = useSharedValue(false);
   const imageXPostition = useSharedValue(startingPosition);
   const rotation = useSharedValue(0);
-  const dislikeIconOpacity = useSharedValue(0);
   const likeIconOpacity = useSharedValue(0);
+  const dislikeIconOpacity = useSharedValue(0);
   const nextImageScale = useSharedValue(0.5);
-  const nextImageOpacity = useSharedValue(0);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const scrollHandlerRef = React.useRef(null);
 
-  const finishGesture = (event: Readonly<GestureEventPayload & PanGestureHandlerEventPayload>) => {
-    if (event.translationX > 50) {
-      imageXPostition.value = withSpring(500, { damping: 15 });
-    } else if (event.translationX < -50) {
-      imageXPostition.value = withSpring(-500, { damping: 15 });
-    }
-    nextImageScale.value = withSpring(0.95, { damping: 15 });
-    nextImageOpacity.value = withSpring(1, { damping: 15 });
-    setTimeout(() => {
-      setCurrentIndex((prev) => prev + 1);
-    }, 100);
-    console.log('finish');
+  // const finishGesture = (event: Readonly<GestureEventPayload & PanGestureHandlerEventPayload>) => {
+  //   if (event.translationX > 20) {
+  //     imageXPostition.value = withSpring(500, { damping: 15 });
+  //   } else if (event.translationX < -20) {
+  //     imageXPostition.value = withSpring(-500, { damping: 15 });
+  //   }
+  //   nextImageScale.value = withSpring(0.95, { damping: 15 });
+  //   likeIconOpacity.value = 0;
+  //   dislikeIconOpacity.value = 0;
+  //   setTimeout(() => {
+  //     setCurrentIndex((prev) => prev + 1);
+  //   }, 150);
+  // };
+
+  const changeCurrentIndex = () => {
+    setCurrentIndex(prev => prev + 1);
+    imageXPostition.value = startingPosition;
   };
 
+  const finishGesture = (event: Readonly<GestureEventPayload & PanGestureHandlerEventPayload>) => {
+    if (event.translationX > 20) {
+      imageXPostition.value = withSpring(400, { damping: 15 }, () => {
+        runOnJS(changeCurrentIndex)()
+      });
+    } else if (event.translationX < -20) {
+      imageXPostition.value = withSpring(-400, { damping: 15 }, () => {
+        runOnJS(changeCurrentIndex)()
+      });
+    }
+    // nextImageScale.value = withSpring(0.95, { damping: 15 });
+    likeIconOpacity.value = 0;
+    dislikeIconOpacity.value = 0;
+  };
+
+  console.log('currentIndex', currentIndex);
+
   const imageSwipeHandler = useAnimatedGestureHandler({
-    onStart: (event, ctx) => {
+    onStart: () => {
       pressed.value = true;
       imageXPostition.value = 0;
       rotation.value = 0;
     },
-    onActive: (event, ctx) => {
+    onActive: (event) => {
       imageXPostition.value = event.translationX / 1.25;
       rotation.value = (event.translationX / 100) * 3;
       if (event.translationX > 50) {
-        dislikeIconOpacity.value = event.translationX / 200;
-        likeIconOpacity.value = 0;
-      }
-      if (event.translationX < 50) {
-        likeIconOpacity.value = event.translationX / -200;
+        likeIconOpacity.value = event.translationX / 150;
         dislikeIconOpacity.value = 0;
       }
-      if (event.translationX < 0) {
-        nextImageScale.value = Math.min(-event.translationX / 3, 0.95);
-        nextImageOpacity.value = Math.min(-event.translationX / 300, 1);
-      } else if (event.translationX > 0) {
-        nextImageScale.value = Math.min(event.translationX / 3, 0.95);
-        nextImageOpacity.value = Math.min(event.translationX / 300, 1);
+      if (event.translationX < 50) {
+        dislikeIconOpacity.value = event.translationX / -150;
+        likeIconOpacity.value = 0;
       }
+      // if (event.translationX < 0) {
+      //   nextImageScale.value = Math.min(-event.translationX / 3, 0.95);
+      // } else if (event.translationX > 0) {
+      //   nextImageScale.value = Math.min(event.translationX / 3, 0.95);
+      // }
     },
-    onEnd: (event, ctx) => {
+    onEnd: (event) => {
       pressed.value = false;
-      imageXPostition.value = withSpring(startingPosition);
+      imageXPostition.value = withSpring(startingPosition, {
+        velocity: event.velocityX,
+      });
       rotation.value = withSpring(0);
-      dislikeIconOpacity.value = withSpring(0);
       likeIconOpacity.value = withSpring(0);
-      nextImageScale.value = withSpring(0);
-      nextImageOpacity.value = withSpring(0);
-      if (event.translationX > 150 || event.translationX < -150) {
+      dislikeIconOpacity.value = withSpring(0);
+      // nextImageScale.value = withSpring(0);
+
+      if (event.translationX > 150 || event.translationX < -150 || Math.abs(event.velocityX) > 1500) {
         runOnJS(finishGesture)(event);
       }
     },
@@ -84,31 +101,28 @@ export const DashboardScreen = () => {
     };
   });
 
-  const dislikeIconOpacityStyle = useAnimatedStyle(() => {
-    return {
-      opacity: dislikeIconOpacity.value
-    };
-  });
-
   const likeIconOpacityStyle = useAnimatedStyle(() => {
     return {
       opacity: likeIconOpacity.value
     };
   });
 
+  const dislikeIconOpacityStyle = useAnimatedStyle(() => {
+    return {
+      opacity: dislikeIconOpacity.value
+    };
+  });
+
   const nextImageScaleStyle = useAnimatedStyle(() => {
     return {
-      transform: [{ scale: nextImageScale.value }],
-      opacity: nextImageOpacity.value
+      // transform: [{ scale: nextImageScale.value }],
     };
   });
 
   React.useEffect(() => {
     imageXPostition.value = 0;
     rotation.value = 0;
-    if(currentIndex === 4) {
-      setCurrentIndex(0)
-    }
+
   }, [currentIndex]);
 
   return (
@@ -128,19 +142,18 @@ export const DashboardScreen = () => {
                 ]}
                 key={user.id}
               >
-                <PanGestureHandler 
-                  onGestureEvent={imageSwipeHandler} 
-                  activeOffsetX={[-15, 15]} // Only capture horizontal gestures
+                <PanGestureHandler
+                  onGestureEvent={imageSwipeHandler}
+                  activeOffsetX={[-15, 15]}
                 >
                   <Animated.ScrollView
-                    scrollEventThrottle={16}
                     style={{ flex: 1 }}
-                    contentContainerStyle={{ padding: 10 }}
-                    scrollEnabled={true}
+                    contentContainerStyle={{ padding: responsiveScreenWidth(3) }}
+                    showsVerticalScrollIndicator={false}
                   >
                     <Animated.View
-                      style={[likeIconOpacityStyle, {
-                        transform: [{ scale: 1.2 }],
+                      style={[dislikeIconOpacityStyle, {
+                        transform: [{ scale: 1.1 }],
                         position: "absolute",
                         top: responsiveScreenHeight(30),
                         left: responsiveScreenWidth(3),
@@ -151,45 +164,62 @@ export const DashboardScreen = () => {
                       <CardDislikeIcon />
                     </Animated.View>
                     <Animated.View
-                      style={[dislikeIconOpacityStyle, {
-                        transform: [{ scale: 1.1 }],
+                      style={[likeIconOpacityStyle, {
+                        transform: [{ scale: 1.2 }],
                         position: "absolute",
-                        top: responsiveScreenHeight(31),
+                        top: responsiveScreenHeight(32),
                         right: responsiveScreenWidth(3),
                         zIndex: 1000
                       }]}
                     >
                       <CardLikeIcon />
                     </Animated.View>
-                    <Animated.View style={[currentImageStyle]}>
+                    <Animated.View style={[currentImageStyle, { position: 'relative' }]}>
                       <Image source={{ uri: user.photo }} style={styles.img} resizeMode='cover' />
-                    </Animated.View>
-                    <Animated.View style={[currentImageStyle]}>
-                      <Text style={styles.userName}>{user.firstName}</Text>
-                      <Text>asddasdasasd</Text>
-                      <Text>asddasdasasd</Text>
-                      <Text>asddasdasasd</Text>
-                      <Text>asddasdasasd</Text>
-                      <Text>asddasdasasd</Text>
-                      <Text>asddasdasasd</Text>
-                      <Text>asddasdasasd</Text>
-                      <Text>asddasdasasd</Text>
-                      <Text>asddasdasasd</Text>
-                      <Text>asddasdasasd</Text>
-                      <Text>asddasdasasd</Text>
+                      <View style={styles.userNameWrapper}>
+                        <Text style={styles.userName}>{user.firstName}</Text>
+                      </View>
+                      <View style={styles.detailsWrapper}>
+                        <Text>asddasdasasd</Text>
+                        <Text>asddasdasasd</Text>
+                        <Text>asddasdasasd</Text>
+                        <Text>asddasdasasd</Text>
+                        <Text>asddasdasasd</Text>
+                        <Text>asddasdasasd</Text>
+                        <Text>asddasdasasd</Text>
+                        <Text>asddasdasasd</Text>
+                        <Text>asddasdasasd</Text>
+                        <Text>asddasdasasd</Text>
+                        <Text>asddasdasasd</Text>
+                      </View>
                     </Animated.View>
                   </Animated.ScrollView>
                 </PanGestureHandler>
               </Animated.View>
             )
-          } else {
+          } else if (index > currentIndex) {
             return (
-              <View key={user.id} style={styles.imgContainer}>
+              <View key={user.id} style={[styles.imgContainer, { padding: responsiveScreenWidth(3) }]}>
                 <Animated.View
                   style={[nextImageScaleStyle]}
                 >
-                  <Image source={{ uri: user.photo }} style={styles.img} />
-                  <Text style={styles.userName}>{user.firstName}</Text>
+                  <Image source={{ uri: user.photo }} style={styles.img} resizeMode='cover' />
+                  <View style={styles.userNameWrapper}>
+                    <Text style={styles.userName}>{user.firstName}</Text>
+                  </View>
+                  <View style={styles.detailsWrapper}>
+                    <Text>zzzzzzzzzzzzzz</Text>
+                    <Text>zzzzzzzzzzzzzz</Text>
+                    <Text>zzzzzzzzzzzzzz</Text>
+                    <Text>zzzzzzzzzzzzzz</Text>
+                    <Text>zzzzzzzzzzzzzz</Text>
+                    <Text>zzzzzzzzzzzzzz</Text>
+                    <Text>zzzzzzzzzzzzzz</Text>
+                    <Text>zzzzzzzzzzzzzz</Text>
+                    <Text>zzzzzzzzzzzzzz</Text>
+                    <Text>zzzzzzzzzzzzzz</Text>
+                    <Text>zzzzzzzzzzzzzz</Text>
+                  </View>
                 </Animated.View>
               </View>
             )
@@ -208,21 +238,34 @@ const styles = StyleSheet.create({
   },
   imgContainer: {
     position: 'absolute',
-    height: SCREEN_HEIGHT - responsiveScreenHeight(10),
-    width: SCREEN_WIDTH,
-    padding: 10,
+    height: responsiveScreenHeight(80),
+    width: responsiveScreenWidth(100),
   },
   img: {
-    height: SCREEN_HEIGHT - responsiveScreenHeight(18),
+    height: responsiveScreenHeight(72),
     width: undefined,
     resizeMode: "cover",
     borderRadius: 20,
+    borderBottomRightRadius: 0,
+    borderBottomLeftRadius: 0,
+    marginBottom: -1,
   },
   userName: {
     position: 'absolute',
     top: '85%',
     left: '10%',
-    fontSize: 32,
+    fontSize: responsiveFontSize(4),
     fontWeight: 'bold',
+    color: getTextButtonColor(THEME.DARK),
+  },
+  userNameWrapper: {
+    position: 'absolute',
+    top: responsiveScreenHeight(65),
+    left: responsiveScreenWidth(5),
+    zIndex: 10,
+  },
+  detailsWrapper: {
+    backgroundColor: getDarkBackgroundColor(THEME.DARK),
+    padding: responsiveScreenWidth(5),
   }
 });

@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
     },
     buttonWrapper: {
         position: 'absolute',
-        bottom: 20,
+        bottom: responsiveScreenHeight(2),
         width: '90%',
         paddingHorizontal: responsiveScreenWidth(2),
     },
