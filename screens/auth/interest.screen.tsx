@@ -55,7 +55,7 @@ export const InterestScreen = () => {
                         onBackPress={() => setIsVerificationModalVisible(false)}
                     />
                 )
-        
+
             case ModalPage.STRIKE_POSE_SCREEN:
                 return (
                     <VerificationModal
@@ -89,7 +89,7 @@ export const InterestScreen = () => {
                         modalDescription='Your profile verification is under review, we will get back to you shortly'
                         modalButtonText='GET VERIFIED'
                         modalCancleButtonText='NOT NOW'
-                        onNextPress={() => navigation.navigate('PhoneNumberScreen', {isSignup: false})}
+                        onNextPress={() => navigation.navigate('PhoneNumberScreen', { isSignup: false })}
                         onBackPress={() => setModalPage(ModalPage.CONFIRMATION_SCREEN)}
                         isLastModal={true}
                     />
@@ -127,7 +127,6 @@ export const InterestScreen = () => {
                         <Text style={styles.headerText}>YOUR INTERSTS ARE</Text>
                     </View>
                     <View style={styles.inputWrapper}>
-                        {/* <Input value={gender} setValue={setGender} placeholder='SEARCH' /> */}
                         <Text style={styles.inputDescription}>Creativity:</Text>
                         <View style={styles.pillContainer}>
                             {interestPillData.map((item, index) => (
@@ -154,19 +153,19 @@ export const InterestScreen = () => {
                         </View>
                     </View>
                 </View>
-                <View style={styles.footerWrapper}>
-                    <View style={styles.buttonWrapper}>
-                        <Button
-                            onPress={handleNavigateToProfilePhotoScreen}
-                            imageSource={require('../../assets/gradients/splash.png')}
-                            variant="primary"
-                            height={responsiveScreenHeight(8)}
-                        >
-                            <RightArrow />
-                        </Button>
-                    </View>
-                </View>
             </KeyboardAwareScrollView>
+            <View style={styles.footerWrapper}>
+                <View style={styles.buttonWrapper}>
+                    <Button
+                        onPress={handleNavigateToProfilePhotoScreen}
+                        imageSource={require('../../assets/gradients/splash.png')}
+                        variant="primary"
+                        height={responsiveScreenHeight(8)}
+                    >
+                        <RightArrow />
+                    </Button>
+                </View>
+            </View>
         </Layout>
     )
 }
@@ -185,7 +184,7 @@ const styles = StyleSheet.create({
     mainScrollView: {
         display: 'flex',
         justifyContent: 'space-between',
-        flex: 1,
+        flexGrow: 1
     },
     mainWrapper: {
         flexGrow: 1,
@@ -203,11 +202,13 @@ const styles = StyleSheet.create({
         marginTop: responsiveScreenHeight(3),
         width: responsiveScreenHeight(8),
         marginBottom: responsiveScreenHeight(3),
-        position: 'absolute',
-        bottom: 0,
-        right: responsiveScreenWidth(3),
+        left: responsiveScreenWidth(75),
     },
     footerWrapper: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -232,7 +233,6 @@ const styles = StyleSheet.create({
     inputWrapper: {
         marginTop: responsiveScreenHeight(4),
         paddingHorizontal: responsiveScreenWidth(3),
-        maxHeight: responsiveScreenHeight(50),
     },
     inputDescription: {
         fontSize: responsiveFontSize(2),

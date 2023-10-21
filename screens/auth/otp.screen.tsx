@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { responsiveScreenWidth, responsiveScreenHeight, responsiveFontSize } from 'react-native-responsive-dimensions';
 import { Layout } from '../../layout/layout';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { LockIcon, RightArrow } from '../../assets';
 import { THEME, getBrandColor, getTextPrimaryColor, getTextSecondaryColor } from '../../utils/theme';
 import { Button, TextButton } from '../../components';
@@ -12,7 +11,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { RootState, setLoginOtp, setOtp } from '../../redux';
-import { useAppDispatch, useAppSelector } from '../../utils';
+import { useAppDispatch, useAppSelector, useKeyboardOffset } from '../../utils';
 
 type otpScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -25,6 +24,7 @@ export const OtpScreen = () => {
     const { isSignup } = route.params as any;
     const authDetails = useAppSelector((state: RootState) => state.authDetails);
     const [otp, setLocalOtp] = React.useState('');
+    const keyboardOffset = useKeyboardOffset();
     const navigation = useNavigation<otpScreenNavigationProp>();
 
     const handleNavigateToNameScreen = () => {
@@ -37,7 +37,6 @@ export const OtpScreen = () => {
 
     return (
         <Layout>
-            <KeyboardAwareScrollView contentContainerStyle={styles.mainScrollView}>
                 {isSignup ?? <Stepper stepCount={11} activeSteps={2} />}
                 <View style={styles.mainWrapper}>
                     <View style={styles.headerWrapper}>
@@ -64,7 +63,7 @@ export const OtpScreen = () => {
                     <View style={styles.footerTextWrapper}>
                         <TextButton text='Didn’t receive the code?' />
                     </View>
-                    <View style={styles.buttonWrapper}>
+                    <View style={[styles.buttonWrapper, { bottom: keyboardOffset }]}>
                         <Button
                             onPress={handleNavigateToNameScreen}
                             imageSource={require('../../assets/gradients/splash.png')}
@@ -75,17 +74,11 @@ export const OtpScreen = () => {
                         </Button>
                     </View>
                 </View>
-            </KeyboardAwareScrollView>
         </Layout>
     )
 }
 
 const styles = StyleSheet.create({
-    mainScrollView: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        flex: 1,
-    },
     mainWrapper: {
         flexGrow: 1,
     },
@@ -151,10 +144,5 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: responsiveScreenWidth(1.5),
         marginTop: responsiveScreenHeight(1.5),
-    },
-    centeredView: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
 })

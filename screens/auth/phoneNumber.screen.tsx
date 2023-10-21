@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Platform, Keyboard } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { responsiveScreenWidth, responsiveScreenHeight, responsiveFontSize } from 'react-native-responsive-dimensions';
 import { Layout } from '../../layout/layout';
 import { PhoneIcon, RightArrow } from '../../assets';
@@ -9,7 +9,7 @@ import { Stepper } from '../../components/stepper.component';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
-import { useAppDispatch } from '../../utils';
+import { useAppDispatch, useKeyboardOffset } from '../../utils';
 import { setLoginPhoneNumber, setPhoneNumber } from '../../redux';
 
 type PhoneNumbeerScreenNavigationProp = NativeStackNavigationProp<
@@ -19,13 +19,13 @@ type PhoneNumbeerScreenNavigationProp = NativeStackNavigationProp<
 
 export const PhoneNumberScreen = () => {
     const dispatch = useAppDispatch();
+    const keyboardOffset = useKeyboardOffset();
     const route = useRoute();
     const { isSignup } = route.params as any;
     const navigation = useNavigation<PhoneNumbeerScreenNavigationProp>();
     const [phoneNumber, setPhoneNumbers] = React.useState('');
     const [isChecked, setIsChecked] = React.useState(false);
     const [isPhoneNumberValid, setIsPhoneNumberValid] = React.useState(true);
-    const [buttonWrapperBottomOffset, setButtonWrapperBottomOffset] = React.useState(0);
 
     const checkboxPress = () => {
         setIsChecked(prev => !prev);
@@ -53,22 +53,6 @@ export const PhoneNumberScreen = () => {
             }
         }
     }, [isPhoneNumberValid, phoneNumber])
-
-    React.useEffect(() => {
-        if (Platform.OS === 'ios') {
-            const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (e) => {
-                setButtonWrapperBottomOffset(e.endCoordinates.height);
-            });
-            const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-                setButtonWrapperBottomOffset(0);
-            });
-    
-            return () => {
-                keyboardDidHideListener.remove();
-                keyboardDidShowListener.remove();
-            };
-        }
-    }, []);
 
     return (
         <Layout>
@@ -113,7 +97,7 @@ export const PhoneNumberScreen = () => {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <View style={[styles.buttonWrapper, { bottom: buttonWrapperBottomOffset }]}>
+                <View style={[styles.buttonWrapper, { bottom: keyboardOffset }]}>
                     <Button
                         onPress={handleNavigateToNextScreen}
                         imageSource={require('../../assets/gradients/splash.png')}

@@ -11,8 +11,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { genderPillData } from '../../constants';
-import { RootState, setGender } from '../../redux';
-import { useAppDispatch, useAppSelector } from '../../utils';
+import { setGender } from '../../redux';
+import { useAppDispatch, useKeyboardOffset } from '../../utils';
 
 type otpScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -21,20 +21,19 @@ type otpScreenNavigationProp = NativeStackNavigationProp<
 
 export const GenderScreen = () => {
     const dispatch = useAppDispatch();
-    const authDetails = useAppSelector((state: RootState) => state.authDetails);
     const [gender, setLocalGender] = React.useState('');
     const [selectedGender, setSelectedGender] = React.useState('');
     const [genderError, setGenderError] = React.useState(false);
     const [isChecked, setIsChecked] = React.useState(false);
     const [genderData, setGenderData] = React.useState(genderPillData);
     const navigation = useNavigation<otpScreenNavigationProp>();
+    const keyboardOffset = useKeyboardOffset();
     const checkboxPress = () => {
         setIsChecked(prev => !prev);
     }
     const handleNavigateToProfilePhotoScreen = () => {
         if (selectedGender !== '') {
             dispatch(setGender(selectedGender));
-            console.log('date', authDetails.signUpDetails.dateOfBirth);
             navigation.navigate('GenderPreferenceScreen');
         } else {
             setGenderError(true);
@@ -96,7 +95,7 @@ export const GenderScreen = () => {
                         <CheckBox isChecked={isChecked} onPress={checkboxPress} />
                         <Text style={styles.inputDescription}>Show Gender on profile?</Text>
                     </View>
-                    <View style={styles.buttonWrapper}>
+                    <View style={[styles.buttonWrapper, { bottom: keyboardOffset }]}>
                         <Button
                             onPress={handleNavigateToProfilePhotoScreen}
                             imageSource={require('../../assets/gradients/splash.png')}

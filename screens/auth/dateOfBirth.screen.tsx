@@ -11,7 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import { RootState, setDateOfBirth } from '../../redux';
-import { useAppDispatch, useAppSelector } from '../../utils';
+import { useAppDispatch, useAppSelector, useKeyboardOffset } from '../../utils';
 
 type PhoneNumbeerScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -20,7 +20,7 @@ type PhoneNumbeerScreenNavigationProp = NativeStackNavigationProp<
 
 export const DateOfBirthScreen = () => {
     const dispatch = useAppDispatch();
-    const authDetails = useAppSelector((state: RootState) => state.authDetails);
+    const keyboardOffset = useKeyboardOffset();
     const navigation = useNavigation<PhoneNumbeerScreenNavigationProp>();
     const [date, setLocalDate] = React.useState<Date>();
     const [isChecked, setIsChecked] = React.useState(false);
@@ -32,14 +32,11 @@ export const DateOfBirthScreen = () => {
     const handleNavigateToNextScreen = () => {
         if(!date) return;
         dispatch(setDateOfBirth(date.toISOString().split('T')[0]));
-        console.log('first', authDetails.signUpDetails.firstName);
-        console.log('last', authDetails.signUpDetails.lastName);
         navigation.navigate('GenderScreen');
     }
 
     return (
         <Layout>
-            <KeyboardAwareScrollView contentContainerStyle={styles.mainScrollView}>
                 <Stepper stepCount={11} activeSteps={4} />
                 <View style={styles.mainWrapper}>
                     <View style={styles.headerWrapper}>
@@ -62,7 +59,7 @@ export const DateOfBirthScreen = () => {
                     </View>
                 </View>
 
-                <View style={styles.buttonWrapper}>
+                <View style={[styles.buttonWrapper, { bottom: keyboardOffset }]}>
                     <Button
                         onPress={handleNavigateToNextScreen}
                         imageSource={require('../../assets/gradients/splash.png')}
@@ -72,7 +69,6 @@ export const DateOfBirthScreen = () => {
                         <RightArrow />
                     </Button>
                 </View>
-            </KeyboardAwareScrollView>
         </Layout>
     )
 }

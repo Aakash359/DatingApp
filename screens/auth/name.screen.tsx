@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { responsiveScreenWidth, responsiveScreenHeight, responsiveFontSize } from 'react-native-responsive-dimensions';
 import { Layout } from '../../layout/layout';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { ProfileIcon, RightArrow } from '../../assets';
 import { COLORS, THEME, getBrandColor, getTextPrimaryColor, getTextSecondaryColor } from '../../utils/theme';
 import { Button, Input } from '../../components';
@@ -11,7 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import { RootState, setFirstName, setLastName } from '../../redux';
-import { useAppDispatch, useAppSelector } from '../../utils';
+import { useAppDispatch, useAppSelector, useKeyboardOffset } from '../../utils';
 
 type NameScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -26,6 +25,7 @@ export const NameScreen = () => {
     const [lastName, setLocalLastName] = React.useState('');
     const [firstNameError, setFirstNameError] = React.useState('');
     const [lastNameError, setLastNameError] = React.useState('');
+    const keyboardOffset = useKeyboardOffset();
 
     const validateName = (name: string) => {
         if(name.length === 0) return 'This field is required';
@@ -62,7 +62,6 @@ export const NameScreen = () => {
 
     return (
         <Layout>
-            <KeyboardAwareScrollView contentContainerStyle={styles.mainScrollView}>
                 <Stepper stepCount={11} activeSteps={3} />
                 <View style={styles.mainWrapper}>
                     <View style={styles.headerWrapper}>
@@ -101,7 +100,7 @@ export const NameScreen = () => {
                         </Text>
                     </View>
                 </View>
-                <View style={styles.buttonWrapper}>
+                <View style={[styles.buttonWrapper, { bottom: keyboardOffset }]}>
                     <Button
                         onPress={handleNavigateToDOBScreen}
                         imageSource={require('../../assets/gradients/splash.png')}
@@ -111,7 +110,6 @@ export const NameScreen = () => {
                         <RightArrow />
                     </Button>
                 </View>
-            </KeyboardAwareScrollView>
         </Layout>
     );
 };

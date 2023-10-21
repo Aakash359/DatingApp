@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, ImageBackground, View } from 'react-native';
+import { StyleSheet, ImageBackground, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 interface Props {
     children?: React.ReactNode;
@@ -10,10 +10,13 @@ export const Layout: React.FC<Props> = (props) => {
         <ImageBackground
             resizeMode='cover'
             source={require('../assets/gradients/gradient-bg.png')}
-            style={styles.image}>
-            <View style={styles.wrapper}>
-                {props.children}
-            </View>
+            style={styles.image}
+        >
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                <View style={styles.wrapper}>
+                    {props.children}
+                </View>
+            </TouchableWithoutFeedback>
         </ImageBackground>
     )
 }
@@ -26,4 +29,4 @@ const styles = StyleSheet.create({
     wrapper: {
         flex: 1,
     },
-})
+});

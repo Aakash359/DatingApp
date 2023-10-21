@@ -12,7 +12,7 @@ import { RootStackParamList } from '../../App';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { genderPillDataAlt } from '../../constants';
 import { RootState, setPreferredGender } from '../../redux';
-import { useAppDispatch, useAppSelector } from '../../utils';
+import { useAppDispatch, useAppSelector, useKeyboardOffset } from '../../utils';
 
 type otpScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -28,6 +28,7 @@ export const GenderPreferenceScreen = () => {
     const [isChecked, setIsChecked] = React.useState(false);
     const [genderData, setGenderData] = React.useState(genderPillDataAlt);
     const navigation = useNavigation<otpScreenNavigationProp>();
+    const keyboardOffset = useKeyboardOffset();
     const checkboxPress = () => {
         setIsChecked(prev => !prev);
     }
@@ -60,7 +61,6 @@ export const GenderPreferenceScreen = () => {
 
     return (
         <Layout>
-            <KeyboardAwareScrollView contentContainerStyle={styles.mainScrollView}>
                 <Stepper stepCount={11} activeSteps={6} />
                 <View style={styles.mainWrapper}>
                     <View style={styles.headerWrapper}>
@@ -84,7 +84,7 @@ export const GenderPreferenceScreen = () => {
                         <CheckBox isChecked={isChecked} onPress={checkboxPress} />
                         <Text style={styles.inputDescription}>Show Interested Genders on profile?</Text>
                     </View>
-                    <View style={styles.buttonWrapper}>
+                    <View style={[styles.buttonWrapper, { bottom: keyboardOffset }]}>
                         <Button
                             onPress={handleNavigateToProfilePhotoScreen}
                             imageSource={require('../../assets/gradients/splash.png')}
@@ -95,7 +95,6 @@ export const GenderPreferenceScreen = () => {
                         </Button>
                     </View>
                 </View>
-            </KeyboardAwareScrollView>
         </Layout>
     )
 }
