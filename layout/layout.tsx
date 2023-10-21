@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, ImageBackground, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface Props {
     children?: React.ReactNode;
@@ -13,9 +14,9 @@ export const Layout: React.FC<Props> = (props) => {
             style={styles.image}
         >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                <View style={styles.wrapper}>
+                <SafeAreaView style={styles.wrapper}>
                     {props.children}
-                </View>
+                </SafeAreaView>
             </TouchableWithoutFeedback>
         </ImageBackground>
     )
