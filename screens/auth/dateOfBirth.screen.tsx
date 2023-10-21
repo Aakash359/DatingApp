@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { responsiveScreenWidth, responsiveScreenHeight, responsiveFontSize } from 'react-native-responsive-dimensions';
 import { Layout } from '../../layout/layout';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { CalendarIcon, RightArrow } from '../../assets';
 import { THEME, getTextPrimaryColor, getTextSecondaryColor } from '../../utils/theme';
 import { Button, CheckBox, CustomDatePicker } from '../../components';
@@ -10,8 +9,8 @@ import { Stepper } from '../../components/stepper.component';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
-import { RootState, setDateOfBirth } from '../../redux';
-import { useAppDispatch, useAppSelector, useKeyboardOffset } from '../../utils';
+import { setDateOfBirth } from '../../redux';
+import { useAppDispatch, useKeyboardOffset } from '../../utils';
 
 type PhoneNumbeerScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -89,7 +88,7 @@ const styles = StyleSheet.create({
         gap: responsiveScreenWidth(1.5),
         maxWidth: responsiveScreenWidth(100),
         paddingHorizontal: responsiveScreenWidth(3),
-        marginTop: responsiveScreenHeight(5),
+        marginTop: responsiveScreenHeight(10),
     },
     buttonWrapper: {
         marginTop: responsiveScreenHeight(3),

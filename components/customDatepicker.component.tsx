@@ -2,7 +2,7 @@
 import React from 'react';
 import {View, StyleSheet, Text, Platform, ViewStyle} from 'react-native';
 import DateTimePicker, {
-  DateTimePickerEvent,
+  DateTimePickerEvent
 } from '@react-native-community/datetimepicker';
 import { COLORS, THEME, getTextButtonColor, getTextPrimaryColor } from '../utils/theme';
 import { responsiveFontSize, responsiveScreenHeight } from 'react-native-responsive-dimensions';
@@ -138,7 +138,7 @@ export class CustomDatePicker extends React.Component<Props, State> {
           is24Hour={true}
           display={'spinner'}
           onChange={this.onDateChange.bind(this)}
-          textColor={'black'}
+          textColor={getTextPrimaryColor(THEME.DARK)}
           minimumDate={new Date(1939, 8, 1)}
         />
       </View>
@@ -153,6 +153,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     borderBottomWidth: 2,
+    borderTopWidth: Platform.OS === 'ios' ? 2 :0,
     height: 36,
     // borderRadius: 3,
     borderColor: COLORS.LIGHT_60,
@@ -165,7 +166,8 @@ const styles = StyleSheet.create({
   },
   pickerContainer: {
     width: '100%',
-    height: responsiveScreenHeight(100),
+    height: responsiveScreenHeight(20),
+    fontFamily: 'Audrey-Medium',
   },
   button: {
     width: '35%',
