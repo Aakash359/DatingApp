@@ -1,8 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Platform, Keyboard } from 'react-native';
 import { responsiveScreenWidth, responsiveScreenHeight, responsiveFontSize } from 'react-native-responsive-dimensions';
 import { Layout } from '../../layout/layout';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { PhoneIcon, RightArrow } from '../../assets';
 import { COLORS, THEME, getBrandColor, getTextPrimaryColor, getTextSecondaryColor } from '../../utils/theme';
 import { Button, CheckBox, Input } from '../../components';
@@ -26,6 +25,7 @@ export const PhoneNumberScreen = () => {
     const [phoneNumber, setPhoneNumbers] = React.useState('');
     const [isChecked, setIsChecked] = React.useState(false);
     const [isPhoneNumberValid, setIsPhoneNumberValid] = React.useState(true);
+    const [buttonWrapperBottomOffset, setButtonWrapperBottomOffset] = React.useState(0);
 
     const checkboxPress = () => {
         setIsChecked(prev => !prev);
@@ -54,9 +54,24 @@ export const PhoneNumberScreen = () => {
         }
     }, [isPhoneNumberValid, phoneNumber])
 
+    React.useEffect(() => {
+        if (Platform.OS === 'ios') {
+            const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (e) => {
+                setButtonWrapperBottomOffset(e.endCoordinates.height);
+            });
+            const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+                setButtonWrapperBottomOffset(0);
+            });
+    
+            return () => {
+                keyboardDidHideListener.remove();
+                keyboardDidShowListener.remove();
+            };
+        }
+    }, []);
+
     return (
         <Layout>
-            <KeyboardAwareScrollView contentContainerStyle={styles.mainScrollView}>
                 { isSignup ? <Stepper stepCount={11} activeSteps={1} /> : null}
                 <View style={styles.mainWrapper}>
                     <View style={styles.headerWrapper}>
@@ -98,7 +113,7 @@ export const PhoneNumberScreen = () => {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <View style={styles.buttonWrapper}>
+                <View style={[styles.buttonWrapper, { bottom: buttonWrapperBottomOffset }]}>
                     <Button
                         onPress={handleNavigateToNextScreen}
                         imageSource={require('../../assets/gradients/splash.png')}
@@ -108,17 +123,11 @@ export const PhoneNumberScreen = () => {
                         <RightArrow />
                     </Button>
                 </View>
-            </KeyboardAwareScrollView>
         </Layout>
     )
 }
 
 const styles = StyleSheet.create({
-    mainScrollView: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        flex: 1,
-    },
     mainWrapper: {
         flexGrow: 1,
     },
