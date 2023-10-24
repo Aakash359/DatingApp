@@ -11,11 +11,11 @@ interface Props {
     image: any;
     isBlur?: boolean;
     isGiftFilter?: boolean;
-    giftType?: GiftTypes;
-    giftAmount?: number;
-    isLikeFilter?: boolean;
-    isCommentFilter?: boolean;
-    numberOfComments?: number;
+    giftType?: GiftTypes | null;
+    giftAmount?: number | null;
+    isLikeFilter?: boolean | null;
+    isCommentFilter?: boolean | null;
+    numberOfComments?: number | null;
 }
 
 export const LikedProfileCard = (props: Props) => {

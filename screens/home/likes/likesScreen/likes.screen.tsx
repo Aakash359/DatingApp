@@ -1,13 +1,13 @@
 import React from 'react'
 import { Layout, MainHeader } from '../../../../layout'
-import { View, Text, StyleSheet, ScrollView, FlatList } from 'react-native'
-import { NoLikesIcon } from '../../../../assets'
+import { View, Text, StyleSheet, ScrollView, FlatList, ActivityIndicator } from 'react-native'
 import { responsiveFontSize, responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions'
-import { THEME, getTextButtonColor, getTextPrimaryColor, getTextSecondaryColor } from '../../../../utils'
+import { COLORS, THEME, getTextButtonColor, getTextPrimaryColor, getTextSecondaryColor } from '../../../../utils'
 import { Button, LikedProfileCard, ProfileBoosterCard, SingleSelectPill } from '../../../../components'
 import Modal from 'react-native-modal/dist/modal';
 import { LikesModal } from '../likesModal'
-import { likeProfileData, likesFilterData } from '../../../../constants'
+import { ActionProfileData, allActionProfileData, commentProfileData, giftProfileData, likesFilterData, likesProfileData } from '../../../../constants'
+import { useFocusEffect } from '@react-navigation/native'
 
 enum ModalPage {
     COST_SCREEN = 'COST_SCREEN',
@@ -21,12 +21,25 @@ export enum Filter {
     COMMENTS = 'COMMENTS',
 }
 
+type CardType = 'ProfileBoosterCard' | 'LikedProfileCard';
+
+interface CardItem extends ActionProfileData {
+    type: CardType;
+    isProfileBoosted: boolean
+}
+
+interface RenderedCardItem {
+    item: CardItem
+}
+
 interface Props {
     numberOfLikes: string
 }
 
 export const LikesScreen = (props: Props) => {
     const { numberOfLikes } = props
+    const [isDataLoading, setIsDataLoading] = React.useState(false);
+    const [actionsData, setActionsData] = React.useState<CardItem[]>([]);
     const [isModalVisible, setIsModalVisible] = React.useState(false);
     const [modalPage, setModalPage] = React.useState(ModalPage.COST_SCREEN);
     const [selectedFilter, setSelectedFilter] = React.useState(Filter.ALL);
@@ -70,11 +83,94 @@ export const LikesScreen = (props: Props) => {
         }
     }, [selectedFilter])
 
+    const getAllActionData = () => {
+        setIsDataLoading(true);
+        const profileBoosterData = [{ type: 'ProfileBoosterCard', isProfileBoosted }];
+        setTimeout(() => {
+            const reformattedData = allActionProfileData.map(item => ({ type: 'LikedProfileCard', ...item }));
+            setActionsData([...profileBoosterData, ...reformattedData] as CardItem[])
+            setIsDataLoading(false)
+        }, 1500)
+    }
+
+    const getLikesActionData = () => {
+        setIsDataLoading(true);
+        const profileBoosterData = [{ type: 'ProfileBoosterCard', isProfileBoosted }];
+        setTimeout(() => {
+            const reformattedData = likesProfileData.map(item => ({ type: 'LikedProfileCard', ...item }));
+            setActionsData([...profileBoosterData, ...reformattedData] as CardItem[])
+            setIsDataLoading(false)
+        }, 1500)
+    }
+
+    const getGiftsActionData = () => {
+        setIsDataLoading(true);
+        const profileBoosterData = [{ type: 'ProfileBoosterCard', isProfileBoosted }];
+        setTimeout(() => {
+            const reformattedData = giftProfileData.map(item => ({ type: 'LikedProfileCard', ...item }));
+            setActionsData([...profileBoosterData, ...reformattedData] as CardItem[])
+            setIsDataLoading(false)
+        }, 1500)
+    }
+
+    const getCommentsActionData = () => {
+        setIsDataLoading(true);
+        const profileBoosterData = [{ type: 'ProfileBoosterCard', isProfileBoosted }];
+        setTimeout(() => {
+            const reformattedData = commentProfileData.map(item => ({ type: 'LikedProfileCard', ...item }));
+            setActionsData([...profileBoosterData, ...reformattedData] as CardItem[])
+            setIsDataLoading(false)
+        }, 1500)
+    }
+
+    const getAllActionDataMemoized = React.useCallback(() => {
+        if (selectedFilter === Filter.ALL) {
+            getAllActionData();
+        } else if (selectedFilter === Filter.LIKES) {
+            getLikesActionData();
+        } else if (selectedFilter === Filter.GIFTS) {
+            getGiftsActionData();
+        } else if (selectedFilter === Filter.COMMENTS) {
+            getCommentsActionData();
+        }
+    }, [selectedFilter])
+
+    useFocusEffect(getAllActionDataMemoized)
+
+    const renderItem = ({ item }: RenderedCardItem) => {
+        switch (item.type) {
+            case 'ProfileBoosterCard':
+                return (
+                    <ProfileBoosterCard
+                        isProfileBoosted={item.isProfileBoosted}
+                        setIsProfileBoosted={setIsProfileBoosted}
+                    />
+                );
+            case 'LikedProfileCard':
+                return (
+                    <LikedProfileCard
+                        name={item.name}
+                        age={item.age}
+                        image={item.image}
+                        isBlur={isBlur}
+                        isGiftFilter={selectedFilter === Filter.GIFTS}
+                        isLikeFilter={selectedFilter === Filter.LIKES}
+                        isCommentFilter={selectedFilter === Filter.COMMENTS}
+                        giftType={item?.giftType}
+                        giftAmount={item?.giftAmount}
+                        numberOfComments={item?.numberOfComments}
+                    />
+                );
+            default:
+                return null;
+        }
+    };
+
     return (
         <Layout>
             <MainHeader />
             <View style={styles.mainWrapper}>
-                <View style={styles.likesWrapper}>
+                {/* <View style={styles.likesWrapper}>
                     <View style={styles.textWrapper}>
                         <Text
                             style={styles.headerText}
@@ -87,7 +183,7 @@ export const LikesScreen = (props: Props) => {
                             null
                         }
                     </View>
-                </View>
+                </View> */}
                 <View style={styles.contentWrapper}>
                     <View style={styles.filterPillContainer}>
                         <ScrollView
@@ -115,44 +211,20 @@ export const LikesScreen = (props: Props) => {
                             />
                         </ScrollView>
                     </View>
-                    {/* <ScrollView
-                        style={{ height: 'auto' }}
-                        contentContainerStyle={{ paddingBottom: isBlur ? 280 : 200 }}
-                        showsVerticalScrollIndicator={false}
-                    > */}
-                        <ScrollView
-                            style={{height:'auto'}}
-                            contentContainerStyle={styles.cardMainWrapper}
-                        >
-                            <ProfileBoosterCard
-                                isProfileBoosted={isProfileBoosted}
-                                setIsProfileBoosted={setIsProfileBoosted}
-                            />
-                            {likeProfileData.map((item, index) => {
-                                if ((selectedFilter === Filter.GIFTS && item.giftType && item.giftAmount) ||
-                                    (selectedFilter === Filter.COMMENTS && item.numberOfComments) ||
-                                    (selectedFilter === Filter.LIKES) ||
-                                    (selectedFilter === Filter.ALL)) {
-                                    return (
-                                        <LikedProfileCard
-                                            key={index}
-                                            name={item.name}
-                                            age={item.age}
-                                            image={item.image}
-                                            isBlur={isBlur}
-                                            isGiftFilter={selectedFilter === Filter.GIFTS}
-                                            isLikeFilter={selectedFilter === Filter.LIKES}
-                                            isCommentFilter={selectedFilter === Filter.COMMENTS}
-                                            giftType={item.giftType}
-                                            giftAmount={item.giftAmount}
-                                            numberOfComments={item.numberOfComments}
-                                        />
-                                    )
-                                }
-                                return null;
-                            })}
-                        </ScrollView>
-                    {/* </ScrollView> */}
+                    {!isDataLoading ? <FlatList
+                        columnWrapperStyle={styles.cardMainWrapperColumnWrapperStyle}
+                        contentContainerStyle={[styles.cardMainWrapper, {
+                            paddingBottom: isBlur ? responsiveScreenHeight(10) : responsiveScreenHeight(2)
+                        }]}
+                        data={actionsData}
+                        renderItem={renderItem}
+                        keyExtractor={(item, index) => index.toString()}
+                        numColumns={2}
+                    /> : (
+                        <View style={styles.centered}>
+                            <ActivityIndicator size='large' color={COLORS.BRAND_LIGHT} />
+                        </View>
+                    )}
                 </View>
                 {isBlur ?
                     <View style={styles.buttonWrapper}>
@@ -213,17 +285,16 @@ const styles = StyleSheet.create({
         height: 'auto',
         alignItems: 'flex-start',
     },
-    cardMainWrapper: {
+    cardMainWrapperColumnWrapperStyle: {
         display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        width: '100%',
-        height: 'auto',
-        flexWrap: 'wrap',
         gap: responsiveScreenWidth(3),
         marginTop: responsiveScreenHeight(2),
-        // backgroundColor:'red'
+    },
+    cardMainWrapper: {
+        display: 'flex',
+        justifyContent: 'flex-start',
+        width: '100%',
+        height: 'auto',
     },
     filterPillContainer: {
         display: 'flex',
@@ -270,5 +341,11 @@ const styles = StyleSheet.create({
         fontSize: responsiveFontSize(2.5),
         fontFamily: 'Audrey-Medium',
         color: getTextButtonColor(THEME.DARK),
+    },
+    centered: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: responsiveScreenWidth(94),
     },
 });

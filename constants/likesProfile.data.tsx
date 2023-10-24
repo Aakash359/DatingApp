@@ -1,63 +1,173 @@
-import { G } from "react-native-svg";
 import { GiftTypes } from "./enums";
 
-export const likeProfileData = [
+export enum ProfileActionType {
+    LIKE = 'LIKE',
+    GIFT = 'GIFT',
+    COMMENT= 'COMMENT'
+}
+
+export interface ActionProfileData {
+    name: string;
+    age: string;
+    image: string | null;
+    giftType: GiftTypes | null;
+    giftAmount: number | null;
+    numberOfComments: number | null;
+    actionType: ProfileActionType
+}
+
+export const allActionProfileData: ActionProfileData[] = [
     {
-        name: 'Samantha',
-        age: '24',
+        name: 'Samantha1',
+        age: '21',
         image: require('../assets/images/home/likes/avatar1.png'),
-        isBlur: true,
         giftType: GiftTypes.ROSE,
         giftAmount: 1,
+        numberOfComments: null,
+        actionType: ProfileActionType.GIFT
     },
     {
-        name: 'Samantha',
-        age: '24',
+        name: 'Samantha2',
+        age: '22',
         image: require('../assets/images/home/likes/avatar1.png'),
-        isBlur: true,
         giftType: GiftTypes.BOUQUET,
-        giftAmount: 1,
+        giftAmount: 2,
+        numberOfComments: null,
+        actionType: ProfileActionType.GIFT
     },
     {
-        name: 'Samantha',
-        age: '24',
+        name: 'Samantha3',
+        age: '23',
         image: require('../assets/images/home/likes/avatar1.png'),
-        isBlur: true,
         giftType: GiftTypes.CHOCOLATE,
-        giftAmount: 1,
+        giftAmount: 3,
+        numberOfComments: null,
+        actionType: ProfileActionType.GIFT
     },
     {
-        name: 'Samantha',
+        name: 'Samantha4',
         age: '24',
         image: require('../assets/images/home/likes/avatar1.png'),
-        isBlur: true,
         giftType: GiftTypes.ROSE,
-        giftAmount: 5,
+        giftAmount: 4,
+        numberOfComments: null,
+        actionType: ProfileActionType.GIFT
     },
     {
-        name: 'Samantha',
-        age: '24',
+        name: 'Samantha5',
+        age: '25',
         image: require('../assets/images/home/likes/avatar1.png'),
-        isBlur: true,
-        numberOfComments: 1,
-    },
-    {
-        name: 'Samantha',
-        age: '24',
-        image: require('../assets/images/home/likes/avatar1.png'),
-        isBlur: true,
+        giftType: null,
+        giftAmount: null,
         numberOfComments: 5,
+        actionType: ProfileActionType.COMMENT
     },
     {
-        name: 'Samantha',
-        age: '24',
+        name: 'Samantha6',
+        age: '26',
         image: require('../assets/images/home/likes/avatar1.png'),
+        giftType: null,
+        giftAmount: null,
+        numberOfComments: 6,
+        actionType: ProfileActionType.COMMENT
     },
     {
-        name: 'Samantha',
-        age: '24',
+        name: 'Samantha7',
+        age: '27',
+        image: require('../assets/images/home/likes/avatar1.png'),
+        giftType: null,
+        giftAmount: null,
+        numberOfComments: null,
+        actionType: ProfileActionType.LIKE
+    },
+    {
+        name: 'Samantha8',
+        age: '28',
         image: require('../assets/images/home/likes/avatar1.png'),
         giftType: GiftTypes.CHOCOLATE,
-        giftAmount: 5,
+        giftAmount: 8,
+        numberOfComments: null,
+        actionType: ProfileActionType.GIFT
+    },
+]
+
+export const giftProfileData: ActionProfileData[] = [
+    {
+        name: 'Samantha1',
+        age: '21',
+        image: require('../assets/images/home/likes/avatar1.png'),
+        giftType: GiftTypes.ROSE,
+        giftAmount: 1,
+        numberOfComments: null,
+        actionType: ProfileActionType.GIFT
+    },
+    {
+        name: 'Samantha2',
+        age: '22',
+        image: require('../assets/images/home/likes/avatar1.png'),
+        giftType: GiftTypes.BOUQUET,
+        giftAmount: 2,
+        numberOfComments: null,
+        actionType: ProfileActionType.GIFT
+    },
+    {
+        name: 'Samantha3',
+        age: '23',
+        image: require('../assets/images/home/likes/avatar1.png'),
+        giftType: GiftTypes.CHOCOLATE,
+        giftAmount: 3,
+        numberOfComments: null,
+        actionType: ProfileActionType.GIFT
+    },
+    {
+        name: 'Samantha4',
+        age: '24',
+        image: require('../assets/images/home/likes/avatar1.png'),
+        giftType: GiftTypes.ROSE,
+        giftAmount: 4,
+        numberOfComments: null,
+        actionType: ProfileActionType.GIFT
+    },
+    {
+        name: 'Samantha8',
+        age: '28',
+        image: require('../assets/images/home/likes/avatar1.png'),
+        giftType: GiftTypes.CHOCOLATE,
+        giftAmount: 8,
+        numberOfComments: null,
+        actionType: ProfileActionType.GIFT
+    },
+]
+
+export const commentProfileData: ActionProfileData[] = [
+    {
+        name: 'Samantha5',
+        age: '25',
+        image: require('../assets/images/home/likes/avatar1.png'),
+        giftType: null,
+        giftAmount: null,
+        numberOfComments: 5,
+        actionType: ProfileActionType.COMMENT
+    },
+    {
+        name: 'Samantha6',
+        age: '26',
+        image: require('../assets/images/home/likes/avatar1.png'),
+        giftType: null,
+        giftAmount: null,
+        numberOfComments: 6,
+        actionType: ProfileActionType.COMMENT
+    },
+]
+
+export const likesProfileData: ActionProfileData[] = [
+    {
+        name: 'Samantha7',
+        age: '27',
+        image: require('../assets/images/home/likes/avatar1.png'),
+        giftType: null,
+        giftAmount: null,
+        numberOfComments: null,
+        actionType: ProfileActionType.LIKE
     },
 ]
