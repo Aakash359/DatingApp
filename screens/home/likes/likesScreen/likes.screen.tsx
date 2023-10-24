@@ -115,12 +115,15 @@ export const LikesScreen = (props: Props) => {
                             />
                         </ScrollView>
                     </View>
-                    <ScrollView
+                    {/* <ScrollView
                         style={{ height: 'auto' }}
                         contentContainerStyle={{ paddingBottom: isBlur ? 280 : 200 }}
                         showsVerticalScrollIndicator={false}
-                    >
-                        <View style={styles.cardMainWrapper}>
+                    > */}
+                        <ScrollView
+                            style={{height:'auto'}}
+                            contentContainerStyle={styles.cardMainWrapper}
+                        >
                             <ProfileBoosterCard
                                 isProfileBoosted={isProfileBoosted}
                                 setIsProfileBoosted={setIsProfileBoosted}
@@ -148,8 +151,8 @@ export const LikesScreen = (props: Props) => {
                                 }
                                 return null;
                             })}
-                        </View>
-                    </ScrollView>
+                        </ScrollView>
+                    {/* </ScrollView> */}
                 </View>
                 {isBlur ?
                     <View style={styles.buttonWrapper}>
@@ -218,8 +221,9 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 'auto',
         flexWrap: 'wrap',
-        gap: responsiveScreenHeight(2),
+        gap: responsiveScreenWidth(3),
         marginTop: responsiveScreenHeight(2),
+        // backgroundColor:'red'
     },
     filterPillContainer: {
         display: 'flex',
