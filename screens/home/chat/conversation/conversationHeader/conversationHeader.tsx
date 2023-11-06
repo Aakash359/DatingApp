@@ -5,6 +5,7 @@ import FastImage from 'react-native-fast-image';
 import { responsiveScreenFontSize, responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import { THEME, getTextPrimaryColor } from '../../../../../utils';
 import { TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const matchData = {
     name: "Alex Linderson",
@@ -13,9 +14,10 @@ const matchData = {
 }
 
 export const ConversationHeader = () => {
+    const navigation = useNavigation()
     return (
         <View style={styles.headerWrapper}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={navigation.goBack}>
                 <View style={styles.leftArrowIconWrapper}>
                     <LeftArrow width={20} height={20} />
                 </View>

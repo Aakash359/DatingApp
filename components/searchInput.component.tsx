@@ -37,13 +37,16 @@ const styles = StyleSheet.create({
         // backgroundColor: 'blue',
         width: 30,
         height: 30,
-        marginHorizontal: responsiveScreenWidth(2),
-        marginVertical: responsiveScreenHeight(1.5),
+        top: responsiveScreenHeight(1),
+        marginHorizontal: responsiveScreenWidth(1.5)
+        // marginHorizontal: responsiveScreenWidth(2),
+        // marginVertical: responsiveScreenHeight(1.5),
     },
     textInput: {
         borderWidth: 1,
         paddingHorizontal: 40,
         borderRadius: 10,
+        height: responsiveScreenHeight(5),
         borderColor: getSearchInputBorderColor(THEME.DARK),
         fontFamily: 'RedHatDisplay-Regular',
         color: getTextPrimaryColor(THEME.DARK),

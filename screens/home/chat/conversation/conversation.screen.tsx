@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { Layout } from "../../../../layout";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from "react-native";
 import { responsiveScreenFontSize, responsiveScreenHeight, responsiveScreenWidth } from "react-native-responsive-dimensions";
 import { ConversationHeader } from "./conversationHeader";
 import { ConversationFooter } from "./conversationFooter";
@@ -11,10 +11,10 @@ import LinearGradient from "react-native-linear-gradient";
 import { useFocusEffect } from "@react-navigation/native";
 
 export const ConversationScreen = () => {
+    const isIos = Platform.OS === 'ios'
     const flatListRef = useRef<FlatList>(null);  // Reference to the FlatList
-
     const scrollToBottom = () => {
-            flatListRef.current?.scrollToEnd({ animated: false });
+        flatListRef.current?.scrollToEnd({ animated: false });
     };
 
     useFocusEffect(
@@ -25,7 +25,8 @@ export const ConversationScreen = () => {
 
     return (
         <Layout>
-            <View style={styles.mainWrapper}>
+            <KeyboardAvoidingView style={styles.mainWrapper} behavior="padding">
+
                 <ConversationHeader />
                 <FlatList
                     ref={flatListRef}
@@ -50,14 +51,16 @@ export const ConversationScreen = () => {
                                                 colors={[getBrandColor(THEME.LIGHT), getBrandColor(THEME.DARK)]}
                                                 style={{
                                                     borderBottomRightRadius: 0,
-                                                    borderTopRightRadius: 10,
-                                                    borderBottomLeftRadius: 10,
-                                                    borderTopLeftRadius: 10,
+                                                    borderTopRightRadius: isIos ? 0 : 10,
+                                                    borderBottomLeftRadius: isIos ? 0 : 10,
+                                                    borderTopLeftRadius: isIos ? 0 : 10,
                                                     paddingHorizontal: responsiveScreenWidth(0.3),
                                                     paddingVertical: responsiveScreenWidth(0.3),
                                                 }}
                                             >
-                                                <Text style={styles.isMeMessageText}>{item.message}</Text>
+                                                {/* <View style={styles.borderStylesMeText}> */}
+                                                    <Text style={styles.isMeMessageText}>{item.message}</Text>
+                                                {/* </View> */}
                                             </LinearGradient>
                                         </View>
                                         :
@@ -67,15 +70,17 @@ export const ConversationScreen = () => {
                                                 end={{ x: 1, y: 1.8 }}
                                                 colors={[getTextPrimaryColor(THEME.DARK), '#292a34']}
                                                 style={{
-                                                    borderBottomRightRadius: 10,
-                                                    borderTopRightRadius: 10,
+                                                    borderBottomRightRadius: isIos ? 0 : 10,
+                                                    borderTopRightRadius: isIos ? 0 : 10,
                                                     borderBottomLeftRadius: 0,
-                                                    borderTopLeftRadius:10,
+                                                    borderTopLeftRadius: isIos ? 0 : 10,
                                                     paddingHorizontal: responsiveScreenWidth(0.3),
                                                     paddingVertical: responsiveScreenWidth(0.3),
                                                 }}
                                             >
-                                                <Text style={styles.messageText}>{item.message}</Text>
+                                                {/* <View style={styles.borderStylesMessageText}> */}
+                                                    <Text style={styles.messageText}>{item.message}</Text>
+                                                {/* </View> */}
                                             </LinearGradient>
                                         </View>
 
@@ -87,7 +92,7 @@ export const ConversationScreen = () => {
                     }
                 />
                 <ConversationFooter />
-            </View>
+            </KeyboardAvoidingView>
         </Layout>
     )
 };
@@ -107,6 +112,10 @@ const styles = StyleSheet.create({
     },
     myMessage: {
         maxWidth: responsiveScreenWidth(75),
+        // borderBottomRightRadius: 0,
+        // borderTopRightRadius: 10,
+        // borderBottomLeftRadius: 10,
+        // borderTopLeftRadius: 10,
     },
     otherMessage: {
         alignSelf: 'flex-start',
@@ -147,5 +156,19 @@ const styles = StyleSheet.create({
         fontSize: responsiveScreenFontSize(1.35),
         marginTop: responsiveScreenHeight(0.5),
         alignSelf: 'flex-start',
+    },
+    borderStylesMeText: {
+        borderBottomRightRadius: 0,
+        borderTopRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderTopLeftRadius: 10,
+        backgroundColor:'red'
+    },
+    borderStylesMessageText: {
+        borderBottomRightRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomLeftRadius: 0,
+        borderTopLeftRadius: 10,
+        backgroundColor:'red'
     }
 });
