@@ -7,7 +7,7 @@ export const LikesMainScreen = () => {
     // const numberOfLikes = 0;
     const numberOfActions = '1'
     return (
-        numberOfActions === '0' ?
+        numberOfActions === '1' ?
             <NoLikesScreen />
             :
             <LikesScreen numberOfLikes={numberOfActions} />

@@ -6,7 +6,7 @@ import { THEME, getModalBackgroundColor, getTextPrimaryColor, getTextSecondaryCo
 
 export interface Props {
     modalHeader?: string;
-    modalPrimaryImage: any;
+    modalPrimaryImage?: any;
     modalDescription?: string;
     nextButtonText: string;
     modalCancleButtonText?: string;
@@ -15,40 +15,46 @@ export interface Props {
     isOnlyOneButton?: boolean;
     isNoHeader?: boolean;
     modalImageText?: string;
+    children?: any
 }
 
-export const LikesModal: React.FC<Props> = ({ isOnlyOneButton = true, modalImageText, isNoHeader = false, onNextPress, onBackPress, modalPrimaryImage, modalHeader, modalDescription, modalCancleButtonText, nextButtonText }) => {
-    return (
-        <View style={styles.modalContainer}>
-            <View style={styles.dragger} />
-            <View style={styles.imageWrapper}>
-                <Image style={styles.image} source={modalPrimaryImage} />
-                <Text style={styles.imageText}>{modalImageText}</Text>
-            </View>
-            <View style={styles.textContainer}>
-                {isNoHeader ? null :
-                    <Text style={styles.headerText}>
-                        {modalHeader}
-                    </Text>
-                }
-                <Text style={styles.inputDescription}>{modalDescription}</Text>
-            </View>
-            <View style={isOnlyOneButton ? styles.singleButtonWrapper : styles.buttonMainWrapper}>
-                <View style={styles.buttonWrapper}>
-                    <Button onPress={onNextPress} imageSource={require('../../../../assets/gradients/splash.png')} variant={'primary'} height={responsiveScreenHeight(8)} >
-                        <Text style={styles.headerText}>{nextButtonText}</Text>
-                    </Button>
+export const LikesModal: React.FC<Props> =
+    ({ isOnlyOneButton = true, modalImageText, isNoHeader = false,
+        onNextPress, onBackPress, modalPrimaryImage, modalHeader,
+        modalDescription, modalCancleButtonText, nextButtonText,
+        children }) => {
+        return (
+            <View style={styles.modalContainer}>
+                <View style={styles.dragger} />
+                {modalPrimaryImage ? <View style={styles.imageWrapper}>
+                    <Image style={styles.image} source={modalPrimaryImage} />
+                    <Text style={styles.imageText}>{modalImageText}</Text>
+                </View> : null}
+                <View style={styles.textContainer}>
+                    {isNoHeader ? null :
+                        <Text style={styles.headerText}>
+                            {modalHeader}
+                        </Text>
+                    }
+                    { children }
+                    <Text style={styles.inputDescription}>{modalDescription}</Text>
                 </View>
-                {isOnlyOneButton ? null :
+                <View style={isOnlyOneButton ? styles.singleButtonWrapper : styles.buttonMainWrapper}>
                     <View style={styles.buttonWrapper}>
-                        <Button onPress={onBackPress} variant={'outline'} height={responsiveScreenHeight(8)} >
-                            <Text style={styles.headerText}>{modalCancleButtonText}</Text>
+                        <Button onPress={onNextPress} imageSource={require('../../../../assets/gradients/splash.png')} variant={'primary'} height={responsiveScreenHeight(8)} >
+                            <Text style={styles.headerText}>{nextButtonText}</Text>
                         </Button>
-                    </View>}
+                    </View>
+                    {isOnlyOneButton ? null :
+                        <View style={styles.buttonWrapper}>
+                            <Button onPress={onBackPress} variant={'outline'} height={responsiveScreenHeight(8)} >
+                                <Text style={styles.headerText}>{modalCancleButtonText}</Text>
+                            </Button>
+                        </View>}
+                </View>
             </View>
-        </View>
-    );
-};
+        );
+    };
 
 const styles = StyleSheet.create({
 
@@ -65,7 +71,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 40,
     },
     image: {
-        transform: [{ scale: 1.2 }], 
+        transform: [{ scale: 1.2 }],
     },
     imageText: {
         fontSize: responsiveFontSize(7),

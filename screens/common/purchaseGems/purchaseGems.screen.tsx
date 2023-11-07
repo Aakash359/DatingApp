@@ -158,7 +158,10 @@ export const PurchaseGemsScreen = () => {
                     modalDescription='You Purchased 200 Gems'
                     nextButtonText='GREAT'
                     isOnlyOneButton={true}
-                    onNextPress={() => navigation.navigate('PurchaseTokensScreen')}
+                    onNextPress={() => {
+                        setIsPurchaseModalVisible(false)
+                        navigation.navigate('PurchaseTokensScreen')
+                    }}
                     onBackPress={() => console.log('e')}
                 />
             </Modal>

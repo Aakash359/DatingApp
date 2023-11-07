@@ -1,22 +1,194 @@
 import React from "react"
 import { View, Text, ImageBackground, TouchableOpacity, StyleSheet, ScrollView } from "react-native"
-import { responsiveFontSize, responsiveHeight, responsiveWidth } from "react-native-responsive-dimensions"
+import { responsiveFontSize, responsiveHeight, responsiveScreenHeight, responsiveScreenWidth, responsiveWidth } from "react-native-responsive-dimensions"
 import { LeftArrow, ManifestCurrency } from "../../../assets"
-import { Button, SelectableGift } from "../../../components"
+import { Button, RadioButtonArea, SelectableGift } from "../../../components"
 import { Layout } from "../../../layout"
 import { COLORS, THEME, getTextButtonColor, getTextPrimaryColor } from "../../../utils"
 import { RootStackParamList } from "../../../App"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { useNavigation } from "@react-navigation/native"
+import Modal from 'react-native-modal/dist/modal';
+import { LikesModal } from "../../home"
+import { GiftTypes } from "../../../constants"
 
 type purchaseGiftsScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
     'PurchaseGiftsScreen'
 >;
 
+enum ModalPage {
+    PURCHASE_GIFT_SCREEN = 'PURCHASE_GIFT_SCREEN',
+    GIFT_PURCHASED_SCREEN = 'GIFT_PURCHASED_SCREEN',
+}
+
+// Step 1: Define a TypeScript interface for your gift items
+interface GiftItem {
+    id: string;
+    imageSource: any; // The type is any because require returns any
+}
+
+// Step 2: Create an array of gift items
+const giftItems: GiftItem[] = [
+    { id: '1', imageSource: require('../../../assets/images/common/roseGift.png') },
+    { id: '2', imageSource: require('../../../assets/images/common/roseGift.png') },
+    { id: '3', imageSource: require('../../../assets/images/common/roseGift.png') },
+    { id: '4', imageSource: require('../../../assets/images/common/roseGift.png') },
+    { id: '5', imageSource: require('../../../assets/images/common/roseGift.png') },
+    { id: '6', imageSource: require('../../../assets/images/common/roseGift.png') },
+    // ... you can add more items here
+];
+
+const giftPurchaseOffers = [
+    {
+        giftAmount: 200,
+        giftType: GiftTypes.ROSE,
+        price: 30,
+        // oldPrice: 40,
+        isBestValue: false
+
+    },
+    {
+        giftAmount: 300,
+        giftType: GiftTypes.ROSE,
+        price: 40,
+        oldPrice: 50,
+        isBestValue: false
+    },
+    {
+        giftAmount: 400,
+        giftType: GiftTypes.ROSE,
+        price: 50,
+        oldPrice: 60,
+        isBestValue: true
+    },
+    {
+        giftAmount: 500,
+        giftType: GiftTypes.ROSE,
+        price: 60,
+        oldPrice: 70,
+        isBestValue: false
+    },
+    {
+        giftAmount: 500,
+        giftType: GiftTypes.ROSE,
+        price: 60,
+        oldPrice: 70,
+        isBestValue: false
+    },
+    {
+        giftAmount: 500,
+        giftType: GiftTypes.ROSE,
+        price: 60,
+        oldPrice: 70,
+        isBestValue: false
+    },
+    {
+        giftAmount: 500,
+        giftType: GiftTypes.ROSE,
+        price: 60,
+        oldPrice: 70,
+        isBestValue: false
+    },
+    {
+        giftAmount: 500,
+        giftType: GiftTypes.ROSE,
+        price: 60,
+        oldPrice: 70,
+        isBestValue: false
+    },
+]
+
 export const PurchaseGiftsScreen = () => {
     const navigation = useNavigation<purchaseGiftsScreenNavigationProp>();
+    const [selectedId, setSelectedId] = React.useState('');
     const [selectedGiftId, setSelectedGiftId] = React.useState('');
+    const [modalPage, setModalPage] = React.useState(ModalPage.PURCHASE_GIFT_SCREEN);
+    const [isPurchaseGiftsModalVisible, setIsPurchaseGiftsModalVisible] = React.useState(false);
+    // const [isGiftsPurchasedModalVisible, setIsGiftsPurchasedModalVisible] = React.useState(false);
+
+    const renderModalPage = () => {
+        switch (modalPage) {
+            case ModalPage.PURCHASE_GIFT_SCREEN:
+                return <LikesModal
+                modalHeader='PURCHASE OPTIONS'
+                nextButtonText='CONTINUE'
+                isOnlyOneButton={true}
+                onNextPress={() => {
+                    // setIsPurchaseGiftsModalVisible(false)
+                    setModalPage(ModalPage.GIFT_PURCHASED_SCREEN)
+                    // navigation.navigate('PurchaseTokensScreen')
+                }}
+                onBackPress={() => console.log('e')}
+            >
+                <ScrollView
+                    style={{ width: responsiveScreenWidth(90), maxHeight: responsiveScreenHeight(50) }}
+                    contentContainerStyle={styles.radioButtonAreaWrapper}
+                >
+                    {
+                        giftPurchaseOffers.map((item, index) => {
+                            return (
+                                <RadioButtonArea
+                                    key={index}
+                                    id={index.toString()}
+                                    selectedId={selectedId}
+                                    setSelectedId={setSelectedId}
+                                    isBestValue={item.isBestValue}
+                                    height={responsiveHeight(10.5)}
+                                    width={responsiveScreenWidth(90)}
+                                >
+                                    <View style={styles.offerWrapper}>
+                                        <Text style={styles.gemsAmountText}>
+                                            {item.giftAmount} {item.giftType.toString().toUpperCase() + 'S'}
+                                        </Text>
+                                        <View style={styles.offerPriceWrapper}>
+                                            <ManifestCurrency />
+                                            <Text
+                                                style={
+                                                    [styles.offerPrice,
+                                                    {
+                                                        fontSize: responsiveFontSize(2),
+                                                        position: 'relative',
+                                                        top: -responsiveHeight(0.1)
+                                                    }]}>
+                                                {item.price}
+
+                                            </Text>
+                                            <Text
+                                                style={
+                                                    [styles.offerPriceCut,
+                                                    {
+                                                        fontSize: responsiveFontSize(2),
+                                                        color: COLORS.LIGHT_40,
+                                                        position: 'relative',
+                                                        top: -responsiveHeight(0.1)
+                                                    }]}>
+                                                {item.oldPrice}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                </RadioButtonArea>
+                            )
+                        })
+                    }
+                </ScrollView>
+            </LikesModal>
+            case ModalPage.GIFT_PURCHASED_SCREEN:
+                return <LikesModal
+                modalPrimaryImage={require('../../../assets/images/home/likes/successCheckmark.png')}
+                modalHeader='GIFTS PURCHASED'
+                modalDescription='You Purchased 10 Roses'
+                nextButtonText='GREAT'
+                isOnlyOneButton={true}
+                onNextPress={() => {
+                    setIsPurchaseGiftsModalVisible(false)
+                    setModalPage(ModalPage.PURCHASE_GIFT_SCREEN)
+                    // navigation.navigate('PurchaseTokensScreen')
+                }}
+                onBackPress={() => console.log('e')}
+            />
+        }
+    }
 
     return (
         <Layout>
@@ -49,55 +221,35 @@ export const PurchaseGiftsScreen = () => {
                     </ImageBackground>
                 </View>
                 <ScrollView contentContainerStyle={styles.selectableGiftWrapper}>
-                    <SelectableGift
-                        id='1'
-                        selectedId={selectedGiftId}
-                        imageSource={require('../../../assets/images/common/roseGift.png')}
-                        setSelectedId={setSelectedGiftId}
-                    />
-                    <SelectableGift
-                        id='2'
-                        selectedId={selectedGiftId}
-                        imageSource={require('../../../assets/images/common/roseGift.png')}
-                        setSelectedId={setSelectedGiftId}
-                    />
-                    <SelectableGift
-                        id='3'
-                        selectedId={selectedGiftId}
-                        imageSource={require('../../../assets/images/common/roseGift.png')}
-                        setSelectedId={setSelectedGiftId}
-                    />
-                    <SelectableGift
-                        id='4'
-                        selectedId={selectedGiftId}
-                        imageSource={require('../../../assets/images/common/roseGift.png')}
-                        setSelectedId={setSelectedGiftId}
-                    />
-                    <SelectableGift
-                        id='5'
-                        selectedId={selectedGiftId}
-                        imageSource={require('../../../assets/images/common/roseGift.png')}
-                        setSelectedId={setSelectedGiftId}
-                    />
-                    <SelectableGift
-                        id='6'
-                        selectedId={selectedGiftId}
-                        imageSource={require('../../../assets/images/common/roseGift.png')}
-                        setSelectedId={setSelectedGiftId}
-                    />
+                    {giftItems.map((item) => (
+                        <SelectableGift
+                            key={item.id}
+                            id={item.id}
+                            selectedId={selectedGiftId}
+                            imageSource={item.imageSource}
+                            setSelectedId={setSelectedGiftId}
+                        />
+                    ))}
                 </ScrollView>
                 <View style={styles.buttonWrapper}>
                     <Button
                         variant={selectedGiftId === '' ? 'disabled' : 'primary'}
                         height={responsiveHeight(8)}
                         imageSource={require('../../../assets/gradients/splash.png')}
-                        // onPress={() => setIsPurchaseModalVisible(true)}
-                        onPress={() => { }}
+                        onPress={() => setIsPurchaseGiftsModalVisible(true)}
                     >
                         <Text style={styles.buttonText}>PURCHASE</Text>
                     </Button>
                 </View>
             </View>
+            <Modal
+                useNativeDriverForBackdrop={true}
+                style={styles.modal}
+                onBackdropPress={() => setIsPurchaseGiftsModalVisible(false)}
+                isVisible={isPurchaseGiftsModalVisible}
+            >
+                {renderModalPage()}
+            </Modal>
         </Layout>
     )
 }
@@ -118,12 +270,6 @@ const styles = StyleSheet.create({
         marginVertical: responsiveHeight(3),
         paddingHorizontal: responsiveWidth(3),
     },
-    priceWrapper: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: responsiveWidth(2),
-    },
     mainHeaderWrapper: {
         display: 'flex',
         flexDirection: 'row',
@@ -138,10 +284,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: responsiveWidth(2),
-    },
-    leftArrowWrapper: {
-        backgroundColor: 'red',
-        width: 10,
     },
     headerText: {
         fontFamily: 'Audrey-Medium',
@@ -210,11 +352,6 @@ const styles = StyleSheet.create({
         paddingVertical: responsiveHeight(3.5),
         gap: responsiveHeight(0.5),
     },
-    tokenAmountText: {
-        fontFamily: 'Audrey-Bold',
-        color: getTextButtonColor(THEME.DARK),
-        fontSize: responsiveFontSize(3),
-    },
     selectableGiftWrapper: {
         marginTop: responsiveHeight(2),
         display: 'flex',
@@ -222,5 +359,26 @@ const styles = StyleSheet.create({
         gap: responsiveWidth(5),
         flexWrap: 'wrap',
         paddingBottom: responsiveHeight(2),
-    }
+    },
+    gemsAmountText: {
+        fontFamily: 'Audrey-Bold',
+        color: getTextButtonColor(THEME.DARK),
+        fontSize: responsiveFontSize(2.5),
+    },
+    offerPriceAlt: {
+        fontFamily: 'RedHatDisplay-Bold',
+        color: 'white',
+        fontSize: responsiveFontSize(2.5),
+    },
+    offerPriceCutAlt: {
+        fontFamily: 'RedHatDisplay-Bold',
+        color: COLORS.LIGHT_70,
+        textDecorationLine: 'line-through',
+        fontSize: responsiveFontSize(2),
+    },
+    rupeeTextAlt: {
+        fontFamily: 'Audrey-Medium',
+        fontSize: responsiveFontSize(2.5),
+        color: COLORS.LIGHT_40
+    },
 })

@@ -12,6 +12,7 @@ interface Props {
     height?: number;
     isBestValue?: boolean;
     children: React.ReactNode | JSX.Element;
+    width?: number;
 }
 
 export const RadioButtonArea = (props: Props) => {
@@ -32,7 +33,7 @@ export const RadioButtonArea = (props: Props) => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     borderRadius: 5,
-                    width: 'auto',
+                    width: props.width ? props.width : 'auto',
                     paddingHorizontal: isCurrentRadioBtnSelected ? responsiveScreenWidth(0.3) : 0,
                     paddingVertical: isCurrentRadioBtnSelected ? responsiveScreenHeight(0.2) : 0,
                     zIndex: -1,
