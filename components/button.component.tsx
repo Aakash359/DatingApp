@@ -10,54 +10,94 @@ interface ImageButtonProps {
     children: ReactNode;
     variant: 'primary' | 'ghost' | 'secondary' | 'outline' | 'disabled';
     height: number;
+    borderRadius?: number;
+    borderTopLeftRadius?: number;
+    borderTopRightRadius?: number;
 }
 
-export const Button = forwardRef<TouchableOpacity, ImageButtonProps>(({ onPress, imageSource, children, variant, height }, ref) => {
-    const variantStyle = styles[variant];
+export const Button = forwardRef<TouchableOpacity, ImageButtonProps>
+    (({ onPress, imageSource, children, variant, height, borderRadius, borderTopLeftRadius, borderTopRightRadius }, ref) => {
+        const variantStyle = styles[variant];
 
-    return variant === 'primary'
-        ? (
-            <TouchableOpacity ref={ref} onPress={onPress} activeOpacity={0.7} style={{ borderRadius: 5, overflow: 'hidden', height }}>
-                <ImageBackground source={imageSource} style={{ width: '100%', height: '100%' }}>
-                    <View style={variantStyle}>
-                        {children}
-                    </View>
-                </ImageBackground>
-            </TouchableOpacity>
-        )
-        : variant === 'disabled' ? (
-            <TouchableOpacity ref={ref} disabled={true} onPress={onPress} activeOpacity={0.7} style={{ borderRadius: 5, overflow: 'hidden', height }}>
-                <ImageBackground source={imageSource} style={{ width: '100%', height: '100%' }}>
-                    <View style={variantStyle}>
-                        {children}
-                    </View>
-                </ImageBackground>
-            </TouchableOpacity>
-        ) : variant === 'outline' ?
-            <LinearGradient
-                start={{ x: 0, y: 0 }}
-                end={{ x: 0.5, y: 1 }}
-                colors={[getBrandColor(THEME.LIGHT), getBrandColor(THEME.DARK)]}
-                style={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 5,
-                    height: 'auto',
-                    width: 'auto',
-                    zIndex: -1,
-                }}
-            >
-                <TouchableOpacity ref={ref} onPress={onPress} activeOpacity={0.8} style={{ borderRadius: 5, overflow: 'hidden', height }}>
-                    <View style={variantStyle}>
-                        {children}
-                    </View>
+        return variant === 'primary'
+            ? (
+                <TouchableOpacity
+                    ref={ref}
+                    onPress={onPress}
+                    activeOpacity={0.7}
+                    style={{
+                        borderRadius: borderRadius ? borderRadius : 5,
+                        overflow: 'hidden',
+                        height,
+                        borderTopLeftRadius,
+                        borderTopRightRadius
+                    }}
+                >
+                    <ImageBackground source={imageSource} style={{ width: '100%', height: '100%' }}>
+                        <View style={variantStyle}>
+                            {children}
+                        </View>
+                    </ImageBackground>
                 </TouchableOpacity>
-            </LinearGradient>
-            :
-            <TouchableOpacity ref={ref} onPress={onPress} activeOpacity={0.7} style={variantStyle}>
-                {children}
-            </TouchableOpacity>;
-});
+            )
+            : variant === 'disabled' ? (
+                <TouchableOpacity
+                    ref={ref}
+                    disabled={true}
+                    onPress={onPress}
+                    activeOpacity={0.7}
+                    style=
+                    {{
+                        borderRadius: borderRadius ? borderRadius : 5,
+                        overflow: 'hidden',
+                        height,
+                        borderTopLeftRadius,
+                        borderTopRightRadius
+                    }}
+                >
+                    <ImageBackground source={imageSource} style={{ width: '100%', height: '100%' }}>
+                        <View style={variantStyle}>
+                            {children}
+                        </View>
+                    </ImageBackground>
+                </TouchableOpacity>
+            ) : variant === 'outline' ?
+                <LinearGradient
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 0.5, y: 1 }}
+                    colors={[getBrandColor(THEME.LIGHT), getBrandColor(THEME.DARK)]}
+                    style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: borderRadius ? borderRadius : 5,
+                        height: 'auto',
+                        width: 'auto',
+                        zIndex: -1,
+                    }}
+                >
+                    <TouchableOpacity
+                        ref={ref}
+                        onPress={onPress}
+                        activeOpacity={0.8}
+                        style=
+                        {{
+                            borderRadius: borderRadius ? borderRadius : 5,
+                            overflow: 'hidden',
+                            height,
+                            borderTopLeftRadius,
+                            borderTopRightRadius
+                        }}
+                    >
+                        <View style={variantStyle}>
+                            {children}
+                        </View>
+                    </TouchableOpacity>
+                </LinearGradient>
+                :
+                <TouchableOpacity ref={ref} onPress={onPress} activeOpacity={0.7} style={variantStyle}>
+                    {children}
+                </TouchableOpacity>;
+    });
 
 const styles = StyleSheet.create({
     ghost: {
