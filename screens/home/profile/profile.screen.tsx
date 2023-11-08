@@ -7,11 +7,24 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import FastImage from 'react-native-fast-image'
 import { CommentIcon, GemLargeIcon, ManifestLargeIcon, RightArrow, SettingsIcon, UpgradeProfileIcon, UserEditIcon } from '../../../assets/icons'
 import { Button } from '../../../components'
+import { useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { RootStackParamList } from '../../../App'
+
+type ProfileScreenNavigationProp = NativeStackNavigationProp<
+    RootStackParamList,
+    'ProfilePhotoScreen'
+>;
 
 export const ProfileScreen = () => {
+
+    const navigation = useNavigation<ProfileScreenNavigationProp>();
+
     const changePhotoHandler = () => { }
     const handleEditProfile = () => { }
-    const handleSettingsPress = () => { }
+    const handleSettingsPress = () => {
+        navigation.navigate('SettingsScreen')
+     }
     const handleAboutUsPress = () => { }
 
     const profileAccordianData = [

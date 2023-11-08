@@ -3,12 +3,19 @@ import { StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { AddYourPhotosScreen, AgePreferenceScreen, DateOfBirthScreen, GenderPreferenceScreen, GenderScreen, HomeScreen, InterestScreen, NameScreen, OnboardingScreen, OtpScreen, PhoneNumberScreen, ProfilePhotoScreen, PurchaseGemsScreen, PurchaseTokensScreen, VisibilityDistanceScreen } from './screens';
 import { Provider } from 'react-redux';
 import { store } from './redux';
 import { PurchaseGiftsScreen } from './screens/common/purchaseGifts';
 import { ConversationScreen } from './screens/home/chat';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import {
+  AddYourPhotosScreen, AgePreferenceScreen, DateOfBirthScreen,
+  GenderPreferenceScreen, GenderScreen, HelpCenterScreen,
+  HomeScreen, InterestScreen, NameScreen, OnboardingScreen,
+  OtpScreen, PhoneNumberScreen, ProfilePhotoScreen,
+  PurchaseGemsScreen, PurchaseTokensScreen, SettingsScreen,
+  VisibilityDistanceScreen
+} from './screens';
 
 export type RootStackParamList = {
   OnboardingScreen: undefined;
@@ -28,6 +35,8 @@ export type RootStackParamList = {
   PurchaseTokensScreen: undefined;
   PurchaseGiftsScreen: undefined;
   ConversationScreen: undefined;
+  SettingsScreen: undefined;
+  HelpCenterScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -60,6 +69,8 @@ function App(): JSX.Element {
               <Stack.Screen name="PurchaseGemsScreen" component={PurchaseGemsScreen} options={{ headerShown: false }} />
               <Stack.Screen name="PurchaseTokensScreen" component={PurchaseTokensScreen} options={{ headerShown: false }} />
               <Stack.Screen name="PurchaseGiftsScreen" component={PurchaseGiftsScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="SettingsScreen" component={SettingsScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="HelpCenterScreen" component={HelpCenterScreen} options={{ headerShown: false }} />
             </Stack.Navigator>
           </NavigationContainer>
         </SafeAreaProvider>

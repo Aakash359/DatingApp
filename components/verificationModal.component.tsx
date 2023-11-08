@@ -1,7 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
-import Modal from 'react-native-modal';
 import { responsiveFontSize, responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import { Button } from './button.component';
 import { THEME, getModalBackgroundColor, getTextPrimaryColor, getTextSecondaryColor } from '../utils';

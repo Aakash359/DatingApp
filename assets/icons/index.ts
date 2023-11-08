@@ -44,4 +44,6 @@ export * from './camera.icon';
 export * from './loveSticker.icon';
 export * from './gift.icon';
 export * from './microphone.icon';
-export * from './profile'
+export * from './profile';
+export * from './settings';
+export * from './helpCenter';
