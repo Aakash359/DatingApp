@@ -8,9 +8,11 @@ interface Props {
     placeholder: string;
     searchText: string;
     setSearchText: React.Dispatch<React.SetStateAction<string>>;
+    CustomSearchIcon?: any;
 }
 
 export const SearchInput: React.FC<Props> = (props) => {
+    const { CustomSearchIcon } = props;
     return (
         <View style={styles.wrapper}>
             <TextInput
@@ -21,7 +23,7 @@ export const SearchInput: React.FC<Props> = (props) => {
                 onChangeText={props.setSearchText}
             />
             <View style={styles.searchIconWrapper}>
-                <SearchIcon />
+                {CustomSearchIcon ? CustomSearchIcon : <SearchIcon />}
             </View>
         </View>
     )

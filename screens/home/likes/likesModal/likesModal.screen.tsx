@@ -37,7 +37,7 @@ export const LikesModal: React.FC<Props> =
                         </Text>
                     }
                     { children }
-                    <Text style={styles.inputDescription}>{modalDescription}</Text>
+                    {modalDescription ? <Text style={styles.inputDescription}>{modalDescription}</Text> : null}
                 </View>
                 <View style={isOnlyOneButton ? styles.singleButtonWrapper : styles.buttonMainWrapper}>
                     <View style={styles.buttonWrapper}>

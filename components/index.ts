@@ -16,3 +16,4 @@ export * from './countdown.component';
 export * from './likedProfileCard.component';
 export * from './searchInput.component';
 export * from './conversation.component';
+export * from './faq.component';

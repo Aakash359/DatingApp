@@ -16,6 +16,7 @@ import {
   PurchaseGemsScreen, PurchaseTokensScreen, SettingsScreen,
   VisibilityDistanceScreen
 } from './screens';
+import { FAQScreen } from './screens/common/faq';
 
 export type RootStackParamList = {
   OnboardingScreen: undefined;
@@ -37,6 +38,7 @@ export type RootStackParamList = {
   ConversationScreen: undefined;
   SettingsScreen: undefined;
   HelpCenterScreen: undefined;
+  FAQScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -71,6 +73,7 @@ function App(): JSX.Element {
               <Stack.Screen name="PurchaseGiftsScreen" component={PurchaseGiftsScreen} options={{ headerShown: false }} />
               <Stack.Screen name="SettingsScreen" component={SettingsScreen} options={{ headerShown: false }} />
               <Stack.Screen name="HelpCenterScreen" component={HelpCenterScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="FAQScreen" component={FAQScreen} options={{ headerShown: false }} />
             </Stack.Navigator>
           </NavigationContainer>
         </SafeAreaProvider>

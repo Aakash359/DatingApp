@@ -47,3 +47,4 @@ export * from './microphone.icon';
 export * from './profile';
 export * from './settings';
 export * from './helpCenter';
+export * from './faq';
