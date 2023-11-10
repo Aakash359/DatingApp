@@ -25,8 +25,10 @@ export const ConversationScreen = () => {
 
     return (
         <Layout>
-            <KeyboardAvoidingView style={styles.mainWrapper} behavior="padding">
-
+            <KeyboardAvoidingView
+                style={styles.mainWrapper}
+                behavior={Platform.OS === 'ios' ? "padding" : "height"}
+            >
                 <ConversationHeader />
                 <FlatList
                     ref={flatListRef}
@@ -59,7 +61,7 @@ export const ConversationScreen = () => {
                                                 }}
                                             >
                                                 {/* <View style={styles.borderStylesMeText}> */}
-                                                    <Text style={styles.isMeMessageText}>{item.message}</Text>
+                                                <Text style={styles.isMeMessageText}>{item.message}</Text>
                                                 {/* </View> */}
                                             </LinearGradient>
                                         </View>
@@ -79,7 +81,7 @@ export const ConversationScreen = () => {
                                                 }}
                                             >
                                                 {/* <View style={styles.borderStylesMessageText}> */}
-                                                    <Text style={styles.messageText}>{item.message}</Text>
+                                                <Text style={styles.messageText}>{item.message}</Text>
                                                 {/* </View> */}
                                             </LinearGradient>
                                         </View>
@@ -162,13 +164,13 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 10,
         borderBottomLeftRadius: 10,
         borderTopLeftRadius: 10,
-        backgroundColor:'red'
+        backgroundColor: 'red'
     },
     borderStylesMessageText: {
         borderBottomRightRadius: 10,
         borderTopRightRadius: 10,
         borderBottomLeftRadius: 0,
         borderTopLeftRadius: 10,
-        backgroundColor:'red'
+        backgroundColor: 'red'
     }
 });

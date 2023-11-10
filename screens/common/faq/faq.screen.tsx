@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     },
     // header styles
     headerWrapper: {
+        marginTop: responsiveScreenHeight(2),
         paddingHorizontal: responsiveScreenWidth(5),
         display: 'flex',
         flexDirection: 'row',

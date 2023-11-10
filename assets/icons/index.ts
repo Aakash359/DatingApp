@@ -49,3 +49,4 @@ export * from './settings';
 export * from './helpCenter';
 export * from './faq';
 export * from './unreadNotfication.icon';
+export * from './noNotification.icon';

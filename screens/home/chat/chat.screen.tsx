@@ -1,6 +1,6 @@
 import React from 'react'
 import { Layout } from '../../../layout'
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native'
 import { responsiveFontSize, responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions'
 import { THEME, getTextButtonColor, getTextPrimaryColor } from '../../../utils'
 import { Conversation, SearchInput } from '../../../components'
@@ -98,7 +98,9 @@ export const ChatScreen = () => {
 
     return (
         <Layout>
-            <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+            <KeyboardAvoidingView 
+            style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? "padding" : "height"}
+            >
             <View style={styles.mainWrapper}>
                 <View style={styles.searchInputWrapper}>
                     <SearchInput

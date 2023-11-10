@@ -162,6 +162,7 @@ export const SettingsScreen = () => {
 const styles = StyleSheet.create({
     // settings header styles
     headerWrapper: {
+        marginTop: responsiveScreenHeight(2),
         paddingHorizontal: responsiveScreenWidth(5),
         display: 'flex',
         flexDirection: 'row',

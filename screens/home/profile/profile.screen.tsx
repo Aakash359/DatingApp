@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
         marginBottom: responsiveScreenHeight(1)
     },
     upgradeBtnText: {
-        fontFamily: 'Audrey',
+        fontFamily: 'Audrey-Medium',
         fontSize: responsiveScreenFontSize(3),
         color: getTextButtonColor(THEME.DARK)
     },

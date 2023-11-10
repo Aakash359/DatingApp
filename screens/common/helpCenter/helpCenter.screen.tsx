@@ -232,6 +232,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: responsiveWidth(2),
+        marginTop: responsiveScreenHeight(2),
     },
     headerText: {
         fontFamily: 'Audrey-Medium',
