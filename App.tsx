@@ -11,7 +11,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   AddYourPhotosScreen, AgePreferenceScreen, DateOfBirthScreen,
   GenderPreferenceScreen, GenderScreen, HelpCenterScreen,
-  HomeScreen, InterestScreen, NameScreen, OnboardingScreen,
+  HomeScreen, InterestScreen, NameScreen, NotificationScreen, OnboardingScreen,
   OtpScreen, PhoneNumberScreen, ProfilePhotoScreen,
   PurchaseGemsScreen, PurchaseTokensScreen, SettingsScreen,
   VisibilityDistanceScreen
@@ -39,6 +39,7 @@ export type RootStackParamList = {
   SettingsScreen: undefined;
   HelpCenterScreen: undefined;
   FAQScreen: undefined;
+  NotificationsScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -74,6 +75,7 @@ function App(): JSX.Element {
               <Stack.Screen name="SettingsScreen" component={SettingsScreen} options={{ headerShown: false }} />
               <Stack.Screen name="HelpCenterScreen" component={HelpCenterScreen} options={{ headerShown: false }} />
               <Stack.Screen name="FAQScreen" component={FAQScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="NotificationsScreen" component={NotificationScreen} options={{ headerShown: false }} />
             </Stack.Navigator>
           </NavigationContainer>
         </SafeAreaProvider>

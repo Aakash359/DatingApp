@@ -18,7 +18,9 @@ export const SettingsScreen = () => {
     const navigation = useNavigation<SettingsScreenNavigationProp>();
     // settings body functions
     const handleAccountPress = () => { }
-    const handleNotificationsPress = () => { }
+    const handleNotificationsPress = () => { 
+        navigation.navigate('NotificationsScreen');
+     }
     const handlePaymentsPress = () => { }
     const handleMessageOptionsPress = () => { }
     const handlePrivacyOptionsPress = () => { }
@@ -34,6 +36,7 @@ export const SettingsScreen = () => {
     const handlePrivacyPolicyPress = () => { }
     const handleDeleteAccountPress = () => { }
     const handleLogOutPress = () => { }
+
     const settingsBodyData = useMemo(() => {
         return [
             {
