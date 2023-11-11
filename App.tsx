@@ -14,6 +14,8 @@ import {
   HomeScreen, InterestScreen, NameScreen, NotificationScreen, OnboardingScreen,
   OtpScreen, PhoneNumberScreen, ProfilePhotoScreen,
   PurchaseGemsScreen, PurchaseTokensScreen, SettingsScreen,
+  ThemesPreviewScreen,
+  ThemesScreen,
   VisibilityDistanceScreen
 } from './screens';
 import { FAQScreen } from './screens/common/faq';
@@ -40,6 +42,8 @@ export type RootStackParamList = {
   HelpCenterScreen: undefined;
   FAQScreen: undefined;
   NotificationsScreen: undefined;
+  ThemesScreen: undefined;
+  ThemesPreviewScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -76,6 +80,8 @@ function App(): JSX.Element {
               <Stack.Screen name="HelpCenterScreen" component={HelpCenterScreen} options={{ headerShown: false }} />
               <Stack.Screen name="FAQScreen" component={FAQScreen} options={{ headerShown: false }} />
               <Stack.Screen name="NotificationsScreen" component={NotificationScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="ThemesScreen" component={ThemesScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="ThemesPreviewScreen" component={ThemesPreviewScreen} options={{ headerShown: false }} />
             </Stack.Navigator>
           </NavigationContainer>
         </SafeAreaProvider>

@@ -18,15 +18,17 @@ export const SettingsScreen = () => {
     const navigation = useNavigation<SettingsScreenNavigationProp>();
     // settings body functions
     const handleAccountPress = () => { }
-    const handleNotificationsPress = () => { 
+    const handleNotificationsPress = () => {
         navigation.navigate('NotificationsScreen');
-     }
+    }
     const handlePaymentsPress = () => { }
     const handleMessageOptionsPress = () => { }
     const handlePrivacyOptionsPress = () => { }
     const handleLikesPress = () => { }
     const handleAboutPress = () => { }
-    const handleThemesPress = () => { }
+    const handleThemesPress = () => {
+        navigation.navigate('ThemesScreen');
+    }
     // settings footer functions
     const handleHelpCenterPress = () => {
         navigation.navigate('HelpCenterScreen')
