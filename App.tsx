@@ -10,6 +10,7 @@ import { ConversationScreen } from './screens/home/chat';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   AddYourPhotosScreen, AgePreferenceScreen, DateOfBirthScreen,
+  EditProfileScreen,
   GenderPreferenceScreen, GenderScreen, HelpCenterScreen,
   HomeScreen, InterestScreen, NameScreen, NotificationScreen, OnboardingScreen,
   OtpScreen, PhoneNumberScreen, ProfilePhotoScreen,
@@ -44,6 +45,7 @@ export type RootStackParamList = {
   NotificationsScreen: undefined;
   ThemesScreen: undefined;
   ThemesPreviewScreen: undefined;
+  EditProfileScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -82,6 +84,7 @@ function App(): JSX.Element {
               <Stack.Screen name="NotificationsScreen" component={NotificationScreen} options={{ headerShown: false }} />
               <Stack.Screen name="ThemesScreen" component={ThemesScreen} options={{ headerShown: false }} />
               <Stack.Screen name="ThemesPreviewScreen" component={ThemesPreviewScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{ headerShown: false }} />
             </Stack.Navigator>
           </NavigationContainer>
         </SafeAreaProvider>

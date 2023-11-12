@@ -21,10 +21,12 @@ export const ProfileScreen = () => {
     const navigation = useNavigation<ProfileScreenNavigationProp>();
 
     const changePhotoHandler = () => { }
-    const handleEditProfile = () => { }
+    const handleEditProfile = () => {
+        navigation.navigate('EditProfileScreen')
+    }
     const handleSettingsPress = () => {
         navigation.navigate('SettingsScreen')
-     }
+    }
     const handleAboutUsPress = () => { }
 
     const profileAccordianData = [
@@ -49,73 +51,73 @@ export const ProfileScreen = () => {
         <Layout>
             {/* <MainHeader /> */}
             <ScrollView>
-            <View style={styles.mainWrapper}>
-                {/* <Text style={styles.headerText}>PROFILE</Text> */}
-                {/* profile img section */}
-                <View style={styles.imageWrapper}>
-                    <TouchableOpacity onPress={changePhotoHandler}>
-                        <FastImage
-                            style={styles.profileImg}
-                            source={require('../../../assets/images/home/likes/avatar1.png')}
-                        />
-                        <Text style={styles.profileImgText}>Tap to change your photo</Text>
-                    </TouchableOpacity>
-                </View>
-                {/* upgrade section */}
-                <View style={styles.upgradeWrapper}>
-                    <View style={styles.upgradeContentWrapper}>
-                        <View style={styles.upgradeIconWrapper}>
-                            <UpgradeProfileIcon />
-                        </View>
-                        <Text style={styles.upgradeText}>
-                            See who already liked you by
-                            upgrading to Manifest Boost
-                        </Text>
-                        <Button
-                            variant='primary'
-                            imageSource={require('../../../assets/gradients/splash.png')}
-                            onPress={() => { }}
-                            height={responsiveScreenHeight(6.5)}
-                            borderRadius={12}
-                            borderTopLeftRadius={0}
-                            borderTopRightRadius={0}
-                        >
-                            <Text style={styles.upgradeBtnText}>UPGRADE</Text>
-                        </Button>
-                    </View>
-                </View>
-                {/* buy currencies section */}
-                <View style={styles.currencyWrapper}>
-                    <TouchableOpacity>
-                        <View style={styles.buyTokensWrapper}>
-                            <ManifestLargeIcon />
-                            <Text style={styles.currencyText}>Buy Tokens</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <View style={styles.buyGemsWrapper}>
-                            <GemLargeIcon />
-                            <Text style={styles.currencyText}>Buy Gems</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-                {/* accordian section */}
-                {profileAccordianData.map((data, index) => {
-                    return (
-                        <TouchableOpacity
-                            key={data.text + index}
-                            style={styles.accordianWrapper}
-                            onPress={data.onPress}
-                        >
-                            <View style={styles.accordianContainer}>
-                                {data.icon}
-                                <Text style={styles.accordianText}>{data.text}</Text>
-                            </View>
-                            <RightArrow />
+                <View style={styles.mainWrapper}>
+                    {/* <Text style={styles.headerText}>PROFILE</Text> */}
+                    {/* profile img section */}
+                    <View style={styles.imageWrapper}>
+                        <TouchableOpacity onPress={changePhotoHandler}>
+                            <FastImage
+                                style={styles.profileImg}
+                                source={require('../../../assets/images/home/likes/avatar1.png')}
+                            />
+                            <Text style={styles.profileImgText}>Tap to change your photo</Text>
                         </TouchableOpacity>
-                    )
-                })}
-            </View>
+                    </View>
+                    {/* upgrade section */}
+                    <View style={styles.upgradeWrapper}>
+                        <View style={styles.upgradeContentWrapper}>
+                            <View style={styles.upgradeIconWrapper}>
+                                <UpgradeProfileIcon />
+                            </View>
+                            <Text style={styles.upgradeText}>
+                                See who already liked you by
+                                upgrading to Manifest Boost
+                            </Text>
+                            <Button
+                                variant='primary'
+                                imageSource={require('../../../assets/gradients/splash.png')}
+                                onPress={() => { }}
+                                height={responsiveScreenHeight(6.5)}
+                                borderRadius={12}
+                                borderTopLeftRadius={0}
+                                borderTopRightRadius={0}
+                            >
+                                <Text style={styles.upgradeBtnText}>UPGRADE</Text>
+                            </Button>
+                        </View>
+                    </View>
+                    {/* buy currencies section */}
+                    <View style={styles.currencyWrapper}>
+                        <TouchableOpacity>
+                            <View style={styles.buyTokensWrapper}>
+                                <ManifestLargeIcon />
+                                <Text style={styles.currencyText}>Buy Tokens</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <View style={styles.buyGemsWrapper}>
+                                <GemLargeIcon />
+                                <Text style={styles.currencyText}>Buy Gems</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    {/* accordian section */}
+                    {profileAccordianData.map((data, index) => {
+                        return (
+                            <TouchableOpacity
+                                key={data.text + index}
+                                style={styles.accordianWrapper}
+                                onPress={data.onPress}
+                            >
+                                <View style={styles.accordianContainer}>
+                                    {data.icon}
+                                    <Text style={styles.accordianText}>{data.text}</Text>
+                                </View>
+                                <RightArrow />
+                            </TouchableOpacity>
+                        )
+                    })}
+                </View>
             </ScrollView>
         </Layout>
     )
