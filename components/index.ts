@@ -18,3 +18,5 @@ export * from './searchInput.component';
 export * from './conversation.component';
 export * from './faq.component';
 export * from './notification.component'
+export * from './checkboxButtonArea.component';
+export * from './accordianCheckboxButtonArea.component';

@@ -3,7 +3,7 @@ import { Layout } from '../../../layout'
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native'
 import { responsiveFontSize, responsiveScreenFontSize, responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions'
 import { THEME, getTextButtonColor, getTextPrimaryColor } from '../../../utils'
-import { Conversation, Input, RadioButtonArea, SearchInput } from '../../../components'
+import { AccordionCheckboxButtonArea, CheckboxButtonArea, Conversation, Input, RadioButtonArea, SearchInput } from '../../../components'
 import { RecentMatchAvatar } from '../../../components/recentMatchAvatar.component'
 import { ChatHorizontalFilterIcon, HelpCenterAttachmentIcon, ThreeDotsIcon } from '../../../assets'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
@@ -104,6 +104,9 @@ enum ModalPage {
     REPORT_TYPE_SCREEN = 'REPORT_TYPE_SCREEN',
     REPORT_SCREEN = 'REPORT_SCREEN',
     REPORT_SUCCESS_SCREEN = 'REPORT_SUCCESS_SCREEN',
+
+    // filter modal
+    FILTER_OPTIONS_SCREEN = 'FILTER_OPTIONS_SCREEN'
 }
 
 const reportOptions = [
@@ -144,6 +147,36 @@ const conversationOptions = [
     }
 ]
 
+const chatFilterOptions = [
+    {
+        id: '1',
+        text: 'Unread messages'
+    },
+    {
+        id: '2',
+        text: 'Mutual likes'
+    },
+    {
+        id: '3',
+        text: 'Recently active'
+    }
+]
+
+const chatGiftFilterOptions = [
+    {
+        id: '1',
+        text: 'Rose'
+    },
+    {
+        id: '2',
+        text: 'Chocolate'
+    },
+    {
+        id: '3',
+        text: 'Bouquet'
+    },
+]
+
 export const ChatScreen = () => {
 
     const [searchText, setSearchText] = React.useState('');
@@ -152,8 +185,15 @@ export const ChatScreen = () => {
     const [reportSelectedId, setReportSelectedId] = React.useState('');
     const [conversationOptionsSelectedId, setConversationOptionsSelectedId] = React.useState('');
     const [reportText, setReportText] = React.useState('');
+    const [chatFilterSelectedIds, setChatFilterSelectedIds] = React.useState<string[]>([]);
+    const [giftFilterSelectedIds, setGiftFilterSelectedIds] = React.useState<string[]>([]);
 
     const navigation = useNavigation<chatScreenNavigationProps>();
+
+    const handleFilterIconPress = () => {
+        setIsModalVisible(true)
+        setModalPage(ModalPage.FILTER_OPTIONS_SCREEN)
+    }
 
     const renderModalPage = () => {
         switch (modalPage) {
@@ -314,6 +354,43 @@ export const ChatScreen = () => {
                     }}
                     onBackPress={() => console.log('e')}
                 />
+            // filter
+            case ModalPage.FILTER_OPTIONS_SCREEN:
+                return <LikesModal
+                    modalHeader='CHAT FILTERS'
+                    // isNoHeader
+                    nextButtonText='APPLY'
+                    onNextPress={() => {
+                        setIsModalVisible(false)
+                    }}
+                    onBackPress={() => console.log('e')}
+                >
+                    {chatFilterOptions.map((options, index) => {
+                        return (
+                            <View
+                                key={index + options.id}
+                                style={styles.radioButtonAreaWrapper}
+                            >
+                                <CheckboxButtonArea
+                                    id={options.id}
+                                    selectedIds={chatFilterSelectedIds}
+                                    setSelectedIds={setChatFilterSelectedIds}
+                                    height={responsiveScreenHeight(7)}
+                                    bordersHidden
+                                // width={200} // Optional width
+                                >
+                                    <Text style={styles.radioText}>{options.text}</Text>
+                                </CheckboxButtonArea>
+                            </View>
+                        )
+                    })}
+                    <AccordionCheckboxButtonArea
+                        accordionCheckboxSelectedIds={giftFilterSelectedIds}
+                        setAccordionCheckboxSelectedIds={setGiftFilterSelectedIds}
+                        options={chatGiftFilterOptions}
+                        title='Gifts'
+                    />
+                </LikesModal>
         }
     }
 
@@ -353,7 +430,7 @@ export const ChatScreen = () => {
                         <View style={styles.conversationHeaderWrapper}>
                             <Text style={styles.recentMatchText}>Coversations</Text>
                             <View style={styles.conversationHeaderIconWrapper}>
-                                <TouchableOpacity>
+                                <TouchableOpacity onPress={handleFilterIconPress}>
                                     <ChatHorizontalFilterIcon />
                                 </TouchableOpacity>
                                 <TouchableOpacity>
