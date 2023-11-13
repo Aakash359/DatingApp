@@ -49,7 +49,7 @@ export const RadioButtonArea = (props: Props) => {
                     <View>
                         {props.children}
                     </View>
-                    <View style={{marginRight: responsiveScreenWidth(1)}}>
+                    <View style={{marginRight: responsiveScreenWidth(4)}}>
                         {isCurrentRadioBtnSelected ? (
                             <RadioCircleFilled />
                         ) : (

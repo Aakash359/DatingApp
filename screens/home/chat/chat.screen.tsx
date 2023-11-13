@@ -1,14 +1,16 @@
 import React from 'react'
 import { Layout } from '../../../layout'
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native'
-import { responsiveFontSize, responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions'
+import { responsiveFontSize, responsiveScreenFontSize, responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions'
 import { THEME, getTextButtonColor, getTextPrimaryColor } from '../../../utils'
-import { Conversation, SearchInput } from '../../../components'
+import { AccordionCheckboxButtonArea, CheckboxButtonArea, Conversation, Input, RadioButtonArea, SearchInput } from '../../../components'
 import { RecentMatchAvatar } from '../../../components/recentMatchAvatar.component'
-import { ChatHorizontalFilterIcon, ThreeDotsIcon } from '../../../assets'
+import { ChatHorizontalFilterIcon, HelpCenterAttachmentIcon, ThreeDotsIcon } from '../../../assets'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../../App'
 import { useNavigation } from '@react-navigation/native'
+import Modal from 'react-native-modal/dist/modal'
+import { LikesModal } from '../likes'
 
 const recentMatches = [
     { image: require('../../../assets/images/home/likes/avatar1.png'), likes: 2 },
@@ -90,82 +92,404 @@ type chatScreenNavigationProps = NativeStackNavigationProp<
     'OnboardingScreen'
 >;
 
+enum ModalPage {
+    CONVERSATION_OPTIONS_SCREEN = 'CONVERSATION_OPTIONS_SCREEN',
+
+    UNMATCH_CONFIRM_SCREEN = 'UNMATCH_CONFIRM_SCREEN',
+    UNMATCH_SUCCESS_SCREEN = 'UNMATCH_SUCCESS_SCREEN',
+
+    CLEAR_CONVERSATION_CONFIRM_SCREEN = 'CLEAR_CONVERSATION_CONFIRM_SCREEN',
+    CLEAR_CONVERSATION_SUCCESS_SCREEN = 'CLEAR_CONVERSATION_SUCCESS_SCREEN',
+
+    REPORT_TYPE_SCREEN = 'REPORT_TYPE_SCREEN',
+    REPORT_SCREEN = 'REPORT_SCREEN',
+    REPORT_SUCCESS_SCREEN = 'REPORT_SUCCESS_SCREEN',
+
+    // filter modal
+    FILTER_OPTIONS_SCREEN = 'FILTER_OPTIONS_SCREEN'
+}
+
+const reportOptions = [
+    {
+        id: '1',
+        text: 'Inappropriate or offensive behaviour'
+    },
+    {
+        id: '2',
+        text: 'Harassment'
+    },
+    {
+        id: '3',
+        text: 'Fake or impersonating profiles'
+    },
+    {
+        id: '4',
+        text: 'Violation of app policies'
+    },
+    {
+        id: '5',
+        text: 'Spam or solicitation'
+    }
+]
+
+const conversationOptions = [
+    {
+        id: '1',
+        text: 'Unmatch'
+    },
+    {
+        id: '2',
+        text: 'Report'
+    },
+    {
+        id: '3',
+        text: 'Clear conversation'
+    }
+]
+
+const chatFilterOptions = [
+    {
+        id: '1',
+        text: 'Unread messages'
+    },
+    {
+        id: '2',
+        text: 'Mutual likes'
+    },
+    {
+        id: '3',
+        text: 'Recently active'
+    }
+]
+
+const chatGiftFilterOptions = [
+    {
+        id: '1',
+        text: 'Rose'
+    },
+    {
+        id: '2',
+        text: 'Chocolate'
+    },
+    {
+        id: '3',
+        text: 'Bouquet'
+    },
+]
+
 export const ChatScreen = () => {
 
     const [searchText, setSearchText] = React.useState('');
+    const [isModalVisible, setIsModalVisible] = React.useState(false);
+    const [modalPage, setModalPage] = React.useState<ModalPage>();
+    const [reportSelectedId, setReportSelectedId] = React.useState('');
+    const [conversationOptionsSelectedId, setConversationOptionsSelectedId] = React.useState('');
+    const [reportText, setReportText] = React.useState('');
+    const [chatFilterSelectedIds, setChatFilterSelectedIds] = React.useState<string[]>([]);
+    const [giftFilterSelectedIds, setGiftFilterSelectedIds] = React.useState<string[]>([]);
 
     const navigation = useNavigation<chatScreenNavigationProps>();
 
+    const handleFilterIconPress = () => {
+        setIsModalVisible(true)
+        setModalPage(ModalPage.FILTER_OPTIONS_SCREEN)
+    }
+
+    const renderModalPage = () => {
+        switch (modalPage) {
+            case ModalPage.CONVERSATION_OPTIONS_SCREEN:
+                return <LikesModal
+                    isNoHeader
+                    nextButtonText='NEXT'
+                    onNextPress={() => {
+                        if (conversationOptionsSelectedId === '1') {
+                            setModalPage(ModalPage.UNMATCH_CONFIRM_SCREEN)
+                        }
+                        if (conversationOptionsSelectedId === '2') {
+                            setModalPage(ModalPage.REPORT_TYPE_SCREEN)
+                        }
+                        if (conversationOptionsSelectedId === '3') {
+                            setModalPage(ModalPage.CLEAR_CONVERSATION_CONFIRM_SCREEN)
+                        }
+                    }}
+                    onBackPress={() => console.log('e')}
+                >
+                    {conversationOptions.map((options, index) => {
+                        return (
+                            <View
+                                key={index + options.id}
+                                style={styles.radioButtonAreaWrapper}
+                            >
+                                <RadioButtonArea
+                                    id={options.id}
+                                    selectedId={conversationOptionsSelectedId}
+                                    setSelectedId={setConversationOptionsSelectedId}
+                                    isBestValue={false}
+                                    height={responsiveScreenHeight(7)}
+                                >
+                                    <Text style={styles.radioText}>{options.text}</Text>
+                                </RadioButtonArea>
+                            </View>
+
+                        )
+                    })}
+                </LikesModal>
+            case ModalPage.UNMATCH_CONFIRM_SCREEN:
+                return <LikesModal
+                    modalHeader='UNMATCH'
+                    modalDescription='Are you sure you want to unmatch Alex Linderson ? This action cannot be undone and is irreversible'
+                    nextButtonText='CONFIRM'
+                    isOnlyOneButton={true}
+                    onNextPress={() => {
+                        setModalPage(ModalPage.UNMATCH_SUCCESS_SCREEN);
+                    }}
+                    onBackPress={() => console.log('e')}
+                />
+            case ModalPage.UNMATCH_SUCCESS_SCREEN:
+                return <LikesModal
+                    modalPrimaryImage={require('../../../assets/images/home/likes/successCheckmark.png')}
+                    modalHeader='UNMATCH SUCCESSFULL'
+                    modalDescription='Alex Linderson has been succesfully unmatched'
+                    nextButtonText='GREAT'
+                    isOnlyOneButton={true}
+                    onNextPress={() => {
+                        setIsModalVisible(false)
+                    }}
+                    onBackPress={() => console.log('e')}
+                />
+            case ModalPage.CLEAR_CONVERSATION_CONFIRM_SCREEN:
+                return <LikesModal
+                    modalHeader='CLEAR CHAT'
+                    modalDescription='Are you sure you want to clear your chat with Alex Linderson ? This action cannot be undone and is irreversible'
+                    nextButtonText='CONFIRM'
+                    isOnlyOneButton={true}
+                    onNextPress={() => {
+                        setModalPage(ModalPage.CLEAR_CONVERSATION_SUCCESS_SCREEN);
+                    }}
+                    onBackPress={() => console.log('e')}
+                />
+            case ModalPage.CLEAR_CONVERSATION_SUCCESS_SCREEN:
+                return <LikesModal
+                    modalPrimaryImage={require('../../../assets/images/home/likes/successCheckmark.png')}
+                    modalHeader='CHAT CLEARED'
+                    modalDescription='Your conversation with Alex Linderson has been cleared'
+                    nextButtonText='GREAT'
+                    isOnlyOneButton={true}
+                    onNextPress={() => {
+                        setIsModalVisible(false)
+                    }}
+                    onBackPress={() => console.log('e')}
+                />
+            case ModalPage.REPORT_TYPE_SCREEN:
+                return <LikesModal
+                    modalHeader='REPORT'
+                    nextButtonText='APPLY'
+                    onNextPress={() => {
+                        setModalPage(ModalPage.REPORT_SCREEN)
+                    }}
+                    onBackPress={() => console.log('e')}
+                >
+                    <Text style={styles.reportText}>Your report is private</Text>
+                    {reportOptions.map((options, index) => {
+                        return (
+                            <View
+                                key={index + options.id}
+                                style={styles.radioButtonAreaWrapper}
+                            >
+                                <RadioButtonArea
+                                    id={options.id}
+                                    selectedId={reportSelectedId}
+                                    setSelectedId={setReportSelectedId}
+                                    isBestValue={false}
+                                    height={responsiveScreenHeight(7)}
+                                >
+                                    <Text style={styles.radioText}>{options.text}</Text>
+                                </RadioButtonArea>
+                            </View>
+
+                        )
+                    })}
+                </LikesModal>
+            case ModalPage.REPORT_SCREEN:
+                return <LikesModal
+                    modalHeader='WRITE REPORT'
+                    nextButtonText='SUBMIT REPORT'
+                    onNextPress={() => {
+                        setModalPage(ModalPage.REPORT_SUCCESS_SCREEN)
+                    }}
+                    onBackPress={() => console.log('e')}
+                >
+                    <View style={styles.reportInputWrapper}>
+                        <Text style={styles.reportDescText}>
+                            The more details you can give, the better we can understand what’s happened
+                        </Text>
+                        <Input
+                            value={reportText}
+                            setValue={setReportText}
+                            placeholder='Tell us more'
+                            fontFamily='RedHatDisplay-Regular'
+                            fontSize={responsiveFontSize(2)}
+                        />
+                        <Input
+                            value={''}
+                            setValue={() => { }}
+                            placeholder='Attachment ( optional )'
+                            fontFamily='RedHatDisplay-Regular'
+                            fontSize={responsiveFontSize(2)}
+                            icon={<HelpCenterAttachmentIcon />}
+                            isInputDisabled
+                        />
+
+                    </View>
+                </LikesModal>
+            case ModalPage.REPORT_SUCCESS_SCREEN:
+                return <LikesModal
+                    modalPrimaryImage={require('../../../assets/images/home/likes/successCheckmark.png')}
+                    modalHeader='REPORT SUBMITTED'
+                    modalDescription='Thank you for helping us maintain a safe and respectful dating community.'
+                    nextButtonText='GREAT'
+                    isOnlyOneButton={true}
+                    onNextPress={() => {
+                        setIsModalVisible(false)
+                    }}
+                    onBackPress={() => console.log('e')}
+                />
+            // filter
+            case ModalPage.FILTER_OPTIONS_SCREEN:
+                return <LikesModal
+                    modalHeader='CHAT FILTERS'
+                    // isNoHeader
+                    nextButtonText='APPLY'
+                    onNextPress={() => {
+                        setIsModalVisible(false)
+                    }}
+                    onBackPress={() => console.log('e')}
+                >
+                    {chatFilterOptions.map((options, index) => {
+                        return (
+                            <View
+                                key={index + options.id}
+                                style={styles.radioButtonAreaWrapper}
+                            >
+                                <CheckboxButtonArea
+                                    id={options.id}
+                                    selectedIds={chatFilterSelectedIds}
+                                    setSelectedIds={setChatFilterSelectedIds}
+                                    height={responsiveScreenHeight(7)}
+                                    bordersHidden
+                                // width={200} // Optional width
+                                >
+                                    <Text style={styles.radioText}>{options.text}</Text>
+                                </CheckboxButtonArea>
+                            </View>
+                        )
+                    })}
+                    <AccordionCheckboxButtonArea
+                        accordionCheckboxSelectedIds={giftFilterSelectedIds}
+                        setAccordionCheckboxSelectedIds={setGiftFilterSelectedIds}
+                        options={chatGiftFilterOptions}
+                        title='Gifts'
+                    />
+                </LikesModal>
+        }
+    }
+
     return (
         <Layout>
-            <KeyboardAvoidingView 
-            style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? "padding" : "height"}
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === 'ios' ? "padding" : "height"}
             >
-            <View style={styles.mainWrapper}>
-                <View style={styles.searchInputWrapper}>
-                    <SearchInput
-                        placeholder='Search Matches..'
-                        searchText={searchText}
-                        setSearchText={setSearchText}
-                    />
-                </View>
-                <View style={styles.recentMatchesContainer}>
-                    <Text style={styles.recentMatchText}>Recent Matches</Text>
-                    <FlatList
-                        contentContainerStyle={styles.recentMatchesWrapper}
-                        horizontal={true}
-                        data={recentMatches}
-                        renderItem={({ item }) => {
-                            return (
-                                <RecentMatchAvatar
-                                    imageSrc={item.image}
-                                    likes={item.likes}
-                                />
-                            );
-                        }}
-                        keyExtractor={(item, index) => index.toString()}
-                        showsHorizontalScrollIndicator={false}
-                    />
-                </View>
-                <View style={styles.conversationWrapper}>
-                    <View style={styles.conversationHeaderWrapper}>
-                        <Text style={styles.recentMatchText}>Coversations</Text>
-                        <View style={styles.conversationHeaderIconWrapper}>
-                            <TouchableOpacity>
-                                <ChatHorizontalFilterIcon />
-                            </TouchableOpacity>
-                            <TouchableOpacity>
-                                <ThreeDotsIcon />
-                            </TouchableOpacity>
-                        </View>
+                <View style={styles.mainWrapper}>
+                    <View style={styles.searchInputWrapper}>
+                        <SearchInput
+                            placeholder='Search Matches..'
+                            searchText={searchText}
+                            setSearchText={setSearchText}
+                        />
                     </View>
-                    <FlatList
-                        style={styles.conversationContainer}
-                        data={conversations}
-                        renderItem={({ item }) => (
-                            <Conversation
-                                matchProfileImgSrc={item.matchProfileImgSrc}
-                                matchName={item.matchName}
-                                lastTextTime={item.lastTextTime}
-                                message={item.message}
-                                noOfUnreadTexts={item.noOfUnreadTexts}
-                                isOnline={item.isOnline}
-                                onConversationPress={() => {
-                                    navigation.navigate('ConversationScreen');
-                                }}
-                            />
-                        )}
-                        keyExtractor={(item, index) => index.toString()}
-                        showsVerticalScrollIndicator={false}
-                    />
+                    <View style={styles.recentMatchesContainer}>
+                        <Text style={styles.recentMatchText}>Recent Matches</Text>
+                        <FlatList
+                            contentContainerStyle={styles.recentMatchesWrapper}
+                            horizontal={true}
+                            data={recentMatches}
+                            renderItem={({ item }) => {
+                                return (
+                                    <RecentMatchAvatar
+                                        imageSrc={item.image}
+                                        likes={item.likes}
+                                    />
+                                );
+                            }}
+                            keyExtractor={(item, index) => index.toString()}
+                            showsHorizontalScrollIndicator={false}
+                        />
+                    </View>
+                    <View style={styles.conversationWrapper}>
+                        <View style={styles.conversationHeaderWrapper}>
+                            <Text style={styles.recentMatchText}>Coversations</Text>
+                            <View style={styles.conversationHeaderIconWrapper}>
+                                <TouchableOpacity onPress={handleFilterIconPress}>
+                                    <ChatHorizontalFilterIcon />
+                                </TouchableOpacity>
+                                <TouchableOpacity>
+                                    <ThreeDotsIcon />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <FlatList
+                            style={styles.conversationContainer}
+                            data={conversations}
+                            renderItem={({ item }) => (
+                                <Conversation
+                                    matchProfileImgSrc={item.matchProfileImgSrc}
+                                    matchName={item.matchName}
+                                    lastTextTime={item.lastTextTime}
+                                    message={item.message}
+                                    noOfUnreadTexts={item.noOfUnreadTexts}
+                                    isOnline={item.isOnline}
+                                    onConversationPress={() => {
+                                        navigation.navigate('ConversationScreen');
+                                    }}
+                                    onConversationLongPress={() => {
+                                        setIsModalVisible(true);
+                                        setModalPage(ModalPage.CONVERSATION_OPTIONS_SCREEN)
+                                    }}
+                                />
+                            )}
+                            keyExtractor={(item, index) => index.toString()}
+                            showsVerticalScrollIndicator={false}
+                        />
+                    </View>
                 </View>
-            </View>
+                <Modal
+                    useNativeDriverForBackdrop={true}
+                    style={styles.modal}
+                    onBackdropPress={() => setIsModalVisible(false)}
+                    isVisible={isModalVisible}>
+                    <KeyboardAvoidingView
+                        behavior={Platform.OS === 'ios' ? "padding" : "height"}
+                    >
+                        {renderModalPage()}
+                    </KeyboardAvoidingView>
+                </Modal>
             </KeyboardAvoidingView>
         </Layout>
     )
 }
 
 const styles = StyleSheet.create({
+    modal: {
+        width: '100%',
+        height: '100%',
+        maxHeight: '100%',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        margin: 0,
+    },
     mainWrapper: {
         display: 'flex',
         flexDirection: 'column',
@@ -218,5 +542,30 @@ const styles = StyleSheet.create({
     },
     conversationContainer: {
         flex: 1,
+    },
+    radioButtonAreaWrapper: {
+        width: responsiveScreenWidth(90),
+        marginBottom: responsiveScreenHeight(1)
+    },
+    radioText: {
+        fontFamily: 'RedHatDisplay-Regular',
+        color: getTextButtonColor(THEME.DARK),
+        marginHorizontal: responsiveScreenWidth(5),
+        fontSize: responsiveScreenFontSize(2.25)
+    },
+    reportText: {
+        fontFamily: 'RedHatDisplay-Regular',
+        color: getTextPrimaryColor(THEME.DARK)
+    },
+    // report modal styles
+    reportInputWrapper: {
+        width: responsiveScreenWidth(80),
+        display: 'flex',
+        gap: responsiveScreenHeight(2)
+    },
+    reportDescText: {
+        color: getTextPrimaryColor(THEME.DARK),
+        fontFamily: 'RedHatDisplay-Regular',
+        marginTop: responsiveScreenHeight(1)
     }
 });

@@ -12,12 +12,16 @@ interface Props {
     noOfUnreadTexts: number;
     isOnline?: boolean;
     onConversationPress: () => void;
+    onConversationLongPress: () => void;
 }
 
 
 export const Conversation: React.FC<Props> = (props) => {
     return (
-        <TouchableOpacity onPress={props.onConversationPress}>
+        <TouchableOpacity 
+            onPress={props.onConversationPress} 
+            onLongPress={props.onConversationLongPress}
+        >
             <View style={styles.wrapper}>
                 <View style={styles.imageWrapper}>
                     <Image
