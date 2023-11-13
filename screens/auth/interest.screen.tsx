@@ -124,7 +124,7 @@ export const InterestScreen = () => {
                 <View style={styles.mainWrapper}>
                     <View style={styles.headerWrapper}>
                         <InterestIcon />
-                        <Text style={styles.headerText}>YOUR INTERSTS ARE</Text>
+                        <Text style={styles.headerText}>YOUR INTERESTS ARE</Text>
                     </View>
                     <View style={styles.inputWrapper}>
                         <Text style={styles.inputDescription}>Creativity:</Text>

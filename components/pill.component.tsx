@@ -6,18 +6,20 @@ import LinearGradient from 'react-native-linear-gradient';
 
 interface ImageButtonProps {
     onPress?: () => void;
-    selectedGender: string[];
-    setSelectedGender: React.Dispatch<React.SetStateAction<string[]>>;
+    selectedGender?: string[];
+    setSelectedGender?: React.Dispatch<React.SetStateAction<string[]>>;
     text: string;
     icon?: React.JSX.Element;
 }
 
-const handlePress = (text: string, setSelectedGender: React.Dispatch<React.SetStateAction<string[]>>, selectedGender: string[]) => {
-    const newSelectedGender = [...selectedGender, text]
-    setSelectedGender(newSelectedGender);
-    if (selectedGender.includes(text)) {
-        const newSelectedGender = selectedGender.filter((item) => item !== text);
+const handlePress = (text: string, setSelectedGender: React.Dispatch<React.SetStateAction<string[]>> | null, selectedGender: string[] | null) => {
+    if (selectedGender && setSelectedGender) {
+        const newSelectedGender = [...selectedGender, text]
         setSelectedGender(newSelectedGender);
+        if (selectedGender.includes(text)) {
+            const newSelectedGender = selectedGender.filter((item) => item !== text);
+            setSelectedGender(newSelectedGender);
+        }
     }
 }
 
@@ -37,7 +39,7 @@ export const Pill = forwardRef<TouchableOpacity, ImageButtonProps>(({ setSelecte
                 zIndex: -1,
             }}
         >
-            <TouchableOpacity activeOpacity={1} style={selectedGender.includes(text) ? styles.selectedPill : styles.pill} onPress={() => handlePress(text, setSelectedGender, selectedGender)} ref={ref}>
+            <TouchableOpacity activeOpacity={1} style={selectedGender ? selectedGender.includes(text) ? styles.selectedPill : styles.pill : styles.pill} onPress={() => handlePress(text, setSelectedGender || null, selectedGender || null)} ref={ref}>
                 {icon ? icon : null}<Text style={styles.text}>{text}</Text>
             </TouchableOpacity>
         </LinearGradient>

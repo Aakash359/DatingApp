@@ -29,3 +29,4 @@ export async function uploadImageAndroid(p_image: any): Promise<MediaAPIResponse
 
     return promise as Promise<MediaAPIResponse[]>;
   }
+  
