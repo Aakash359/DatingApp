@@ -29,6 +29,14 @@ export const ProfileScreen = () => {
     }
     const handleAboutUsPress = () => { }
 
+    const handleBuyTokensPress = () => {
+        navigation.navigate('PurchaseTokensScreen');
+    }
+
+    const handleBuyGemsPress = () => {
+        navigation.navigate('PurchaseGemsScreen')
+    }
+
     const profileAccordianData = [
         {
             icon: <UserEditIcon />,
@@ -88,13 +96,13 @@ export const ProfileScreen = () => {
                     </View>
                     {/* buy currencies section */}
                     <View style={styles.currencyWrapper}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={handleBuyTokensPress}>
                             <View style={styles.buyTokensWrapper}>
                                 <ManifestLargeIcon />
                                 <Text style={styles.currencyText}>Buy Tokens</Text>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={handleBuyGemsPress}>
                             <View style={styles.buyGemsWrapper}>
                                 <GemLargeIcon />
                                 <Text style={styles.currencyText}>Buy Gems</Text>

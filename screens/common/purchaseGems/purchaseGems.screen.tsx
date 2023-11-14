@@ -160,7 +160,7 @@ export const PurchaseGemsScreen = () => {
                     isOnlyOneButton={true}
                     onNextPress={() => {
                         setIsPurchaseModalVisible(false)
-                        navigation.navigate('PurchaseTokensScreen')
+                        navigation.goBack()
                     }}
                     onBackPress={() => console.log('e')}
                 />

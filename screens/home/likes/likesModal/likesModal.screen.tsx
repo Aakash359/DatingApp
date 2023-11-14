@@ -8,21 +8,22 @@ export interface Props {
     modalHeader?: string;
     modalPrimaryImage?: any;
     modalDescription?: string;
-    nextButtonText: string;
+    nextButtonText?: string;
     modalCancleButtonText?: string;
-    onNextPress: () => void;
-    onBackPress: () => void;
+    onNextPress?: () => void;
+    onBackPress?: () => void;
     isOnlyOneButton?: boolean;
     isNoHeader?: boolean;
     modalImageText?: string;
     children?: any
+    isNoFooter?:boolean;
 }
 
 export const LikesModal: React.FC<Props> =
     ({ isOnlyOneButton = true, modalImageText, isNoHeader = false,
         onNextPress, onBackPress, modalPrimaryImage, modalHeader,
         modalDescription, modalCancleButtonText, nextButtonText,
-        children }) => {
+        children, isNoFooter }) => {
         return (
             <View style={styles.modalContainer}>
                 <View style={styles.dragger} />
@@ -36,28 +37,27 @@ export const LikesModal: React.FC<Props> =
                             {modalHeader}
                         </Text>
                     }
-                    { children }
+                    {children}
                     {modalDescription ? <Text style={styles.inputDescription}>{modalDescription}</Text> : null}
                 </View>
-                <View style={isOnlyOneButton ? styles.singleButtonWrapper : styles.buttonMainWrapper}>
-                    <View style={styles.buttonWrapper}>
-                        <Button onPress={onNextPress} imageSource={require('../../../../assets/gradients/splash.png')} variant={'primary'} height={responsiveScreenHeight(8)} >
+                {!isNoFooter ? <View style={isOnlyOneButton ? styles.singleButtonWrapper : styles.buttonMainWrapper}>
+                    {nextButtonText ? <View style={styles.buttonWrapper}>
+                        <Button onPress={onNextPress ? onNextPress : () => { }} imageSource={require('../../../../assets/gradients/splash.png')} variant={'primary'} height={responsiveScreenHeight(8)} >
                             <Text style={styles.headerText}>{nextButtonText}</Text>
                         </Button>
-                    </View>
+                    </View> : null}
                     {isOnlyOneButton ? null :
                         <View style={styles.buttonWrapper}>
-                            <Button onPress={onBackPress} variant={'outline'} height={responsiveScreenHeight(8)} >
+                            <Button onPress={onBackPress ? onBackPress : () => { }} variant={'outline'} height={responsiveScreenHeight(8)} >
                                 <Text style={styles.headerText}>{modalCancleButtonText}</Text>
                             </Button>
                         </View>}
-                </View>
+                </View> : null}
             </View>
         );
     };
 
 const styles = StyleSheet.create({
-
     modalContainer: {
         backgroundColor: getModalBackgroundColor(THEME.DARK),
         display: 'flex',
