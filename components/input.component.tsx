@@ -16,15 +16,21 @@ interface Props extends TextInputProps {
   fontFamily?: string;
   fontSize?: number;
   isInputDisabled?:boolean;
+  isTextArea?: boolean;
+  customTextAreaHeight?: number;
 }
 
 export const Input: React.FC<Props> = props => {
-  const { isPassword, isError, value, setValue, ...otherProps } = props;
+  const { customTextAreaHeight, isPassword, isError, value, setValue, isTextArea, ...otherProps } = props;
   const [isFocused, setIsFocused] = useState<boolean>();
   const [isPasswordMasked, setIsPasswordMasked] = useState<boolean>(true);
 
   return (
-    <View style={styles.container}>
+    <View style={{
+        height: isTextArea ? customTextAreaHeight : 50,
+        position: 'relative'
+      }
+    }>
       <TextInput
         editable={props.isInputDisabled ? false : true}
         value={value}
@@ -36,6 +42,13 @@ export const Input: React.FC<Props> = props => {
             color: isError ? COLORS.ERROR : getTextPrimaryColor(THEME.DARK),
             fontFamily: props.fontFamily ? props.fontFamily : 'Audrey-Medium',
             fontSize: props.fontSize ? props.fontSize : responsiveFontSize(3),
+            height: isTextArea ? customTextAreaHeight : 'auto',
+            textAlignVertical: isTextArea ? 'top' : 'auto',
+            lineHeight: isTextArea ? 25 : 20,
+            borderBottomWidth: isTextArea ? 1 : 1,
+            borderWidth: isTextArea ? 1 : 0,
+            borderRadius: isTextArea ? 5 : 0,
+            borderStyle: isTextArea ? 'dashed' : 'solid',
           },
         ]}
         placeholderTextColor="#888888CC"
@@ -66,10 +79,6 @@ export const Input: React.FC<Props> = props => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-    height: 50,
-  },
   input: {
     height: 50,
     borderBottomWidth: 1,

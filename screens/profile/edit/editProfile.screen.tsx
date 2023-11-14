@@ -1,16 +1,16 @@
 import React from "react"
 import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { Layout } from "../../../layout"
-import { AddImageVerticalBox, LeftArrow } from "../../../assets"
+import { AddImageVerticalBox, GiftIcon, LeftArrow, ThreeDotsIcon } from "../../../assets"
 import { responsiveScreenHeight, responsiveScreenWidth, responsiveWidth, responsiveFontSize } from "react-native-responsive-dimensions"
-import { getBorderPrimaryColor, getBrandColor, getBrandSecondaryColor, getTextPrimaryColor, THEME, uploadImageAndroid } from "../../../utils"
+import { COLORS, getBorderPrimaryColor, getBrandColor, getBrandSecondaryColor, getTextPrimaryColor, THEME, uploadImageAndroid } from "../../../utils"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { RootStackParamList } from "../../../App"
 import { useNavigation } from "@react-navigation/native"
 import mime from "mime"
 import { launchImageLibrary } from "react-native-image-picker"
 import { interestPillData } from "../../../constants"
-import { Pill } from "../../../components"
+import { Input, Pill } from "../../../components"
 
 type EditProfileScreenScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -24,6 +24,7 @@ export const EditProfileScreen = () => {
 
     const [isPhotoUploading, setIsPhotoUploading] = React.useState(false);
     const [photo, setPhoto] = React.useState('');
+    const [bio, setLocalBio] = React.useState('This is a dummy bio just for development purposes! This bio is intended only for testing and must not be taken seriously');
 
     const handleOpenAddPhoto = async () => {
         const result = await launchImageLibrary({
@@ -91,6 +92,37 @@ export const EditProfileScreen = () => {
                             ))}
                         </View>
                     </TouchableOpacity>
+                    {/* bio section */}
+                    <View style={styles.subHeaderWrapper}>
+                        <Text style={styles.subHeaderText}>My bio</Text>
+                    </View>
+                    <View style={styles.textarea}>
+                            <Input
+                                value={bio}
+                                setValue={setLocalBio}
+                                placeholder='Add Bio'
+                                multiline
+                                numberOfLines={10}
+                                isTextArea
+                                customTextAreaHeight={150}
+                                fontSize={responsiveFontSize(2)}
+                                fontFamily="RedHatDisplay-Regular"
+                            />
+                        </View>
+                </View>
+                {/* basics section */}
+                <View style={styles.subHeaderWrapper}>
+                        <Text style={styles.subHeaderText}>My basics</Text>
+                </View>
+                <View style={styles.basicsMainWrapper}>
+                    <View style={styles.basicsWrapper}>
+                        <GiftIcon />
+                        <Text style={styles.subHeaderText}>Work</Text>
+                    </View>
+                    <View style={styles.basicsWrapper}>
+                        <Text style={styles.subHeaderText}>Software Engineer</Text>
+                        <ThreeDotsIcon />
+                    </View>
                 </View>
             </ScrollView>
         </Layout>
@@ -141,8 +173,8 @@ const styles = StyleSheet.create({
     },
     // interests section
     interestsWrapper: {
-        borderColor: getBorderPrimaryColor(THEME.DARK),
-        borderRadius: 2,
+        borderColor: COLORS.LIGHT_60,
+        borderRadius: 5,
         borderStyle: 'dashed',
         borderWidth: 1,
         width: responsiveScreenWidth(86),
@@ -174,4 +206,25 @@ const styles = StyleSheet.create({
         width: responsiveScreenWidth(95),
         marginBottom: responsiveScreenHeight(3),
     },
+    // bio section
+    textarea: {
+        marginTop: responsiveScreenHeight(2),
+        marginLeft: responsiveScreenHeight(3),
+        width: responsiveScreenWidth(88),
+        borderColor: getBorderPrimaryColor(THEME.DARK),
+        borderRadius: 5,
+        borderStyle: 'solid',
+        borderWidth: 1,
+    },
+    // basics section
+    basicsMainWrapper: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    basicsWrapper: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-start'
+    }
 })

@@ -1,8 +1,8 @@
 import React from "react";
-import { StyleSheet, View, TouchableOpacity, TextInput, NativeSyntheticEvent, TextInputContentSizeChangeEventData, ImageBackground, Keyboard } from "react-native";
+import { StyleSheet, View, TouchableOpacity, TextInput, NativeSyntheticEvent, TextInputContentSizeChangeEventData, ImageBackground } from "react-native";
 import { CameraIcon, GiftIcon, LoveStickerIcon, MicrophoneIcon, RightArrow } from "../../../../../assets";
 import { responsiveFontSize, responsiveScreenHeight, responsiveScreenWidth } from "react-native-responsive-dimensions";
-import { getPlaceholderTextColor, getTextPrimaryColor, THEME, useKeyboardOffset } from "../../../../../utils";
+import { getPlaceholderTextColor, getTextPrimaryColor, THEME } from "../../../../../utils";
 import Animated, { useSharedValue, withTiming, Easing } from 'react-native-reanimated';
 
 const fontSize = responsiveFontSize(1.8);
@@ -15,7 +15,6 @@ export const ConversationFooter = () => {
     const cameraIconWidth = useSharedValue(25);
     const iconSize = useSharedValue(1);
     const animatedSendIconSize = useSharedValue(0);
-    const keyboardOffset = useKeyboardOffset();
     const [isSendIconVisible, setIsSendIconVisible] = React.useState(false);
 
     const animateIcons = () => {
@@ -58,6 +57,9 @@ export const ConversationFooter = () => {
             resizeMode='cover'
             source={require('../../../../../assets/gradients/gradient-bg.png')}
             style={[styles.image, {
+                height: responsiveScreenHeight(4) + height,
+                // paddingBottom: Math.max(40, height)
+                // paddingBottom: 150,
                 // bottom: Keyboard.isVisible() ? keyboardOffset : keyboardOffset - responsiveScreenHeight(5)
             }]}
         >
@@ -149,6 +151,5 @@ const styles = StyleSheet.create({
     },
     image: {
         width: responsiveScreenWidth(100),
-        height: responsiveScreenHeight(10)
     },
 });

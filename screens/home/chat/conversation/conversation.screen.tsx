@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { Layout } from "../../../../layout";
-import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from "react-native";
+import { FlatList, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from "react-native";
 import { responsiveScreenFontSize, responsiveScreenHeight, responsiveScreenWidth } from "react-native-responsive-dimensions";
 import { ConversationHeader } from "./conversationHeader";
 import { ConversationFooter } from "./conversationFooter";
@@ -11,6 +11,7 @@ import LinearGradient from "react-native-linear-gradient";
 import { useFocusEffect } from "@react-navigation/native";
 
 export const ConversationScreen = () => {
+    const [keyboardIsVisible, setKeyboardIsVisible] = React.useState(false);
     const isIos = Platform.OS === 'ios'
     const flatListRef = useRef<FlatList>(null);  // Reference to the FlatList
     const scrollToBottom = () => {
@@ -23,11 +24,28 @@ export const ConversationScreen = () => {
         }, [])
     );
 
+    React.useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+          'keyboardDidShow',
+          () => setKeyboardIsVisible(true)
+        );
+        const keyboardDidHideListener = Keyboard.addListener(
+          'keyboardDidHide',
+          () => setKeyboardIsVisible(false)
+        );
+    
+        return () => {
+          keyboardDidShowListener.remove();
+          keyboardDidHideListener.remove();
+        };
+      }, []);
+
     return (
         <Layout>
             <KeyboardAvoidingView
                 style={styles.mainWrapper}
                 behavior={Platform.OS === 'ios' ? "padding" : "height"}
+                keyboardVerticalOffset={isIos ? 0 : !keyboardIsVisible ?  38 : 0}
             >
                 <ConversationHeader />
                 <FlatList
