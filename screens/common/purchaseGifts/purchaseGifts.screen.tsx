@@ -1,6 +1,6 @@
 import React from "react"
 import { View, Text, ImageBackground, TouchableOpacity, StyleSheet, ScrollView } from "react-native"
-import { responsiveFontSize, responsiveHeight, responsiveScreenHeight, responsiveScreenWidth, responsiveWidth } from "react-native-responsive-dimensions"
+import { responsiveScreenFontSize, responsiveScreenHeight, responsiveScreenWidth } from "react-native-responsive-dimensions"
 import { LeftArrow, ManifestCurrency } from "../../../assets"
 import { Button, RadioButtonArea, SelectableGift } from "../../../components"
 import { Layout } from "../../../layout"
@@ -134,7 +134,7 @@ export const PurchaseGiftsScreen = () => {
                                     selectedId={selectedId}
                                     setSelectedId={setSelectedId}
                                     isBestValue={item.isBestValue}
-                                    height={responsiveHeight(10.5)}
+                                    height={responsiveScreenHeight(10.5)}
                                     width={responsiveScreenWidth(90)}
                                 >
                                     <View style={styles.offerWrapper}>
@@ -147,9 +147,9 @@ export const PurchaseGiftsScreen = () => {
                                                 style={
                                                     [styles.offerPrice,
                                                     {
-                                                        fontSize: responsiveFontSize(2),
+                                                        fontSize: responsiveScreenFontSize(2),
                                                         position: 'relative',
-                                                        top: -responsiveHeight(0.1)
+                                                        top: -responsiveScreenHeight(0.1)
                                                     }]}>
                                                 {item.price}
 
@@ -158,10 +158,10 @@ export const PurchaseGiftsScreen = () => {
                                                 style={
                                                     [styles.offerPriceCut,
                                                     {
-                                                        fontSize: responsiveFontSize(2),
+                                                        fontSize: responsiveScreenFontSize(2),
                                                         color: COLORS.LIGHT_40,
                                                         position: 'relative',
-                                                        top: -responsiveHeight(0.1)
+                                                        top: -responsiveScreenHeight(0.1)
                                                     }]}>
                                                 {item.oldPrice}
                                             </Text>
@@ -208,7 +208,7 @@ export const PurchaseGiftsScreen = () => {
                     >
                         <View style={styles.offerTextWrapper}>
                             <Text style={styles.offerText}>Great Offer</Text>
-                            <Text style={[styles.offerText, { fontSize: responsiveFontSize(4) }]}>250 Tokens</Text>
+                            <Text style={[styles.offerText, { fontSize: responsiveScreenFontSize(4) }]}>250 Tokens</Text>
                             <View style={styles.offerPriceWrapper}>
                                 <View style={styles.manifestWrapper}>
                                     <ManifestCurrency />
@@ -234,7 +234,7 @@ export const PurchaseGiftsScreen = () => {
                 <View style={styles.buttonWrapper}>
                     <Button
                         variant={selectedGiftId === '' ? 'disabled' : 'primary'}
-                        height={responsiveHeight(8)}
+                        height={responsiveScreenHeight(8)}
                         imageSource={require('../../../assets/gradients/splash.png')}
                         onPress={() => setIsPurchaseGiftsModalVisible(true)}
                     >
@@ -267,8 +267,8 @@ const styles = StyleSheet.create({
     },
     mainWrapper: {
         flex: 1,
-        marginVertical: responsiveHeight(3),
-        paddingHorizontal: responsiveWidth(3),
+        marginVertical: responsiveScreenHeight(3),
+        paddingHorizontal: responsiveScreenWidth(3),
     },
     mainHeaderWrapper: {
         display: 'flex',
@@ -283,102 +283,102 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        gap: responsiveWidth(2),
+        gap: responsiveScreenWidth(2),
     },
     headerText: {
         fontFamily: 'Audrey-Medium',
-        fontSize: responsiveFontSize(3),
+        fontSize: responsiveScreenFontSize(3),
         color: getTextPrimaryColor(THEME.DARK)
     },
     rupeeText: {
         fontFamily: 'Audrey-Medium',
-        fontSize: responsiveFontSize(3),
+        fontSize: responsiveScreenFontSize(3),
         color: getTextPrimaryColor(THEME.DARK)
     },
     imageBackground: {
-        height: responsiveHeight(20),
+        height: responsiveScreenHeight(20),
         overflow: 'hidden',
         borderRadius: 10,
     },
     imageBackgroundWrapper: {
-        marginTop: responsiveHeight(2),
+        marginTop: responsiveScreenHeight(2),
     },
     offerTextWrapper: {
         display: 'flex',
         flexDirection: 'column',
-        paddingLeft: responsiveWidth(7),
-        paddingTop: responsiveHeight(3),
-        gap: responsiveHeight(0.5),
+        paddingLeft: responsiveScreenWidth(7),
+        paddingTop: responsiveScreenHeight(3),
+        gap: responsiveScreenHeight(0.5),
     },
     offerText: {
         fontFamily: 'RedHatDisplay-Bold',
         color: 'white',
-        fontSize: responsiveFontSize(2.5),
+        fontSize: responsiveScreenFontSize(2.5),
     },
     offerPrice: {
         fontFamily: 'RedHatDisplay-Bold',
         color: 'white',
-        fontSize: responsiveFontSize(2.5),
+        fontSize: responsiveScreenFontSize(2.5),
     },
     offerPriceCut: {
         fontFamily: 'RedHatDisplay-Bold',
         color: COLORS.LIGHT_70,
         textDecorationLine: 'line-through',
-        fontSize: responsiveFontSize(2.5),
+        fontSize: responsiveScreenFontSize(2.5),
     },
     offerPriceWrapper: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        gap: responsiveWidth(1.5),
+        gap: responsiveScreenWidth(1.5),
     },
     radioButtonAreaWrapper: {
-        marginTop: responsiveHeight(2),
+        marginTop: responsiveScreenHeight(2),
         display: 'flex',
         flexDirection: 'column',
-        gap: responsiveHeight(3),
+        gap: responsiveScreenHeight(3),
     },
     buttonText: {
         fontFamily: 'Audrey-Medium',
         color: getTextButtonColor(THEME.DARK),
-        fontSize: responsiveFontSize(3),
+        fontSize: responsiveScreenFontSize(3),
     },
     buttonWrapper: {
-        marginTop: responsiveHeight(3),
+        marginTop: responsiveScreenHeight(3),
     },
     offerWrapper: {
         display: 'flex',
-        paddingHorizontal: responsiveWidth(3),
-        paddingVertical: responsiveHeight(3.5),
-        gap: responsiveHeight(0.5),
+        paddingHorizontal: responsiveScreenWidth(3),
+        paddingVertical: responsiveScreenHeight(3.5),
+        gap: responsiveScreenHeight(0.5),
     },
     selectableGiftWrapper: {
-        marginTop: responsiveHeight(2),
+        marginTop: responsiveScreenHeight(2),
         display: 'flex',
         flexDirection: 'row',
-        gap: responsiveWidth(5),
+        gap: responsiveScreenWidth(5),
         flexWrap: 'wrap',
-        paddingBottom: responsiveHeight(2),
+        paddingBottom: responsiveScreenHeight(2),
     },
     gemsAmountText: {
         fontFamily: 'Audrey-Bold',
         color: getTextButtonColor(THEME.DARK),
-        fontSize: responsiveFontSize(2.5),
+        fontSize: responsiveScreenFontSize(2.5),
     },
     offerPriceAlt: {
         fontFamily: 'RedHatDisplay-Bold',
         color: 'white',
-        fontSize: responsiveFontSize(2.5),
+        fontSize: responsiveScreenFontSize(2.5),
     },
     offerPriceCutAlt: {
         fontFamily: 'RedHatDisplay-Bold',
         color: COLORS.LIGHT_70,
         textDecorationLine: 'line-through',
-        fontSize: responsiveFontSize(2),
+        fontSize: responsiveScreenFontSize(2),
     },
     rupeeTextAlt: {
         fontFamily: 'Audrey-Medium',
-        fontSize: responsiveFontSize(2.5),
+        fontSize: responsiveScreenFontSize(2.5),
         color: COLORS.LIGHT_40
     },
 })

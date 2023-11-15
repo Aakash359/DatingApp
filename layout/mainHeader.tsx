@@ -4,11 +4,20 @@ import { responsiveHeight, responsiveScreenWidth } from 'react-native-responsive
 import { MenuIcon } from '../assets/icons/menu.icon';
 import { FilterMenuIcon } from '../assets/icons/filterMenu.icon';
 import { THEME, getTextButtonColor } from '../utils';
+import { useNavigation } from '@react-navigation/native';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { RootStackParamList } from '../App';
 
 export const MainHeader: React.FC = () => {
+    const navigation = useNavigation<DrawerNavigationProp<RootStackParamList>>();
+
+    const handleMenuIconPress = () => {
+        navigation.openDrawer();
+    }
+
     return (
         <View style={styles.mainWrapper}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handleMenuIconPress}>
                 <MenuIcon />
             </TouchableOpacity>
             <Text style={styles.headerText}>MANIFEST</Text>
