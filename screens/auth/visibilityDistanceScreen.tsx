@@ -141,7 +141,6 @@ const styles = StyleSheet.create({
         marginLeft: responsiveScreenWidth(3),
         width: '95%',
         height: responsiveScreenHeight(10),
-        
     },
     sliderTextContainer: {
         display: 'flex',

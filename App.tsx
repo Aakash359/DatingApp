@@ -11,16 +11,20 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   AddYourPhotosScreen, AgePreferenceScreen, DateOfBirthScreen,
   EditProfileScreen,
+  FilterScreen,
   GenderPreferenceScreen, GenderScreen, HelpCenterScreen,
-  HomeScreen, InterestScreen, NameScreen, NotificationScreen, OnboardingScreen,
+  HomeScreen, InterestScreen, InventoryScreen, NameScreen, NotificationScreen, OnboardingScreen,
   OtpScreen, PhoneNumberScreen, ProfilePhotoScreen,
   PurchaseGemsScreen, PurchaseTokensScreen, SettingsScreen,
+  SideDrawerScreen,
   ThemesPreviewScreen,
   ThemesScreen,
   VisibilityDistanceScreen
 } from './screens';
 import { FAQScreen } from './screens/common/faq';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
+
 export type RootStackParamList = {
   OnboardingScreen: undefined;
   PhoneNumberScreen: { isSignup: boolean };
@@ -46,6 +50,8 @@ export type RootStackParamList = {
   ThemesScreen: undefined;
   ThemesPreviewScreen: undefined;
   EditProfileScreen: undefined;
+  InventoryScreen: undefined;
+  FilterScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -82,6 +88,8 @@ const StackNavigator = () => {
       <Stack.Screen name="ThemesScreen" component={ThemesScreen} options={{ headerShown: false }} />
       <Stack.Screen name="ThemesPreviewScreen" component={ThemesPreviewScreen} options={{ headerShown: false }} />
       <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="InventoryScreen" component={InventoryScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="FilterScreen" component={FilterScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   )
 }
@@ -92,9 +100,16 @@ function App(): JSX.Element {
       <Provider store={store}>
         <SafeAreaProvider style={styles.mainView}>
           <NavigationContainer>
-            <Drawer.Navigator initialRouteName="Home" screenOptions={{
-              headerShown: false,
-            }}>
+            <Drawer.Navigator
+              initialRouteName="Home"
+              screenOptions={{
+                headerShown: false,
+                drawerStyle: {
+                  width: responsiveScreenWidth(70),
+                }
+              }}
+              drawerContent={(props) => <SideDrawerScreen {...props} />}
+            >
               <Drawer.Screen name="Home" component={StackNavigator} />
               <Drawer.Screen name="Notifications" component={NotificationScreen} />
             </Drawer.Navigator>

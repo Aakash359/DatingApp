@@ -16,6 +16,7 @@ interface Props {
     giftItemWidth?: number;
     isInventory?: boolean;
     qty?: number;
+    isRedeeming?: boolean;
 }
 
 type purchaseGiftsScreenNavigationProp = NativeStackNavigationProp<
@@ -33,7 +34,7 @@ export const SelectableGift: React.FC<Props> = (props) => {
     }
 
     const getQtyText = () => {
-        if (props.qty !== 0) return `${props.qty} left`
+        if (props.qty !== 0 || props.isRedeeming) return `${props.qty} left`
         return 'Out of stock'
     }
 
@@ -57,7 +58,7 @@ export const SelectableGift: React.FC<Props> = (props) => {
                     {props.isInventory ?
                         <View style={styles.footerWrapper}>
                             <Text style={styles.qtyText}>{getQtyText()}</Text>
-                            {props.qty === 0 ?
+                            {props.qty === 0 && !props.isRedeeming ?
                                 <View style={styles.buttonWrapper}>
                                     <Button
                                         onPress={handleGoToShopPress}

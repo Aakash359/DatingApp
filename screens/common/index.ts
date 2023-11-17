@@ -5,3 +5,6 @@ export * from './helpCenter';
 export * from './notifications';
 export * from './themes';
 export * from './themesPreview';
+export * from './sideDrawer';
+export * from './inventory';
+export * from './filter';

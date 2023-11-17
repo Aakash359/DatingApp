@@ -64,6 +64,7 @@ export const AccordionCheckboxButtonArea = ({ title, options, accordionCheckboxS
                         setSelectedIds={setAccordionCheckboxSelectedIds}
                         height={responsiveScreenHeight(7)}
                         bordersHidden
+                        zeroBorderRadius
                     >
                         <Text style={styles.optionText}>{option.text}</Text>
                     </CheckboxButtonArea>
@@ -82,12 +83,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        // padding: 10,
         paddingHorizontal: responsiveScreenWidth(5),
         paddingVertical: responsiveScreenHeight(2),
         backgroundColor: getRadioGroupBackgroundColor(THEME.DARK),
-        // borderTopLeftRadius: 8,
-        // borderTopRightRadius: 8
     },
     content: {
         // If you have specific styles for the content, apply them here

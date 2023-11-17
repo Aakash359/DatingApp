@@ -591,23 +591,23 @@ const styles = StyleSheet.create({
     },
     selectableGiftWrapperStyle: {
         width: responsiveScreenWidth(100),
-        height: responsiveHeight(55)
+        height: responsiveScreenHeight(55)
     },
     selectableGiftWrapper: {
-        marginTop: responsiveHeight(2),
+        marginTop: responsiveScreenHeight(2),
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
-        gap: responsiveWidth(5),
+        gap: responsiveScreenWidth(5),
         flexWrap: 'wrap',
-        paddingBottom: responsiveHeight(2),
+        paddingBottom: responsiveScreenHeight(2),
     },
     buttonWrapper: {
         marginTop: responsiveScreenHeight(3),
         // width: responsiveScreenHeight(40),
     },
     headerText: {
-        fontSize: responsiveFontSize(3),
+        fontSize: responsiveScreenFontSize(3),
         fontFamily: 'Audrey-Medium',
         color: getTextPrimaryColor(THEME.DARK),
     },

@@ -15,13 +15,17 @@ export const MainHeader: React.FC = () => {
         navigation.openDrawer();
     }
 
+    const handleFilterIconPress = () => {
+        navigation.navigate('FilterScreen');
+    }
+
     return (
         <View style={styles.mainWrapper}>
             <TouchableOpacity onPress={handleMenuIconPress}>
                 <MenuIcon />
             </TouchableOpacity>
             <Text style={styles.headerText}>MANIFEST</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handleFilterIconPress}>
                 <FilterMenuIcon />
             </TouchableOpacity>
         </View>

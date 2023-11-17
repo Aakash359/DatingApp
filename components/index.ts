@@ -20,3 +20,4 @@ export * from './faq.component';
 export * from './notification.component'
 export * from './checkboxButtonArea.component';
 export * from './accordianCheckboxButtonArea.component';
+export * from './clickableArea.component';

@@ -12,11 +12,12 @@ interface CheckboxButtonAreaProps {
     height?: number;
     children: React.ReactNode | JSX.Element;
     width?: number;
-    bordersHidden?:boolean
-    borderRadius?:number
+    bordersHidden?: boolean
+    borderRadius?: number
+    zeroBorderRadius?: boolean
 }
 
-export const CheckboxButtonArea = ({ id, selectedIds, setSelectedIds, height, children, width, bordersHidden }: CheckboxButtonAreaProps) => {
+export const CheckboxButtonArea = ({ id, selectedIds, setSelectedIds, height, children, width, bordersHidden, zeroBorderRadius }: CheckboxButtonAreaProps) => {
 
     const handleCheckboxButtonPress = () => {
         if (selectedIds.includes(id)) {
@@ -37,7 +38,7 @@ export const CheckboxButtonArea = ({ id, selectedIds, setSelectedIds, height, ch
                 style={{
                     alignItems: 'center',
                     justifyContent: 'center',
-                    borderRadius: bordersHidden ? 0 : 5,
+                    borderRadius: zeroBorderRadius ? 0 : 5,
                     width: width ? width : 'auto',
                     paddingHorizontal: isCheckboxSelected ? responsiveScreenWidth(0.3) : 0,
                     paddingVertical: isCheckboxSelected ? responsiveScreenHeight(0.2) : 0,
@@ -45,12 +46,12 @@ export const CheckboxButtonArea = ({ id, selectedIds, setSelectedIds, height, ch
                 }}
             >
                 <View style={[styles.mainWrapper, {
-                    height: height ? height : responsiveHeight(10),
+                    height: height ? isCheckboxSelected ? height - responsiveScreenHeight(0.4) : height : isCheckboxSelected ? responsiveHeight(10) - responsiveScreenHeight(0.4) : responsiveHeight(10),
                     width: '100%',
-                    paddingHorizontal: isCheckboxSelected ?  0 : responsiveScreenWidth(0.3),
-                    paddingVertical:  isCheckboxSelected ? 0 : responsiveScreenHeight(0.2),
-                    borderRadius: bordersHidden ? 0 : 5,
-                    borderWidth:  bordersHidden ? 0 : 1,
+                    paddingHorizontal: isCheckboxSelected ? 0 : responsiveScreenWidth(0.3),
+                    paddingVertical: isCheckboxSelected ? 0 : responsiveScreenHeight(0.2),
+                    borderRadius: zeroBorderRadius ? 0 : 5,
+                    borderWidth: bordersHidden ? 0 : 1,
                 }]}>
                     <View>
                         {children}
