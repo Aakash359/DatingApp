@@ -42,7 +42,7 @@ export const RadioButtonArea = (props: Props) => {
             >
 
                 <View style={[styles.mainWrapper, {
-                    height: props.height ? props.height : responsiveHeight(10),
+                    height: props.height ? isCurrentRadioBtnSelected ? props.height - responsiveScreenHeight(0.4) : props.height : isCurrentRadioBtnSelected ? responsiveHeight(10) - responsiveScreenHeight(0.4) : responsiveHeight(10),
                     width: '100%',
                     paddingHorizontal: isCurrentRadioBtnSelected ?  0 : responsiveScreenWidth(0.3),
                     paddingVertical:  isCurrentRadioBtnSelected ? 0 : responsiveScreenHeight(0.2),
