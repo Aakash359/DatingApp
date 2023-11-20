@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Image, View, Text } from 'react-native';
+import { StyleSheet, Image, View, Text, TouchableOpacity } from 'react-native';
 import { Layout } from '../../../layout/layout';
 import { MainHeader } from '../../../layout';
 import { CardDislikeIcon, CardLikeIcon } from '../../../assets';
@@ -19,7 +19,8 @@ export const DashboardScreen = () => {
   const dislikeIconOpacity = useSharedValue(0);
   const nextImageScale = useSharedValue(0.5);
   const [currentIndex, setCurrentIndex] = useState(0);
-
+  const overrideNopeOpacity = useSharedValue(0);
+   const overrideLikeOpacity = useSharedValue(0);
   // const finishGesture = (event: Readonly<GestureEventPayload & PanGestureHandlerEventPayload>) => {
   //   if (event.translationX > 20) {
   //     imageXPostition.value = withSpring(500, { damping: 15 });
@@ -182,15 +183,28 @@ export const DashboardScreen = () => {
                       <View style={styles.detailsWrapper}>
                         <Text>asddasdasasd</Text>
                         <Text>asddasdasasd</Text>
-                        <Text>asddasdasasd</Text>
-                        <Text>asddasdasasd</Text>
-                        <Text>asddasdasasd</Text>
-                        <Text>asddasdasasd</Text>
-                        <Text>asddasdasasd</Text>
-                        <Text>asddasdasasd</Text>
-                        <Text>asddasdasasd</Text>
-                        <Text>asddasdasasd</Text>
-                        <Text>asddasdasasd</Text>
+                         <View style={[styles.headFoot, { marginBottom: 16 }]}>
+          <TouchableOpacity
+            onPress={() => {
+              // let "nope" stay a bit, before swiping
+              overrideNopeOpacity.value = withSpring(1);
+              setTimeout(() => onSwiped(false), 500);
+            }}
+            style={styles.icon}>
+            <Text>Left</Text>
+            {/* <CrossSVG /> */}
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              // let "like" stay a bit, before swiping
+              overrideLikeOpacity.value = withSpring(1);
+              setTimeout(() => onSwiped(true), 500);
+            }}
+            style={[styles.icon, {}]}>
+           <Text>Right</Text>
+          </TouchableOpacity>
+        </View>
                       </View>
                     </Animated.View>
                   </Animated.ScrollView>
